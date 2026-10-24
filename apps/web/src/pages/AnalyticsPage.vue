@@ -90,3 +90,4 @@ function getBarWidth(val: number): number {
   return Math.min(100, Math.max(5, (val / 3000000) * 100));
 }
 </script>
+

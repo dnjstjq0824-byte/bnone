@@ -236,3 +236,4 @@ function formatDate(iso: string) {
   return `${d.getMonth() + 1}월 ${d.getDate()}일`;
 }
 </script>
+

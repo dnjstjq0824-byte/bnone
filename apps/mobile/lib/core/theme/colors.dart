@@ -28,3 +28,4 @@ class AppColors {
   static const Color darkTextSecondary = Color(0xFF94A3B8);
   static const Color darkBorder = Color(0xFF1E293B);
 }
+

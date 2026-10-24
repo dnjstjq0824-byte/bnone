@@ -90,3 +90,4 @@ BN ONE v1.0 is a **manual financial lifestyle and personal wealth tracking softw
 - **Performance:** Sub-200ms API response time at p95 for all read/write endpoints; 60fps Flutter rendering on mid-range devices; Web first contentful paint (FCP) < 1.2s.
 - **Accessibility:** WCAG 2.1 Level AA compliance, minimum 48x48dp touch targets, semantic headings, full screen-reader labelling.
 - **Reliability:** 99.9% uptime target; automated hourly FX refresh background workers; database transactional ACID guarantees.
+

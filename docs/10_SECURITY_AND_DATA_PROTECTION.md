@@ -42,3 +42,4 @@ BN ONE holds sensitive user financial records. The platform enforces defense-in-
 
 - **Right of Access & Portability:** Self-service CSV export generates structured account and transaction archives on demand.
 - **Right to Erasure (Right to be Forgotten):** Users can trigger account deletion with a 30-day grace period (soft delete) or immediate hard purge cascading through all accounts and transactions.
+

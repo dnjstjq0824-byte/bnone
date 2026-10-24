@@ -30,3 +30,4 @@ To ensure strict compliance with Korean Financial Services Commission (FSC) guid
 1. **No Implication of Bank Synchronization:** Marketing copy and UI text must never use phrasing such as "Bank auto-sync", "Live account balance connection", "Direct wire transfer", or "Open banking partner".
 2. **Clear Origin Labels:** In all exports and reports, figures are labeled as `User-Entered Ledger` rather than `Bank Verified`.
 3. **No Custodial Claims:** Disclaimers explicitly specify that Booking Network Co., Ltd. does not hold, custody, or insure user funds.
+

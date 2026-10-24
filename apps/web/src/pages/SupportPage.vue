@@ -128,3 +128,4 @@ async function openTicket(ticket: any) {
   alert(`[${detail.subject}]\n상태: ${detail.status}\n\n내용:\n${detail.description}\n\n대화 내역:\n${msgList}`);
 }
 </script>
+

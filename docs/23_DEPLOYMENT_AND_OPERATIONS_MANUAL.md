@@ -67,3 +67,4 @@ docker compose exec postgres psql -U bnone -d bnone_db -f /fixtures/01_seed_init
 1. **Database Snapshots:** PostgreSQL automated daily snapshots via WAL-G / pg_dump stored in encrypted S3/GCS buckets with 30-day retention.
 2. **Point-In-Time Recovery (PITR):** Continuous Write-Ahead Log (WAL) archiving enables recovery to any point within the last 14 days.
 3. **Health Check Probes:** `/healthz` and `/readyz` endpoints monitored by Kubernetes Liveness and Readiness probes.
+

@@ -124,3 +124,4 @@ All 24 required documents mandated by Article 32 are located in `docs/`:
 
 **Status: APPROVED FOR RELEASE**  
 Booking Network Co., Ltd. — 2026-10-24
+

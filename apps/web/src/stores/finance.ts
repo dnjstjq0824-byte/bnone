@@ -83,3 +83,4 @@ export const useFinanceStore = defineStore('finance', () => {
     formatCurrency,
   };
 });
+

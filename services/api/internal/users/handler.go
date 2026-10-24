@@ -254,3 +254,4 @@ func (h *Handler) CreateDeletionRequest(w http.ResponseWriter, r *http.Request) 
 		"message":             "Your account deletion request has been registered and will be processed within the statutory review period.",
 	})
 }
+

@@ -114,3 +114,4 @@ func (db *DB) executeMultiSQL(script string) error {
 	}
 	return nil
 }
+

@@ -67,3 +67,4 @@ CREATE TABLE IF NOT EXISTS valuation_history (
 );
 
 CREATE INDEX IF NOT EXISTS idx_valuation_history_user ON valuation_history(user_id, valued_at);
+

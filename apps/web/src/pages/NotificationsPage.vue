@@ -71,3 +71,4 @@ function formatDate(iso: string) {
   return `${d.getMonth() + 1}월 ${d.getDate()}일 ${d.getHours()}:${String(d.getMinutes()).padStart(2, '0')}`;
 }
 </script>
+

@@ -53,3 +53,4 @@ stateDiagram-v2
 - After 30 days, the scheduled background worker (`services/worker/internal/privacy`) executes a database deletion.
 - All associated records in `transactions`, `transaction_entries`, `accounts`, `budgets`, `subscriptions`, `trips`, and `notifications` are permanently deleted via database cascading constraints (`ON DELETE CASCADE`).
 - Data cannot be recovered after this purge has executed.
+

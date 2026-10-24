@@ -34,3 +34,4 @@
 ### 2.3 Mobile (Flutter)
 - **Const Constructors:** Maximized use of `const` widget constructors to prevent unnecessary element tree rebuilds.
 - **ListView.builder:** Lazy instantiation of transaction items and account cards, maintaining low memory usage even with thousands of historical records.
+

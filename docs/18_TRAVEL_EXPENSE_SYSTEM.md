@@ -48,3 +48,4 @@ sequenceDiagram
 1. **Trip Workspace Metadata:** Destination country, start/end dates, target trip currency, total trip budget.
 2. **Multi-Currency Logging:** User can log expenses in the local foreign currency (e.g., JPY, EUR, USD, THB) while the engine automatically computes the home currency equivalent using historical or current reference exchange rates.
 3. **Trip Settlement Report:** Generates a post-trip summary detailing total spending by category (Dining, Lodging, Transit, Sightseeing, Shopping), daily spend burn rates, and budget variance (surplus / deficit).
+

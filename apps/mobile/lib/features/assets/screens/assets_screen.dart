@@ -202,3 +202,4 @@ class _AssetsScreenState extends State<AssetsScreen> {
     );
   }
 }
+

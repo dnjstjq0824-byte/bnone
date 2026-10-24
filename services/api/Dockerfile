@@ -26,3 +26,4 @@ COPY database/migrations /app/migrations
 
 EXPOSE 8080
 ENTRYPOINT ["/app/api"]
+

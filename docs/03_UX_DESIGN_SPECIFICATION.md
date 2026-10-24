@@ -61,3 +61,4 @@ BN ONE incorporates a high-trust, modern financial aesthetic built upon an indig
 - Users can toggle the **Privacy Eye Icon** (located on the Net Worth hero card or app header).
 - When toggled, all sensitive monetary balances immediately mask to `₩••••••`, `$••••••`, or `€••••••`.
 - This ensures users can open the app in public transit, coffee shops, or airports without exposing their liquid wealth to shoulder-surfing.
+

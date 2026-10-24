@@ -101,3 +101,4 @@ INSERT INTO feature_flags (id, key, description, environment, enabled, updated_b
 ('ff-004', 'csv_data_exports', 'Allow users to export all transactions and accounts to CSV', 'ALL', TRUE, 'SYSTEM', CURRENT_TIMESTAMP),
 ('ff-005', 'account_deletion_flow', 'Allow users to initiate GDPR/PIPA compliant account deletion', 'ALL', TRUE, 'SYSTEM', CURRENT_TIMESTAMP)
 ON CONFLICT (id) DO NOTHING;
+

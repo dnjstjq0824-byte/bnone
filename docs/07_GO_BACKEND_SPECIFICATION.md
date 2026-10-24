@@ -79,3 +79,4 @@ services/api/
    - Credit Account B: `+amount`
    - **Net Worth Impact:** Exactly zero (`Δ Net Worth = 0`).
 3. **Strict Tenant Isolation:** Every repository query MUST enforce `WHERE user_id = $1`. Attempts to query or mutate an account or transaction by ID without matching `user_id` return `404 Not Found` or `403 Forbidden`.
+

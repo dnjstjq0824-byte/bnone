@@ -34,3 +34,4 @@ CREATE TABLE IF NOT EXISTS budget_alert_rules (
     enabled BOOLEAN NOT NULL DEFAULT TRUE,
     last_triggered_at TIMESTAMP WITH TIME ZONE NULL
 );
+

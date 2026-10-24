@@ -31,3 +31,4 @@
 ### 2.2 Mobile Tests (`apps/mobile/test/widget_test.dart`)
 1. **`CurrencyFormatter minor units to major units formatting`**: Validates accurate formatting for KRW (`₩1,500,000`), USD (`$1,250.50`), JPY (`¥990`), EUR (`€50.00`), and privacy masking (`₩••••••`).
 2. **`BN ONE App initializes smoke test`**: Tests that `BnOneApp` with `ProviderScope` boots up correctly and mounts root widgets without exception.
+

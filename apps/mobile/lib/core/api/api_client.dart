@@ -93,3 +93,4 @@ class ApiException implements Exception {
   @override
   String toString() => message;
 }
+

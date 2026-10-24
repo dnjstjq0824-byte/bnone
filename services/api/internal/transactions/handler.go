@@ -542,3 +542,4 @@ func (h *Handler) populateTransactionDetails(t *models.Transaction) {
 		t.Splits = splits
 	}
 }
+

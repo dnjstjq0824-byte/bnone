@@ -234,3 +234,4 @@ func (h *Handler) AccountBalances(w http.ResponseWriter, r *http.Request) {
 
 	middleware.RespondJSON(w, r, http.StatusOK, results)
 }
+

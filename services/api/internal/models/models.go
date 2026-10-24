@@ -358,3 +358,4 @@ type FeatureFlag struct {
 	UpdatedBy   string    `json:"updated_by"`
 	UpdatedAt   time.Time `json:"updated_at"`
 }
+

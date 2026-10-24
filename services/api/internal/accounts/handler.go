@@ -528,3 +528,4 @@ func (h *Handler) convertToBase(amount int64, fromCurr, toCurr string) int64 {
 	// Return 1:1 fallback if unverified
 	return amount
 }
+

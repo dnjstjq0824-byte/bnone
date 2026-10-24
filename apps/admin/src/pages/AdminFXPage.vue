@@ -60,3 +60,4 @@ function formatDate(iso: string) {
   return new Date(iso).toISOString().slice(0, 10);
 }
 </script>
+

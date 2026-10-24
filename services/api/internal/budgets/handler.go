@@ -272,3 +272,4 @@ func (h *Handler) calculateBudgetSpent(userID, budgetID, startDate, endDate stri
 	}
 	return 0
 }
+

@@ -194,3 +194,4 @@ async function finishOnboarding() {
   router.push('/app');
 }
 </script>
+

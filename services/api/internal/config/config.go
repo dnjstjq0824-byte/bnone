@@ -47,3 +47,4 @@ func getEnvInt(key string, defaultVal int) int {
 	}
 	return defaultVal
 }
+

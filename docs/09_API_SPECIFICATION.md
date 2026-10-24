@@ -75,3 +75,4 @@
 - `POST /api/v1/admin/support/tickets/{id}/reply` — Post response to support inquiry.
 - `GET /api/v1/admin/audit-logs` — Query immutable administrative audit logs.
 - `GET /api/v1/admin/feature-flags` — Query and toggle runtime feature flags.
+

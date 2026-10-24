@@ -82,3 +82,4 @@ final appRouter = GoRouter(
 - **iOS:** Minimum iOS deployment target 13.0.
 - **Secure Storage:** Uses Android Keystore and iOS Keychain via `flutter_secure_storage` for refresh token protection.
 - **Offline Cache:** Cached snapshot of account balances and recent transactions stored locally in encrypted Key-Value storage.
+

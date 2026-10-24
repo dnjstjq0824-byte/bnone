@@ -25,3 +25,4 @@ export async function adminFetch<T = any>(endpoint: string, options: RequestInit
 
   return json.data as T;
 }
+

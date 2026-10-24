@@ -60,3 +60,4 @@ Every mutating API request performed by an operator executes inside a database t
 - `target_type` & `target_id`: Entity being impacted.
 - `ip_address` & `user_agent`: Client network metadata.
 - `changes`: JSON before/after state diff.
+

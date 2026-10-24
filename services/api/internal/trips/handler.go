@@ -375,3 +375,4 @@ func (h *Handler) calculateTripSpent(tripID string) int64 {
 	}
 	return 0
 }
+

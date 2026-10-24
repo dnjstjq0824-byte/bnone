@@ -59,3 +59,4 @@ export const useAdminAuthStore = defineStore('adminAuth', () => {
     logout,
   };
 });
+

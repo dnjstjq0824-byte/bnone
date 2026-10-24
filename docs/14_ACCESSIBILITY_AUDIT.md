@@ -28,3 +28,4 @@ BN ONE adheres to **WCAG 2.1 Level AA** standards across both Mobile (Flutter) a
 - **Screen Readers:** Verified using TalkBack (Android), VoiceOver (iOS/macOS), and NVDA (Windows).
 - **Reduced Motion:** Supports `@media (prefers-reduced-motion: reduce)` in web styles and disables large parallax transitions in Flutter.
 - **Dynamic Type / Font Scaling:** Tested up to 200% font size scaling without clipping or overflow errors on mobile screens.
+

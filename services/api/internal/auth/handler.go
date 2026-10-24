@@ -367,3 +367,4 @@ func (h *Handler) generateSessionTokens(userID, email, platform, deviceName stri
 		ExpiresIn:    86400,
 	}, nil
 }
+

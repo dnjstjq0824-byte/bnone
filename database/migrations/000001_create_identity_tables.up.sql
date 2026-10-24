@@ -59,3 +59,4 @@ CREATE TABLE IF NOT EXISTS consent_records (
 );
 
 CREATE INDEX IF NOT EXISTS idx_consent_records_user_id ON consent_records(user_id);
+

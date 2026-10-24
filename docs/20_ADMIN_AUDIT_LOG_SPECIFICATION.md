@@ -60,3 +60,4 @@ CREATE TABLE admin_audit_logs (
   }
 }
 ```
+

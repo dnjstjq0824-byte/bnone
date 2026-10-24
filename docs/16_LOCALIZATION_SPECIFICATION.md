@@ -39,3 +39,4 @@ BN ONE v1.0 targets global personal finance users with Day-1 localization suppor
    - Gregorian calendar standard across all platforms.
    - ISO-8601 strings (`2026-10-24T12:00:00Z`) used in API requests and serialized database storage.
    - Formatted for display using localized patterns (e.g., `YYYY년 MM월 DD일` in Korean, `MMM DD, YYYY` in English).
+

@@ -46,3 +46,4 @@ BN ONE manages communications to keep users aware of financial events without sp
 - **Schema:** Stored in `notifications(id, user_id, title, message, type, is_read, metadata, created_at)`.
 - **Read State:** Real-time badge counter decrements when user opens the notification drawer or clicks "Mark All as Read" (`PUT /api/v1/notifications/read`).
 - **User Opt-Outs:** Users can granularly disable marketing or budget alerts while keeping security-critical alerts mandatory.
+

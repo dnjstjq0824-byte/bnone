@@ -73,3 +73,4 @@ CREATE TABLE IF NOT EXISTS transaction_revisions (
 );
 
 CREATE INDEX IF NOT EXISTS idx_revisions_tx_id ON transaction_revisions(transaction_id);
+

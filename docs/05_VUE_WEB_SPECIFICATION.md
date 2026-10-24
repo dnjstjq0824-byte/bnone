@@ -61,3 +61,4 @@ apps/web/src/
    - All user-entered memo strings, category labels, and account names are automatically escaped to prevent Cross-Site Scripting (XSS).
 3. **Session Expiry Handling:**
    - HTTP 401 Unauthorized responses trigger automatic session termination and redirection to `/login` with an informational notice.
+

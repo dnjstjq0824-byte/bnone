@@ -52,3 +52,4 @@ External Central Bank / ECB / KEB Hana Feeds
 - Ingestion runs on a configurable cron schedule (`@hourly`).
 - If an external upstream API fails or times out, the worker implements exponential backoff retry (3 attempts).
 - The cached database rates remain active, annotated with the exact `updated_at` timestamp.
+

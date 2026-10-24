@@ -53,3 +53,4 @@ erDiagram
 2. **Account Balances:** Calculated atomically using database transactions (`SELECT ... FOR UPDATE` or transactional balance updates).
 3. **Foreign Keys:** All secondary tables enforce foreign keys pointing to `users(id)` with cascading or protected constraints (`ON DELETE CASCADE`).
 4. **Audit Immutability:** The `admin_audit_logs` table has no `UPDATE` or `DELETE` API handlers, ensuring an append-only verifiable audit trail.
+

@@ -46,3 +46,4 @@ CREATE TABLE IF NOT EXISTS fx_conversion_snapshots (
     provider_id VARCHAR(36) NOT NULL REFERENCES fx_providers(id),
     created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
+

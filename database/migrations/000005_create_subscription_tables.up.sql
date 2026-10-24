@@ -52,3 +52,4 @@ CREATE TABLE IF NOT EXISTS subscription_reminders (
     deduplication_key VARCHAR(100) NOT NULL UNIQUE,
     created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
+

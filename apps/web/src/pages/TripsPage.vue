@@ -150,3 +150,4 @@ async function viewReport(tripId: string) {
   alert(`[${report.trip.name} 결산 리포트]\n총 예산: ${report.total_budget_minor} KRW\n총 지출: ${report.total_spent_minor} KRW\n남은 금액: ${report.remaining_minor} KRW\n\n* ${report.fx_disclaimer}`);
 }
 </script>
+

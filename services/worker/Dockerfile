@@ -23,3 +23,4 @@ WORKDIR /app
 COPY --from=builder /bin/worker /app/worker
 
 ENTRYPOINT ["/app/worker"]
+
