@@ -1,0 +1,116 @@
+-- 000009_create_admin_and_security_tables.up.sql
+-- BN ONE v1.0 Admin RBAC, Audit Logging, Privacy Jobs & Outbox
+
+CREATE TABLE IF NOT EXISTS admin_users (
+    id VARCHAR(36) PRIMARY KEY,
+    email VARCHAR(255) NOT NULL UNIQUE,
+    password_hash VARCHAR(255) NOT NULL,
+    full_name VARCHAR(100) NOT NULL,
+    status VARCHAR(20) NOT NULL DEFAULT 'ACTIVE', -- ACTIVE, SUSPENDED, DEACTIVATED
+    mfa_enabled BOOLEAN NOT NULL DEFAULT FALSE,
+    created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS admin_roles (
+    id VARCHAR(36) PRIMARY KEY,
+    code VARCHAR(50) NOT NULL UNIQUE,
+    name VARCHAR(100) NOT NULL,
+    description TEXT NOT NULL DEFAULT ''
+);
+
+CREATE TABLE IF NOT EXISTS admin_permissions (
+    id VARCHAR(36) PRIMARY KEY,
+    code VARCHAR(100) NOT NULL UNIQUE,
+    resource VARCHAR(50) NOT NULL,
+    action VARCHAR(50) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS admin_role_permissions (
+    role_id VARCHAR(36) NOT NULL REFERENCES admin_roles(id) ON DELETE CASCADE,
+    permission_id VARCHAR(36) NOT NULL REFERENCES admin_permissions(id) ON DELETE CASCADE,
+    PRIMARY KEY (role_id, permission_id)
+);
+
+CREATE TABLE IF NOT EXISTS admin_user_roles (
+    admin_user_id VARCHAR(36) NOT NULL REFERENCES admin_users(id) ON DELETE CASCADE,
+    role_id VARCHAR(36) NOT NULL REFERENCES admin_roles(id) ON DELETE CASCADE,
+    assigned_by VARCHAR(36) NOT NULL,
+    assigned_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (admin_user_id, role_id)
+);
+
+CREATE TABLE IF NOT EXISTS audit_logs (
+    id VARCHAR(36) PRIMARY KEY,
+    actor_type VARCHAR(20) NOT NULL, -- USER, ADMIN, SYSTEM
+    actor_id VARCHAR(36) NOT NULL,
+    action VARCHAR(100) NOT NULL,
+    resource_type VARCHAR(50) NOT NULL,
+    resource_id VARCHAR(100) NOT NULL,
+    result VARCHAR(20) NOT NULL DEFAULT 'SUCCESS', -- SUCCESS, FAILURE, DENIED
+    metadata_redacted TEXT NOT NULL DEFAULT '{}',
+    request_id VARCHAR(36) NOT NULL DEFAULT '',
+    created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX IF NOT EXISTS idx_audit_logs_actor ON audit_logs(actor_type, actor_id, created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_audit_logs_resource ON audit_logs(resource_type, resource_id);
+
+CREATE TABLE IF NOT EXISTS data_export_jobs (
+    id VARCHAR(36) PRIMARY KEY,
+    user_id VARCHAR(36) NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    format VARCHAR(10) NOT NULL DEFAULT 'CSV', -- CSV, JSON
+    status VARCHAR(20) NOT NULL DEFAULT 'PENDING', -- PENDING, PROCESSING, COMPLETED, FAILED
+    storage_reference VARCHAR(255) NOT NULL DEFAULT '',
+    requested_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    completed_at TIMESTAMP WITH TIME ZONE NULL,
+    expires_at TIMESTAMP WITH TIME ZONE NULL
+);
+
+CREATE INDEX IF NOT EXISTS idx_data_export_jobs_user ON data_export_jobs(user_id);
+
+CREATE TABLE IF NOT EXISTS deletion_requests (
+    id VARCHAR(36) PRIMARY KEY,
+    user_id VARCHAR(36) NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    status VARCHAR(20) NOT NULL DEFAULT 'PENDING', -- PENDING, APPROVED, COMPLETED, REJECTED
+    requested_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    processed_at TIMESTAMP WITH TIME ZONE NULL,
+    retention_exception_reason TEXT NOT NULL DEFAULT ''
+);
+
+CREATE INDEX IF NOT EXISTS idx_deletion_requests_user ON deletion_requests(user_id);
+
+CREATE TABLE IF NOT EXISTS feature_flags (
+    id VARCHAR(36) PRIMARY KEY,
+    key VARCHAR(100) NOT NULL UNIQUE,
+    description TEXT NOT NULL DEFAULT '',
+    environment VARCHAR(20) NOT NULL DEFAULT 'ALL', -- ALL, DEV, STAGING, PROD
+    enabled BOOLEAN NOT NULL DEFAULT FALSE,
+    updated_by VARCHAR(36) NOT NULL DEFAULT 'SYSTEM',
+    updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS system_jobs (
+    id VARCHAR(36) PRIMARY KEY,
+    job_type VARCHAR(50) NOT NULL,
+    status VARCHAR(20) NOT NULL DEFAULT 'QUEUED', -- QUEUED, RUNNING, COMPLETED, FAILED
+    attempt_count INT NOT NULL DEFAULT 0,
+    scheduled_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    started_at TIMESTAMP WITH TIME ZONE NULL,
+    completed_at TIMESTAMP WITH TIME ZONE NULL,
+    error_summary TEXT NOT NULL DEFAULT ''
+);
+
+CREATE TABLE IF NOT EXISTS outbox_events (
+    id VARCHAR(36) PRIMARY KEY,
+    aggregate_type VARCHAR(50) NOT NULL,
+    aggregate_id VARCHAR(36) NOT NULL,
+    event_type VARCHAR(50) NOT NULL,
+    payload TEXT NOT NULL,
+    status VARCHAR(20) NOT NULL DEFAULT 'PENDING', -- PENDING, PROCESSED, FAILED
+    attempt_count INT NOT NULL DEFAULT 0,
+    created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    processed_at TIMESTAMP WITH TIME ZONE NULL
+);
+
+CREATE INDEX IF NOT EXISTS idx_outbox_events_status ON outbox_events(status, created_at ASC);

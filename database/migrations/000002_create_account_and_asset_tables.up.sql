@@ -1,0 +1,69 @@
+-- 000002_create_account_and_asset_tables.up.sql
+-- BN ONE v1.0 Accounts, Manual Assets & Liabilities
+
+CREATE TABLE IF NOT EXISTS finance_accounts (
+    id VARCHAR(36) PRIMARY KEY,
+    user_id VARCHAR(36) NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    name VARCHAR(100) NOT NULL,
+    account_type VARCHAR(50) NOT NULL, -- CASH, MANUAL_BANK, SAVINGS, E_WALLET_MANUAL, OTHER_ASSET, LIABILITY
+    currency_code VARCHAR(3) NOT NULL DEFAULT 'KRW',
+    opening_balance_minor BIGINT NOT NULL DEFAULT 0,
+    opening_balance_date DATE NOT NULL,
+    status VARCHAR(20) NOT NULL DEFAULT 'ACTIVE', -- ACTIVE, ARCHIVED, HIDDEN
+    color VARCHAR(20) NOT NULL DEFAULT '#2563EB',
+    icon VARCHAR(50) NOT NULL DEFAULT 'wallet',
+    sort_order INT NOT NULL DEFAULT 0,
+    created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    archived_at TIMESTAMP WITH TIME ZONE NULL
+);
+
+CREATE INDEX IF NOT EXISTS idx_finance_accounts_user_status ON finance_accounts(user_id, status);
+
+CREATE TABLE IF NOT EXISTS assets (
+    id VARCHAR(36) PRIMARY KEY,
+    user_id VARCHAR(36) NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    name VARCHAR(100) NOT NULL,
+    asset_type VARCHAR(50) NOT NULL, -- REAL_ESTATE, VEHICLE, INVESTMENT_MANUAL, CRYPTO_MANUAL, OTHER
+    currency_code VARCHAR(3) NOT NULL DEFAULT 'KRW',
+    estimated_value_minor BIGINT NOT NULL DEFAULT 0,
+    valuation_date DATE NOT NULL,
+    valuation_source VARCHAR(100) NOT NULL DEFAULT 'USER_ESTIMATE',
+    notes TEXT NOT NULL DEFAULT '',
+    status VARCHAR(20) NOT NULL DEFAULT 'ACTIVE', -- ACTIVE, ARCHIVED
+    created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX IF NOT EXISTS idx_assets_user_id ON assets(user_id, status);
+
+CREATE TABLE IF NOT EXISTS liabilities (
+    id VARCHAR(36) PRIMARY KEY,
+    user_id VARCHAR(36) NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    name VARCHAR(100) NOT NULL,
+    liability_type VARCHAR(50) NOT NULL, -- MORTGAGE, PERSONAL_LOAN, CREDIT_CARD_DEBT, STUDENT_LOAN, OTHER
+    currency_code VARCHAR(3) NOT NULL DEFAULT 'KRW',
+    outstanding_amount_minor BIGINT NOT NULL DEFAULT 0,
+    valuation_date DATE NOT NULL,
+    interest_rate_optional NUMERIC(5,2) NULL,
+    notes TEXT NOT NULL DEFAULT '',
+    status VARCHAR(20) NOT NULL DEFAULT 'ACTIVE', -- ACTIVE, SETTLED, ARCHIVED
+    created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX IF NOT EXISTS idx_liabilities_user_id ON liabilities(user_id, status);
+
+CREATE TABLE IF NOT EXISTS valuation_history (
+    id VARCHAR(36) PRIMARY KEY,
+    user_id VARCHAR(36) NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    asset_id VARCHAR(36) NULL REFERENCES assets(id) ON DELETE CASCADE,
+    liability_id VARCHAR(36) NULL REFERENCES liabilities(id) ON DELETE CASCADE,
+    value_minor BIGINT NOT NULL,
+    currency_code VARCHAR(3) NOT NULL,
+    valued_at DATE NOT NULL,
+    source_type VARCHAR(50) NOT NULL DEFAULT 'USER_ENTERED',
+    created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX IF NOT EXISTS idx_valuation_history_user ON valuation_history(user_id, valued_at);

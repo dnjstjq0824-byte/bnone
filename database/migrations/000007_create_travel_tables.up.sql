@@ -1,0 +1,48 @@
+-- 000007_create_travel_tables.up.sql
+-- BN ONE v1.0 Travel Management, Budgets, Expense Links & Notes
+
+CREATE TABLE IF NOT EXISTS trips (
+    id VARCHAR(36) PRIMARY KEY,
+    user_id VARCHAR(36) NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    name VARCHAR(100) NOT NULL,
+    country_code VARCHAR(2) NOT NULL,
+    city_name VARCHAR(100) NOT NULL DEFAULT '',
+    start_date DATE NOT NULL,
+    end_date DATE NOT NULL,
+    base_currency VARCHAR(3) NOT NULL DEFAULT 'KRW',
+    status VARCHAR(20) NOT NULL DEFAULT 'PLANNED', -- PLANNED, ACTIVE, COMPLETED, CANCELLED
+    notes TEXT NOT NULL DEFAULT '',
+    created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX IF NOT EXISTS idx_trips_user_date ON trips(user_id, start_date, end_date);
+
+CREATE TABLE IF NOT EXISTS trip_budgets (
+    id VARCHAR(36) PRIMARY KEY,
+    trip_id VARCHAR(36) NOT NULL REFERENCES trips(id) ON DELETE CASCADE,
+    category_id VARCHAR(36) NULL REFERENCES categories(id) ON DELETE SET NULL,
+    budget_amount_minor BIGINT NOT NULL,
+    currency_code VARCHAR(3) NOT NULL DEFAULT 'KRW',
+    created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS trip_expense_links (
+    id VARCHAR(36) PRIMARY KEY,
+    trip_id VARCHAR(36) NOT NULL REFERENCES trips(id) ON DELETE CASCADE,
+    transaction_id VARCHAR(36) NOT NULL REFERENCES transactions(id) ON DELETE CASCADE,
+    created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT uq_trip_transaction UNIQUE (trip_id, transaction_id)
+);
+
+CREATE INDEX IF NOT EXISTS idx_trip_links_trip ON trip_expense_links(trip_id);
+CREATE INDEX IF NOT EXISTS idx_trip_links_tx ON trip_expense_links(transaction_id);
+
+CREATE TABLE IF NOT EXISTS trip_notes (
+    id VARCHAR(36) PRIMARY KEY,
+    trip_id VARCHAR(36) NOT NULL REFERENCES trips(id) ON DELETE CASCADE,
+    content TEXT NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP
+);

@@ -1,0 +1,70 @@
+-- 000008_create_notification_and_support_tables.up.sql
+-- BN ONE v1.0 Notifications, Deliveries, Devices & Customer Support Tickets
+
+CREATE TABLE IF NOT EXISTS notifications (
+    id VARCHAR(36) PRIMARY KEY,
+    user_id VARCHAR(36) NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    type VARCHAR(50) NOT NULL, -- BUDGET_ALERT, RENEWAL_REMINDER, SYSTEM_NOTICE, SECURITY_ALERT, TRIP_UPDATE
+    title VARCHAR(200) NOT NULL,
+    body TEXT NOT NULL,
+    channel VARCHAR(20) NOT NULL DEFAULT 'IN_APP', -- IN_APP, PUSH, EMAIL
+    status VARCHAR(20) NOT NULL DEFAULT 'DELIVERED', -- PENDING, DELIVERED, READ, DISMISSED
+    scheduled_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    sent_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    read_at TIMESTAMP WITH TIME ZONE NULL,
+    created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX IF NOT EXISTS idx_notifications_user ON notifications(user_id, status, created_at DESC);
+
+CREATE TABLE IF NOT EXISTS notification_deliveries (
+    id VARCHAR(36) PRIMARY KEY,
+    notification_id VARCHAR(36) NOT NULL REFERENCES notifications(id) ON DELETE CASCADE,
+    attempt_number INT NOT NULL DEFAULT 1,
+    provider VARCHAR(50) NOT NULL DEFAULT 'INTERNAL',
+    delivery_status VARCHAR(20) NOT NULL DEFAULT 'SUCCESS', -- SUCCESS, FAILED
+    error_code VARCHAR(50) NULL,
+    attempted_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS devices (
+    id VARCHAR(36) PRIMARY KEY,
+    user_id VARCHAR(36) NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    platform VARCHAR(20) NOT NULL, -- ANDROID, IOS, WEB
+    device_identifier_hash VARCHAR(255) NOT NULL,
+    push_token_reference VARCHAR(255) NOT NULL DEFAULT '',
+    app_version VARCHAR(20) NOT NULL DEFAULT '1.0.0',
+    last_seen_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    revoked_at TIMESTAMP WITH TIME ZONE NULL
+);
+
+CREATE INDEX IF NOT EXISTS idx_devices_user ON devices(user_id);
+
+CREATE TABLE IF NOT EXISTS support_tickets (
+    id VARCHAR(36) PRIMARY KEY,
+    user_id VARCHAR(36) NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    subject VARCHAR(200) NOT NULL,
+    category VARCHAR(50) NOT NULL DEFAULT 'GENERAL', -- GENERAL, BILLING, BUG, ACCOUNT
+    description TEXT NOT NULL,
+    priority VARCHAR(20) NOT NULL DEFAULT 'NORMAL', -- LOW, NORMAL, HIGH, URGENT
+    status VARCHAR(20) NOT NULL DEFAULT 'OPEN', -- OPEN, IN_PROGRESS, WAITING_FOR_USER, RESOLVED, CLOSED
+    assigned_admin_id VARCHAR(36) NULL,
+    created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    resolved_at TIMESTAMP WITH TIME ZONE NULL
+);
+
+CREATE INDEX IF NOT EXISTS idx_support_tickets_user ON support_tickets(user_id, status);
+CREATE INDEX IF NOT EXISTS idx_support_tickets_status ON support_tickets(status);
+
+CREATE TABLE IF NOT EXISTS support_messages (
+    id VARCHAR(36) PRIMARY KEY,
+    ticket_id VARCHAR(36) NOT NULL REFERENCES support_tickets(id) ON DELETE CASCADE,
+    sender_type VARCHAR(20) NOT NULL, -- USER, ADMIN, SYSTEM
+    sender_id VARCHAR(36) NOT NULL,
+    message TEXT NOT NULL,
+    visibility VARCHAR(20) NOT NULL DEFAULT 'PUBLIC', -- PUBLIC, INTERNAL_ONLY
+    created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX IF NOT EXISTS idx_support_messages_ticket ON support_messages(ticket_id, created_at ASC);

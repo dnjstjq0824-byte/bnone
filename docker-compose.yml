@@ -1,0 +1,81 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: bnone-postgres
+    environment:
+      POSTGRES_USER: bnone
+      POSTGRES_PASSWORD: bnone_secret
+      POSTGRES_DB: bnone_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./database/fixtures/01_seed_initial_data.sql:/docker-entrypoint-initdb.d/01_seed.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U bnone -d bnone_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: bnone-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redisdata:/data
+
+  api:
+    build:
+      context: .
+      dockerfile: services/api/Dockerfile
+    container_name: bnone-api
+    ports:
+      - "8080:8080"
+    environment:
+      PORT: "8080"
+      DATABASE_URL: "postgres://bnone:bnone_secret@postgres:5432/bnone_db?sslmode=disable"
+      REDIS_URL: "redis://redis:6379/0"
+      JWT_SECRET: "bnone-production-grade-jwt-secret-key-256bit-min"
+      BASE_CURRENCY: "KRW"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  worker:
+    build:
+      context: .
+      dockerfile: services/worker/Dockerfile
+    container_name: bnone-worker
+    environment:
+      DATABASE_URL: "postgres://bnone:bnone_secret@postgres:5432/bnone_db?sslmode=disable"
+      REDIS_URL: "redis://redis:6379/0"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  web:
+    build:
+      context: apps/web
+      dockerfile: Dockerfile
+    container_name: bnone-web
+    ports:
+      - "3000:80"
+    depends_on:
+      - api
+
+  admin:
+    build:
+      context: apps/admin
+      dockerfile: Dockerfile
+    container_name: bnone-admin
+    ports:
+      - "3001:80"
+    depends_on:
+      - api
+
+volumes:
+  pgdata:
+  redisdata:
