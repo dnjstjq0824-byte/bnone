@@ -1,4 +1,4 @@
-export const API_BASE = '/api/v1';
+export const API_BASE = (import.meta.env.VITE_API_URL || '') + '/api/v1';
 
 export async function adminFetch<T = any>(endpoint: string, options: RequestInit = {}): Promise<T> {
   const token = localStorage.getItem('bn_admin_token');

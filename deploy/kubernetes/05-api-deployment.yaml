@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bnone-api
+  namespace: bnone-prod
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: bnone-api
+  template:
+    metadata:
+      labels:
+        app: bnone-api
+    spec:
+      containers:
+        - name: api
+          image: ghcr.io/dnjstjq0824-byte/bnone-api:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+          envFrom:
+            - configMapRef:
+                name: bnone-config
+            - secretRef:
+                name: bnone-secrets
+          readinessProbe:
+            httpGet:
+              path: /readyz
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 8080
+            initialDelaySeconds: 10
+            periodSeconds: 15
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: bnone-api-svc
+  namespace: bnone-prod
+spec:
+  ports:
+    - port: 8080
+      targetPort: 8080
+  selector:
+    app: bnone-api
+

@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: bnone-prod
+  labels:
+    app.kubernetes.io/name: bn-one
+    app.kubernetes.io/part-of: bn-one-super-app
+

@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bnone-admin
+  namespace: bnone-prod
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bnone-admin
+  template:
+    metadata:
+      labels:
+        app: bnone-admin
+    spec:
+      containers:
+        - name: admin
+          image: ghcr.io/dnjstjq0824-byte/bnone-admin:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 80
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi
+            limits:
+              cpu: 250m
+              memory: 256Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: bnone-admin-svc
+  namespace: bnone-prod
+spec:
+  ports:
+    - port: 80
+      targetPort: 80
+  selector:
+    app: bnone-admin
+

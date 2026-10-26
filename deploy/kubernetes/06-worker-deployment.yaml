@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bnone-worker
+  namespace: bnone-prod
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bnone-worker
+  template:
+    metadata:
+      labels:
+        app: bnone-worker
+    spec:
+      containers:
+        - name: worker
+          image: ghcr.io/dnjstjq0824-byte/bnone-worker:latest
+          imagePullPolicy: IfNotPresent
+          envFrom:
+            - configMapRef:
+                name: bnone-config
+            - secretRef:
+                name: bnone-secrets
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi
+            limits:
+              cpu: 250m
+              memory: 256Mi
+

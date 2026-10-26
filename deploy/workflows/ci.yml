@@ -1,0 +1,100 @@
+name: BN ONE CI - Master Verification
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  backend-test:
+    name: Go Backend & Worker Build & Test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.24'
+          cache: true
+
+      - name: Run Financial Integrity Unit Tests
+        run: |
+          cd services/api
+          go test -v ./internal/transactions/...
+
+      - name: Build API Server Binary
+        run: |
+          cd services/api
+          go build -v -o bin/api ./cmd/server
+
+      - name: Build Worker Binary
+        run: |
+          cd services/worker
+          go build -v -o bin/worker ./cmd
+
+  web-admin-build:
+    name: Vue 3 User Web & Admin Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+          cache-dependency-path: |
+            apps/web/package-lock.json
+            apps/admin/package-lock.json
+
+      - name: Build User Web Application
+        run: |
+          cd apps/web
+          npm ci
+          npm run build
+
+      - name: Build Operations Admin Console
+        run: |
+          cd apps/admin
+          npm ci
+          npm run build
+
+  mobile-verify:
+    name: Flutter Mobile Analyze & Test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.47.x'
+          channel: 'stable'
+          cache: true
+
+      - name: Flutter Dependencies
+        run: |
+          cd apps/mobile
+          flutter pub get
+
+      - name: Flutter Static Analysis
+        run: |
+          cd apps/mobile
+          flutter analyze --no-fatal-infos
+
+      - name: Flutter Unit & Widget Tests
+        run: |
+          cd apps/mobile
+          flutter test
+

@@ -42,10 +42,19 @@ func main() {
 	// Automatically run migrations and fixtures
 	migrationsPath := "./database/migrations"
 	fixturesPath := "./database/fixtures"
-	// Check if run from repository root or services/api
-	if _, err := os.Stat(migrationsPath); os.IsNotExist(err) {
-		migrationsPath = "../../database/migrations"
-		fixturesPath = "../../database/fixtures"
+	if custom := os.Getenv("MIGRATIONS_PATH"); custom != "" {
+		migrationsPath = custom
+	} else if _, err := os.Stat(migrationsPath); os.IsNotExist(err) {
+		if _, err := os.Stat("./migrations"); err == nil {
+			migrationsPath = "./migrations"
+			fixturesPath = "./fixtures"
+		} else {
+			migrationsPath = "../../database/migrations"
+			fixturesPath = "../../database/fixtures"
+		}
+	}
+	if customFixtures := os.Getenv("FIXTURES_PATH"); customFixtures != "" {
+		fixturesPath = customFixtures
 	}
 	if err := db.Migrate(migrationsPath, fixturesPath); err != nil {
 		log.Printf("[DB] Migration warning: %v", err)

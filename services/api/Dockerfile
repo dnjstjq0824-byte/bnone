@@ -23,7 +23,10 @@ RUN apk --no-cache add ca-certificates tzdata
 WORKDIR /app
 COPY --from=builder /bin/api /app/api
 COPY database/migrations /app/migrations
+COPY database/fixtures /app/fixtures
+
+ENV MIGRATIONS_PATH=/app/migrations
+ENV FIXTURES_PATH=/app/fixtures
 
 EXPOSE 8080
 ENTRYPOINT ["/app/api"]
-

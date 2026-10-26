@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bnone-web
+  namespace: bnone-prod
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: bnone-web
+  template:
+    metadata:
+      labels:
+        app: bnone-web
+    spec:
+      containers:
+        - name: web
+          image: ghcr.io/dnjstjq0824-byte/bnone-web:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 80
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi
+            limits:
+              cpu: 250m
+              memory: 256Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: bnone-web-svc
+  namespace: bnone-prod
+spec:
+  ports:
+    - port: 80
+      targetPort: 80
+  selector:
+    app: bnone-web
+
