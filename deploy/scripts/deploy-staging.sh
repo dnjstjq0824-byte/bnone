@@ -39,3 +39,4 @@ echo "User Web:     http://localhost:3000"
 echo "Admin Console: http://localhost:3001"
 echo "API Server:   http://localhost:8080/api/v1"
 echo "Healthcheck:  http://localhost:8080/healthz"
+

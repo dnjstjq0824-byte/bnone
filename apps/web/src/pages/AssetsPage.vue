@@ -1,11 +1,11 @@
 <template>
   <div class="space-y-6">
-    <div class="flex items-center justify-between">
+    <div class="flex flex-wrap items-center justify-between gap-4">
       <div>
         <h1 class="text-2xl font-black text-slate-900 tracking-tight">자산 & 부채 관리</h1>
         <p class="text-xs text-slate-500 mt-0.5">수동 금융계정 및 보유 자산·부채를 체계적으로 관리합니다.</p>
       </div>
-      <div class="flex items-center gap-2">
+      <div class="flex flex-wrap items-center gap-2">
         <button
           @click="showAddAccountModal = true"
           class="px-3.5 py-2 bg-brand-600 hover:bg-brand-700 text-white rounded-xl text-xs font-bold shadow-sm transition-all"
@@ -35,6 +35,10 @@
       </p>
     </div>
 
+    <div v-if="loadError" role="alert" class="p-4 rounded-xl bg-red-50 text-red-700 text-sm">{{ loadError }} <button class="underline ml-2" @click="loadData">다시 시도</button></div>
+    <p v-if="loading" role="status" class="text-sm text-slate-500">자산 정보를 불러오는 중이에요.</p>
+    <AssetEntryDialog v-if="showAddAssetModal" kind="asset" @close="showAddAssetModal = false" @saved="entrySaved" />
+    <AssetEntryDialog v-if="showAddLiabilityModal" kind="liability" @close="showAddLiabilityModal = false" @saved="entrySaved" />
     <!-- Accounts Section -->
     <div class="bg-white p-6 rounded-3xl border border-slate-200 card-shadow space-y-4">
       <h2 class="text-base font-bold text-slate-900">금융 계정 장부 ({{ accounts.length }})</h2>
@@ -157,12 +161,15 @@
 import { ref, onMounted } from 'vue';
 import { apiFetch } from '../api/client';
 import { useFinanceStore } from '../stores/finance';
+import AssetEntryDialog from '../components/AssetEntryDialog.vue';
 
 const finance = useFinanceStore();
 
 const accounts = ref<any[]>([]);
 const assets = ref<any[]>([]);
 const liabilities = ref<any[]>([]);
+const loading = ref(false);
+const loadError = ref('');
 
 const showAddAccountModal = ref(false);
 const showAddAssetModal = ref(false);
@@ -176,6 +183,9 @@ const newAcc = ref({
 });
 
 async function loadData() {
+  loading.value = true;
+  loadError.value = '';
+  try {
   const [accs, asts, liabs] = await Promise.all([
     apiFetch('/accounts'),
     apiFetch('/assets'),
@@ -184,6 +194,18 @@ async function loadData() {
   accounts.value = accs;
   assets.value = asts;
   liabilities.value = liabs;
+  } catch {
+    loadError.value = '자산 정보를 불러오지 못했어요. 표시된 정보가 최신이 아닐 수 있어요.';
+  } finally {
+    loading.value = false;
+  }
+}
+
+async function entrySaved() {
+  showAddAssetModal.value = false;
+  showAddLiabilityModal.value = false;
+  await loadData();
+  await finance.loadDashboard();
 }
 
 onMounted(() => {

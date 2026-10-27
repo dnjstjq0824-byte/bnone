@@ -80,6 +80,19 @@ flutter run
 docker compose up -d --build
 ```
 
+### 3.6 Production Kubernetes Deployment
+```bash
+kubectl apply -f deploy/kubernetes/
+```
+Production manifests deploy PostgreSQL 16 StatefulSet with persistent volumes, Redis cache, auto-scaling API deployment with readiness/liveness probes, background worker, Nginx-backed SPA user web and admin console, and Nginx Ingress with Let's Encrypt TLS termination.
+
+### 3.7 CI/CD & Deployment Workflows
+Automated CI/CD pipelines are located in [`deploy/workflows/`](file:///c:/Users/dnjst/Desktop/project/bnmoeny/deploy/workflows):
+- `ci.yml`: Full automated testing and verification across Go backend, Vue web/admin, and Flutter mobile.
+- `deploy.yml`: Production container build and registry deployment pipeline.
+- `deploy/scripts/`: `backup.sh` (Postgres automated backup with 14-day retention), `restore.sh` (database restore), `deploy-staging.sh` (staging verification script).
+
+
 ---
 
 ## 4. Master Documentation Index (`docs/`)

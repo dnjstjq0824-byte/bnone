@@ -42,10 +42,12 @@ export const useFinanceStore = defineStore('finance', () => {
   const recentTransactions = ref<TransactionItem[]>([]);
   const analyticsOverview = ref<any>(null);
   const isLoading = ref<boolean>(false);
+  const dashboardError = ref('');
   const maskAmounts = ref<boolean>(false);
 
   async function loadDashboard() {
     isLoading.value = true;
+    dashboardError.value = '';
     try {
       const [accs, nw, txs, overview] = await Promise.all([
         apiFetch<FinanceAccount[]>('/accounts'),
@@ -57,6 +59,12 @@ export const useFinanceStore = defineStore('finance', () => {
       netWorth.value = nw;
       recentTransactions.value = txs;
       analyticsOverview.value = overview;
+    } catch {
+      accounts.value = [];
+      netWorth.value = null;
+      recentTransactions.value = [];
+      analyticsOverview.value = null;
+      dashboardError.value = '금융 정보를 불러오지 못했어요. 연결을 확인하고 다시 시도해주세요.';
     } finally {
       isLoading.value = false;
     }
@@ -78,6 +86,7 @@ export const useFinanceStore = defineStore('finance', () => {
     recentTransactions,
     analyticsOverview,
     isLoading,
+    dashboardError,
     maskAmounts,
     loadDashboard,
     formatCurrency,
