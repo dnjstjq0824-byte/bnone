@@ -32,41 +32,72 @@ class _BudgetsScreenState extends State<BudgetsScreen> {
     }
   }
 
-  void _showCreateBudgetDialog() {
+  void _showCreateBudgetSheet() {
     final nameCtrl = TextEditingController(text: '이번 달 생활비');
     final limitCtrl = TextEditingController(text: '1000000');
 
-    showDialog(
+    showModalBottomSheet(
       context: context,
-      builder: (ctx) => AlertDialog(
-        title: const Text('새 예산 생성', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-        content: Column(
+      isScrollControlled: true,
+      backgroundColor: Colors.white,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
+      ),
+      builder: (ctx) => Padding(
+        padding: EdgeInsets.only(
+          left: 24,
+          right: 24,
+          top: 28,
+          bottom: MediaQuery.of(ctx).viewInsets.bottom + 28,
+        ),
+        child: Column(
           mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            TextField(controller: nameCtrl, decoration: const InputDecoration(labelText: '예산 이름')),
-            const SizedBox(height: 12),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text(
+                  '새 목표 예산 설정',
+                  style: TextStyle(
+                    fontSize: 19,
+                    fontWeight: FontWeight.w800,
+                    color: AppColors.textPrimary,
+                  ),
+                ),
+                IconButton(
+                  icon: const Icon(Icons.close, color: AppColors.textTertiary),
+                  onPressed: () => Navigator.pop(ctx),
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+            TextField(
+              controller: nameCtrl,
+              decoration: const InputDecoration(labelText: '예산 이름', hintText: '예: 이번 달 생활비, 식비 예산'),
+            ),
+            const SizedBox(height: 14),
             TextField(
               controller: limitCtrl,
               keyboardType: TextInputType.number,
-              decoration: const InputDecoration(labelText: '예산 한도 (KRW)'),
+              decoration: const InputDecoration(labelText: '예산 한도', hintText: '1,000,000', suffixText: '원'),
+            ),
+            const SizedBox(height: 24),
+            ElevatedButton(
+              onPressed: () async {
+                if (nameCtrl.text.trim().isEmpty) return;
+                Navigator.pop(ctx);
+                await ApiClient().post('/budgets', {
+                  'name': nameCtrl.text.trim(),
+                  'limit_minor': int.tryParse(limitCtrl.text.trim()) ?? 1000000,
+                  'period_type': 'MONTHLY',
+                });
+                _loadBudgets();
+              },
+              child: const Text('예산 만들기'),
             ),
           ],
         ),
-        actions: [
-          TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('취소')),
-          ElevatedButton(
-            onPressed: () async {
-              Navigator.pop(ctx);
-              await ApiClient().post('/budgets', {
-                'name': nameCtrl.text.trim(),
-                'limit_minor': int.tryParse(limitCtrl.text.trim()) ?? 1000000,
-                'period_type': 'MONTHLY',
-              });
-              _loadBudgets();
-            },
-            child: const Text('생성'),
-          ),
-        ],
       ),
     );
   }
@@ -74,97 +105,148 @@ class _BudgetsScreenState extends State<BudgetsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.background,
       appBar: AppBar(
-        title: const Text('예산 관리'),
+        title: const Text('예산 계획'),
         actions: [
-          IconButton(icon: const Icon(Icons.add), onPressed: _showCreateBudgetDialog),
+          IconButton(
+            icon: const Icon(Icons.add, color: AppColors.textPrimary),
+            onPressed: _showCreateBudgetSheet,
+            tooltip: '예산 만들기',
+          ),
         ],
       ),
       body: _isLoading
-          ? const Center(child: CircularProgressIndicator())
+          ? const Center(child: CircularProgressIndicator(color: AppColors.brandPrimary))
           : _budgets.isEmpty
               ? Center(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Icon(Icons.track_changes, size: 48, color: AppColors.textSecondary),
+                      Container(
+                        width: 64,
+                        height: 64,
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFE5F7F0),
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: const Icon(Icons.track_changes_rounded, size: 32, color: Color(0xFF00B06B)),
+                      ),
                       const SizedBox(height: 16),
-                      const Text('설정된 예산이 없습니다.', style: TextStyle(fontWeight: FontWeight.bold)),
-                      const SizedBox(height: 12),
-                      ElevatedButton(onPressed: _showCreateBudgetDialog, child: const Text('예산 만들기')),
+                      const Text(
+                        '설정된 예산이 없습니다.',
+                        style: TextStyle(fontWeight: FontWeight.w700, fontSize: 16, color: AppColors.textPrimary),
+                      ),
+                      const SizedBox(height: 8),
+                      const Text(
+                        '목표 예산을 세우고 똑똑하게 지출을 관리해보세요.',
+                        style: TextStyle(fontSize: 13, color: AppColors.textTertiary),
+                      ),
+                      const SizedBox(height: 20),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 40),
+                        child: ElevatedButton(
+                          onPressed: _showCreateBudgetSheet,
+                          child: const Text('첫 예산 세우기'),
+                        ),
+                      ),
                     ],
                   ),
                 )
-              : ListView.builder(
-                  padding: const EdgeInsets.all(16),
-                  itemCount: _budgets.length,
-                  itemBuilder: (context, index) {
-                    final b = _budgets[index];
-                    final double percent = (b['usage_percent'] ?? 0.0).toDouble();
+              : RefreshIndicator(
+                  color: AppColors.brandPrimary,
+                  onRefresh: _loadBudgets,
+                  child: ListView.builder(
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    itemCount: _budgets.length,
+                    itemBuilder: (context, index) {
+                      final b = _budgets[index];
+                      final double percent = (b['usage_percent'] ?? 0.0).toDouble();
+                      final remaining = ((b['limit_minor'] ?? 0) - (b['spent_minor'] ?? 0)).clamp(0, 9999999999);
 
-                    return Card(
-                      margin: const EdgeInsets.only(bottom: 12),
-                      child: Padding(
-                        padding: const EdgeInsets.all(16),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(b['name'] ?? '', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
-                                Container(
-                                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                                  decoration: BoxDecoration(
-                                    color: percent >= 100
-                                        ? AppColors.danger.withOpacity(0.1)
-                                        : percent >= 80
-                                            ? AppColors.warning.withOpacity(0.1)
-                                            : AppColors.success.withOpacity(0.1),
-                                    borderRadius: BorderRadius.circular(8),
+                      return Card(
+                        child: Padding(
+                          padding: const EdgeInsets.all(22),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    b['name'] ?? '',
+                                    style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 16, color: AppColors.textPrimary),
                                   ),
-                                  child: Text(
-                                    '${percent.toStringAsFixed(1)}% 사용',
-                                    style: TextStyle(
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                                    decoration: BoxDecoration(
                                       color: percent >= 100
-                                          ? AppColors.danger
+                                          ? const Color(0xFFFEECEB)
                                           : percent >= 80
-                                              ? AppColors.warning
-                                              : AppColors.success,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 11,
+                                              ? const Color(0xFFFFF3E2)
+                                              : AppColors.primaryLight,
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    child: Text(
+                                      '${percent.toStringAsFixed(0)}% 사용',
+                                      style: TextStyle(
+                                        color: percent >= 100
+                                            ? AppColors.danger
+                                            : percent >= 80
+                                                ? const Color(0xFFFF8D00)
+                                                : AppColors.brandPrimary,
+                                        fontWeight: FontWeight.w700,
+                                        fontSize: 12,
+                                      ),
                                     ),
                                   ),
+                                ],
+                              ),
+                              const SizedBox(height: 14),
+                              Text(
+                                '남은 예산 ${CurrencyFormatter.format(remaining)}',
+                                style: const TextStyle(
+                                  fontSize: 22,
+                                  fontWeight: FontWeight.w800,
+                                  color: AppColors.textPrimary,
+                                  letterSpacing: -0.5,
                                 ),
-                              ],
-                            ),
-                            const SizedBox(height: 12),
-                            LinearProgressIndicator(
-                              value: (percent / 100).clamp(0.0, 1.0),
-                              backgroundColor: AppColors.border,
-                              color: percent >= 100
-                                  ? AppColors.danger
-                                  : percent >= 80
-                                      ? AppColors.warning
-                                      : AppColors.brandPrimary,
-                              minHeight: 8,
-                              borderRadius: BorderRadius.circular(4),
-                            ),
-                            const SizedBox(height: 12),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text('사용: ${CurrencyFormatter.format(b['spent_minor'] ?? 0)}', style: const TextStyle(fontSize: 12, color: AppColors.textSecondary)),
-                                Text('한도: ${CurrencyFormatter.format(b['limit_minor'] ?? 0)}', style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
-                              ],
-                            ),
-                          ],
+                              ),
+                              const SizedBox(height: 14),
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(8),
+                                child: LinearProgressIndicator(
+                                  value: (percent / 100).clamp(0.0, 1.0),
+                                  backgroundColor: AppColors.background,
+                                  color: percent >= 100
+                                      ? AppColors.danger
+                                      : percent >= 80
+                                          ? const Color(0xFFFF8D00)
+                                          : AppColors.brandPrimary,
+                                  minHeight: 8,
+                                ),
+                              ),
+                              const SizedBox(height: 14),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    '쓴 돈 ${CurrencyFormatter.format(b['spent_minor'] ?? 0)}',
+                                    style: const TextStyle(fontSize: 13, color: AppColors.textSecondary, fontWeight: FontWeight.w500),
+                                  ),
+                                  Text(
+                                    '목표 ${CurrencyFormatter.format(b['limit_minor'] ?? 0)}',
+                                    style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: AppColors.textPrimary),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                    );
-                  },
+                      );
+                    },
+                  ),
                 ),
     );
   }
 }
-

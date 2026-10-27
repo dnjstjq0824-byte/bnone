@@ -1,110 +1,132 @@
 <template>
   <div class="space-y-6">
+    <!-- Header -->
     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
       <div>
-        <h1 class="text-2xl font-black text-slate-900 tracking-tight">거래 내역 장부</h1>
-        <p class="text-xs text-slate-500 mt-0.5">수입, 지출 및 계정 간 이동 기록을 검색하고 관리합니다.</p>
+        <h1 class="text-2xl font-bold tracking-tight text-[#191F28]">소비 & 거래 내역</h1>
+        <p class="text-sm text-[#8B95A1] mt-1">수입, 지출 및 계정 간 자금 이동 기록을 확인해요.</p>
       </div>
       <div class="flex items-center gap-2">
         <button
           @click="exportCSV"
-          class="px-3.5 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5"
+          class="inline-flex items-center gap-2 px-4 py-2.5 bg-white hover:bg-[#F2F4F6] text-[#4E5968] rounded-xl text-sm font-semibold border border-[#E5E8EB] transition-colors"
         >
-          <span>📥</span>
+          <Download :size="16" />
           <span>CSV 내보내기</span>
         </button>
         <RouterLink
           to="/app/transactions/new"
-          class="px-4 py-2 bg-brand-600 hover:bg-brand-700 text-white rounded-xl text-xs font-bold shadow-md shadow-brand-600/20 transition-all flex items-center gap-1.5"
+          class="inline-flex items-center gap-1.5 px-4 py-2.5 bg-[#3182F6] hover:bg-[#1B64DA] text-white rounded-xl text-sm font-bold shadow-sm transition-colors"
         >
-          <span>+</span>
-          <span>거래 추가</span>
+          <Plus :size="18" />
+          <span>거래 기록하기</span>
         </RouterLink>
       </div>
     </div>
 
-    <!-- Filters & Search -->
-    <div class="bg-white p-4 rounded-2xl border border-slate-200 card-shadow flex flex-wrap items-center gap-3">
-      <div class="flex-1 min-w-[200px]">
+    <!-- Filters & Search (Toss Pill Filter Style) -->
+    <div class="bg-white p-4 rounded-2xl flex flex-wrap items-center justify-between gap-4">
+      <div class="flex items-center gap-1.5 p-1 bg-[#F2F4F6] rounded-xl">
+        <button
+          v-for="tab in filterTabs"
+          :key="tab.value"
+          @click="selectFilter(tab.value)"
+          class="px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all"
+          :class="filterType === tab.value ? 'bg-white text-[#191F28] shadow-sm' : 'text-[#8B95A1] hover:text-[#4E5968]'"
+        >
+          {{ tab.label }}
+        </button>
+      </div>
+
+      <div class="relative flex-1 min-w-[220px] max-w-sm">
+        <Search :size="16" class="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#8B95A1]" />
         <input
           v-model="searchQuery"
           @input="fetchTransactions"
           type="text"
-          placeholder="상호명, 설명 검색..."
-          class="w-full px-3.5 py-2 rounded-xl border border-slate-200 text-xs focus:outline-none focus:border-brand-600"
+          placeholder="상호명, 메모 검색"
+          class="w-full pl-9 pr-3.5 py-2 bg-[#F9FAFB] rounded-xl text-xs text-[#191F28] placeholder-[#8B95A1] border border-transparent focus:border-[#3182F6] focus:bg-white focus:outline-none transition-colors"
         />
       </div>
+    </div>
 
-      <div class="flex items-center gap-2">
-        <select
-          v-model="filterType"
-          @change="fetchTransactions"
-          class="px-3 py-2 rounded-xl border border-slate-200 text-xs bg-white font-medium text-slate-700"
+    <!-- Mandatory Notice (Article 1.5) -->
+    <div class="p-3.5 rounded-2xl bg-[#E8F3FF] flex items-center gap-2.5">
+      <span class="text-[#3182F6] text-sm">ℹ️</span>
+      <p class="text-xs text-[#1B64DA] font-semibold">
+        BN ONE의 거래 기록은 사용자가 직접 입력한 장부이며 실제 금융기관 거래를 실행하지 않습니다.
+      </p>
+    </div>
+
+    <!-- Transaction List Card (Toss Timeline Style) -->
+    <div class="bg-white rounded-3xl p-6">
+      <div v-if="loading" class="text-center py-16 text-sm text-[#8B95A1]">
+        거래 내역을 불러오는 중이에요...
+      </div>
+      <div v-else-if="transactions.length === 0" class="text-center py-16">
+        <div class="w-14 h-14 mx-auto mb-4 rounded-2xl bg-[#F2F4F6] flex items-center justify-center text-[#8B95A1]">
+          <ReceiptText :size="28" />
+        </div>
+        <h3 class="text-base font-bold text-[#191F28]">기록된 거래가 없어요</h3>
+        <p class="text-xs text-[#8B95A1] mt-1">오늘 쓴 커피 한 잔부터 가볍게 기록해보세요.</p>
+        <RouterLink
+          to="/app/transactions/new"
+          class="inline-block mt-4 px-4 py-2 bg-[#3182F6] text-white rounded-xl text-xs font-bold"
         >
-          <option value="">전체 종류</option>
-          <option value="EXPENSE">지출</option>
-          <option value="INCOME">수입</option>
-          <option value="TRANSFER">계정 이동</option>
-        </select>
+          첫 거래 기록하기
+        </RouterLink>
       </div>
-    </div>
+      <div v-else class="divide-y divide-[#F2F4F6]">
+        <div
+          v-for="tx in transactions"
+          :key="tx.id"
+          class="py-4 first:pt-0 last:pb-0 flex items-center justify-between gap-4 group hover:bg-[#F9FAFB] px-2 rounded-2xl transition-colors"
+        >
+          <div class="flex items-center gap-3.5 min-w-0">
+            <div
+              class="w-11 h-11 rounded-2xl flex items-center justify-center flex-shrink-0"
+              :class="tx.transaction_type === 'INCOME' ? 'bg-[#E8F3FF] text-[#3182F6]' : tx.transaction_type === 'TRANSFER' ? 'bg-[#F1EDFF] text-[#8061D9]' : 'bg-[#F2F4F6] text-[#4E5968]'"
+            >
+              <ArrowDownLeft v-if="tx.transaction_type === 'INCOME'" :size="20" />
+              <ArrowLeftRight v-else-if="tx.transaction_type === 'TRANSFER'" :size="20" />
+              <ArrowUpRight v-else :size="20" />
+            </div>
+            <div class="min-w-0">
+              <div class="flex items-center gap-2">
+                <p class="text-sm font-bold text-[#191F28] truncate">{{ tx.description || tx.merchant_name || '거래 기록' }}</p>
+                <span
+                  class="px-2 py-0.5 rounded-md text-[10px] font-bold"
+                  :class="tx.transaction_type === 'INCOME' ? 'bg-[#E8F3FF] text-[#3182F6]' : tx.transaction_type === 'TRANSFER' ? 'bg-[#F1EDFF] text-[#8061D9]' : 'bg-[#F2F4F6] text-[#6B7684]'"
+                >
+                  {{ tx.transaction_type === 'INCOME' ? '수입' : tx.transaction_type === 'TRANSFER' ? '이동' : '지출' }}
+                </span>
+              </div>
+              <p class="text-xs text-[#8B95A1] mt-0.5 truncate">
+                {{ formatDate(tx.occurred_at) }}
+                <span v-if="tx.category_name"> · {{ tx.category_name }}</span>
+                <span v-if="tx.merchant_name && tx.description !== tx.merchant_name"> · {{ tx.merchant_name }}</span>
+              </p>
+            </div>
+          </div>
 
-    <!-- Mandatory Notice -->
-    <div class="text-[11px] text-slate-400 px-1">
-      * BN ONE의 거래 기록은 실제 금융기관 거래를 실행하지 않습니다.
-    </div>
-
-    <!-- Transaction Table -->
-    <div class="bg-white rounded-3xl border border-slate-200 card-shadow overflow-hidden">
-      <div v-if="loading" class="text-center py-12 text-xs text-slate-400">
-        거래 내역을 불러오는 중...
-      </div>
-      <div v-else-if="transactions.length === 0" class="text-center py-12 text-xs text-slate-400">
-        조회된 거래 내역이 없습니다.
-      </div>
-      <table v-else class="w-full text-left border-collapse">
-        <thead>
-          <tr class="border-b border-slate-100 bg-slate-50/70 text-[11px] font-bold text-slate-400">
-            <th class="py-3 px-5">날짜</th>
-            <th class="py-3 px-4">종류</th>
-            <th class="py-3 px-4">설명 / 상호명</th>
-            <th class="py-3 px-4">카테고리</th>
-            <th class="py-3 px-4 text-right">금액</th>
-            <th class="py-3 px-4 text-center">관리</th>
-          </tr>
-        </thead>
-        <tbody class="divide-y divide-slate-100 text-xs">
-          <tr v-for="tx in transactions" :key="tx.id" class="hover:bg-slate-50/60 transition-colors">
-            <td class="py-3.5 px-5 text-slate-500 font-medium">
-              {{ formatDate(tx.occurred_at) }}
-            </td>
-            <td class="py-3.5 px-4">
-              <span
-                class="px-2 py-0.5 rounded-full text-[10px] font-bold"
-                :class="tx.transaction_type === 'EXPENSE' ? 'bg-red-50 text-red-600' : tx.transaction_type === 'INCOME' ? 'bg-emerald-50 text-emerald-600' : 'bg-indigo-50 text-indigo-600'"
-              >
-                {{ tx.transaction_type === 'EXPENSE' ? '지출' : tx.transaction_type === 'INCOME' ? '수입' : '계정 이동' }}
-              </span>
-            </td>
-            <td class="py-3.5 px-4 font-bold text-slate-800">
-              <div>{{ tx.description || '거래' }}</div>
-              <div v-if="tx.merchant_name" class="text-[10px] text-slate-400 font-normal">{{ tx.merchant_name }}</div>
-            </td>
-            <td class="py-3.5 px-4 text-slate-600">
-              {{ tx.category_name || '-' }}
-            </td>
-            <td class="py-3.5 px-4 text-right font-black tracking-tight" :class="tx.transaction_type === 'EXPENSE' ? 'text-slate-900' : tx.transaction_type === 'INCOME' ? 'text-emerald-600' : 'text-indigo-600'">
+          <div class="flex items-center gap-3 flex-shrink-0">
+            <span
+              class="text-base font-extrabold tracking-tight tabular-nums"
+              :class="tx.transaction_type === 'INCOME' ? 'text-[#3182F6]' : 'text-[#191F28]'"
+            >
               {{ tx.transaction_type === 'EXPENSE' ? '− ' : tx.transaction_type === 'INCOME' ? '+ ' : '' }}
               {{ finance.formatCurrency(tx.amount_minor, tx.currency_code) }}
-            </td>
-            <td class="py-3.5 px-4 text-center">
-              <button @click="deleteTx(tx.id)" class="text-[11px] text-slate-400 hover:text-red-600 font-semibold transition-colors">
-                삭제
-              </button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+            </span>
+            <button
+              @click="deleteTx(tx.id)"
+              class="opacity-0 group-hover:opacity-100 p-1.5 text-[#8B95A1] hover:text-[#F04452] rounded-lg transition-all"
+              title="거래 삭제"
+            >
+              <Trash2 :size="16" />
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -112,6 +134,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import { RouterLink } from 'vue-router';
+import { Download, Plus, Search, ReceiptText, ArrowDownLeft, ArrowUpRight, ArrowLeftRight, Trash2 } from 'lucide-vue-next';
 import { apiFetch } from '../api/client';
 import { useFinanceStore } from '../stores/finance';
 
@@ -121,6 +144,18 @@ const transactions = ref<any[]>([]);
 const loading = ref(false);
 const searchQuery = ref('');
 const filterType = ref('');
+
+const filterTabs = [
+  { label: '전체', value: '' },
+  { label: '지출', value: 'EXPENSE' },
+  { label: '수입', value: 'INCOME' },
+  { label: '계정 이동', value: 'TRANSFER' },
+];
+
+function selectFilter(val: string) {
+  filterType.value = val;
+  fetchTransactions();
+}
 
 async function fetchTransactions() {
   loading.value = true;
@@ -139,7 +174,7 @@ onMounted(() => {
 });
 
 async function deleteTx(id: string) {
-  if (confirm('이 거래를 삭제하시겠습니까? 관련 잔액과 예산이 자동 재계산됩니다.')) {
+  if (confirm('이 거래를 삭제하시겠습니까? 관련 계정 잔액과 예산이 자동으로 다시 계산됩니다.')) {
     await apiFetch(`/transactions/${id}`, { method: 'DELETE' });
     await fetchTransactions();
     await finance.loadDashboard();
@@ -157,7 +192,6 @@ async function exportCSV() {
 function formatDate(iso: string) {
   if (!iso) return '';
   const d = new Date(iso);
-  return `${d.getFullYear()}.${String(d.getMonth() + 1).padStart(2, '0')}.${String(d.getDate()).padStart(2, '0')}`;
+  return `${d.getMonth() + 1}월 ${d.getDate()}일`;
 }
 </script>
-

@@ -73,56 +73,363 @@ class _HomeDashboardScreenState extends State<HomeDashboardScreen> {
 
     final monthExpense = _overview?['current_month_expense_minor'] ?? 0;
     final monthIncome = _overview?['current_month_income_minor'] ?? 0;
+    final currentMonth = DateTime.now().month;
 
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
-        title: const Text('BN ONE', style: TextStyle(fontWeight: FontWeight.w900)),
+        title: Row(
+          children: [
+            Container(
+              width: 28,
+              height: 28,
+              decoration: BoxDecoration(
+                color: AppColors.brandPrimary,
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: const Center(
+                child: Text(
+                  '1',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w900,
+                    fontSize: 16,
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(width: 8),
+            const Text(
+              'BN ONE',
+              style: TextStyle(
+                fontWeight: FontWeight.w900,
+                fontSize: 20,
+                letterSpacing: -0.5,
+              ),
+            ),
+          ],
+        ),
         actions: [
           IconButton(
-            icon: Icon(_maskAmounts ? Icons.visibility_off : Icons.visibility),
+            icon: Icon(
+              _maskAmounts ? Icons.visibility_off_outlined : Icons.visibility_outlined,
+              color: AppColors.textSecondary,
+            ),
             onPressed: () => setState(() => _maskAmounts = !_maskAmounts),
             tooltip: '금액 숨기기',
           ),
           IconButton(
-            icon: const Icon(Icons.notifications_outlined),
+            icon: const Icon(
+              Icons.notifications_none_rounded,
+              color: AppColors.textSecondary,
+            ),
             onPressed: () => context.push('/notifications'),
+            tooltip: '알림',
           ),
+          const SizedBox(width: 8),
         ],
       ),
       body: _isLoading
-          ? const Center(child: CircularProgressIndicator())
+          ? const Center(
+              child: CircularProgressIndicator(color: AppColors.brandPrimary),
+            )
           : RefreshIndicator(
+              color: AppColors.brandPrimary,
               onRefresh: _loadDashboardData,
               child: SingleChildScrollView(
                 physics: const AlwaysScrollableScrollPhysics(),
-                padding: const EdgeInsets.all(16.0),
+                padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Mandatory Disclaimer (Article 1.5)
+                    // Legal Disclaimer Banner (Article 1.5)
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-                      margin: const EdgeInsets.only(bottom: 16),
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                      margin: const EdgeInsets.only(bottom: 12),
                       decoration: BoxDecoration(
-                        color: AppColors.brandPrimary.withOpacity(0.08),
-                        borderRadius: BorderRadius.circular(14),
+                        color: AppColors.primaryLight,
+                        borderRadius: BorderRadius.circular(16),
                       ),
-                      child: const Row(
+                      child: Row(
                         children: [
-                          Icon(Icons.info_outline, size: 16, color: AppColors.brandPrimary),
-                          SizedBox(width: 8),
+                          const Icon(Icons.info_outline, size: 16, color: AppColors.brandPrimary),
+                          const SizedBox(width: 10),
                           Expanded(
                             child: Text(
-                              '표시된 자산과 잔액은 사용자가 직접 입력한 기록을 기준으로 합니다.',
-                              style: TextStyle(fontSize: 11, color: AppColors.brandPrimary, fontWeight: FontWeight.bold),
+                              '표시된 자산과 잔액은 직접 입력한 장부 기록을 기준으로 합니다.',
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: AppColors.primaryDark,
+                                fontWeight: FontWeight.w600,
+                              ),
                             ),
                           ),
                         ],
                       ),
                     ),
 
-                    // Net Worth Card
+                    // Net Worth Card (Toss Bank Card Style)
+                    InkWell(
+                      onTap: () => context.push('/assets'),
+                      borderRadius: BorderRadius.circular(24),
+                      child: Card(
+                        child: Padding(
+                          padding: const EdgeInsets.all(24.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  const Row(
+                                    children: [
+                                      Text(
+                                        '내 순자산',
+                                        style: TextStyle(
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.w700,
+                                          color: AppColors.textSecondary,
+                                        ),
+                                      ),
+                                      SizedBox(width: 4),
+                                      Icon(Icons.chevron_right, size: 18, color: AppColors.textTertiary),
+                                    ],
+                                  ),
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                                    decoration: BoxDecoration(
+                                      color: AppColors.background,
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                    child: Text(
+                                      currency,
+                                      style: const TextStyle(
+                                        fontSize: 11,
+                                        fontWeight: FontWeight.w700,
+                                        color: AppColors.textSecondary,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 12),
+                              Text(
+                                CurrencyFormatter.format(netWorthMinor, currency: currency, masked: _maskAmounts),
+                                style: const TextStyle(
+                                  fontSize: 32,
+                                  fontWeight: FontWeight.w800,
+                                  color: AppColors.textPrimary,
+                                  letterSpacing: -1.0,
+                                ),
+                              ),
+                              const SizedBox(height: 12),
+                              Row(
+                                children: [
+                                  Text(
+                                    '총자산 ${CurrencyFormatter.format(totalAssetsMinor, currency: currency, masked: _maskAmounts)}',
+                                    style: const TextStyle(
+                                      fontSize: 13,
+                                      color: AppColors.textSecondary,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                  const SizedBox(width: 10),
+                                  const Text('·', style: TextStyle(color: AppColors.textTertiary)),
+                                  const SizedBox(width: 10),
+                                  Text(
+                                    '부채 ${CurrencyFormatter.format(totalLiabilitiesMinor, currency: currency, masked: _maskAmounts)}',
+                                    style: const TextStyle(
+                                      fontSize: 13,
+                                      color: AppColors.danger,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 20),
+                              const Divider(),
+                              const SizedBox(height: 16),
+                              // Toss Quick Actions Row
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                children: [
+                                  _buildTossQuickAction(
+                                    icon: Icons.add,
+                                    label: '거래 기록',
+                                    color: AppColors.brandPrimary,
+                                    bg: AppColors.primaryLight,
+                                    onTap: () => context.push('/transactions/new'),
+                                  ),
+                                  _buildTossQuickAction(
+                                    icon: Icons.account_balance_wallet_outlined,
+                                    label: '자산 관리',
+                                    color: const Color(0xFF8061D9),
+                                    bg: const Color(0xFFF1EDFF),
+                                    onTap: () => context.push('/assets'),
+                                  ),
+                                  _buildTossQuickAction(
+                                    icon: Icons.track_changes_outlined,
+                                    label: '예산 관리',
+                                    color: const Color(0xFF00B06B),
+                                    bg: const Color(0xFFE5F7F0),
+                                    onTap: () => context.push('/budgets'),
+                                  ),
+                                  _buildTossQuickAction(
+                                    icon: Icons.currency_exchange_rounded,
+                                    label: '환율 계산',
+                                    color: const Color(0xFFFF8D00),
+                                    bg: const Color(0xFFFFF3E2),
+                                    onTap: () => context.push('/fx'),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+
+                    const SizedBox(height: 12),
+
+                    // Monthly Spending Card (Toss "이번 달 쓴 금액" Style)
+                    InkWell(
+                      onTap: () => context.push('/transactions'),
+                      borderRadius: BorderRadius.circular(24),
+                      child: Card(
+                        child: Padding(
+                          padding: const EdgeInsets.all(24.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    '$currentMonth월 소비',
+                                    style: const TextStyle(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.w700,
+                                      color: AppColors.textSecondary,
+                                    ),
+                                  ),
+                                  const Icon(Icons.chevron_right, size: 18, color: AppColors.textTertiary),
+                                ],
+                              ),
+                              const SizedBox(height: 10),
+                              const Text(
+                                '이번 달 쓴 금액',
+                                style: TextStyle(
+                                  fontSize: 13,
+                                  color: AppColors.textTertiary,
+                                ),
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                CurrencyFormatter.format(monthExpense, currency: currency, masked: _maskAmounts),
+                                style: const TextStyle(
+                                  fontSize: 28,
+                                  fontWeight: FontWeight.w800,
+                                  color: AppColors.textPrimary,
+                                  letterSpacing: -0.8,
+                                ),
+                              ),
+                              const SizedBox(height: 16),
+                              Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                                decoration: BoxDecoration(
+                                  color: AppColors.background,
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    const Text(
+                                      '이번 달 들어온 돈',
+                                      style: TextStyle(
+                                        fontSize: 13,
+                                        color: AppColors.textSecondary,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                    Text(
+                                      '+ ${CurrencyFormatter.format(monthIncome, currency: currency, masked: _maskAmounts)}',
+                                      style: const TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w700,
+                                        color: AppColors.brandPrimary,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+
+                    const SizedBox(height: 12),
+
+                    // Lifestyle Services Card (Toss Feature Banner Style)
+                    Card(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 8),
+                        child: Column(
+                          children: [
+                            ListTile(
+                              leading: Container(
+                                width: 42,
+                                height: 42,
+                                decoration: BoxDecoration(
+                                  color: const Color(0xFFF1EDFF),
+                                  borderRadius: BorderRadius.circular(14),
+                                ),
+                                child: const Icon(Icons.repeat_rounded, color: Color(0xFF8061D9), size: 22),
+                              ),
+                              title: const Text(
+                                '매달 나가는 구독료',
+                                style: TextStyle(fontWeight: FontWeight.w700, fontSize: 14),
+                              ),
+                              subtitle: const Text(
+                                '정기 결제를 한곳에서 모아 관리해요',
+                                style: TextStyle(fontSize: 12, color: AppColors.textTertiary),
+                              ),
+                              trailing: const Icon(Icons.chevron_right, size: 18, color: AppColors.textTertiary),
+                              onTap: () => context.push('/subscriptions'),
+                            ),
+                            const Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 16),
+                              child: Divider(),
+                            ),
+                            ListTile(
+                              leading: Container(
+                                width: 42,
+                                height: 42,
+                                decoration: BoxDecoration(
+                                  color: const Color(0xFFE5F7F0),
+                                  borderRadius: BorderRadius.circular(14),
+                                ),
+                                child: const Icon(Icons.flight_takeoff_rounded, color: Color(0xFF00B06B), size: 22),
+                              ),
+                              title: const Text(
+                                '여행도 계획적으로',
+                                style: TextStyle(fontWeight: FontWeight.w700, fontSize: 14),
+                              ),
+                              subtitle: const Text(
+                                '여행 예산과 외화 지출을 현지 통화로 기록해요',
+                                style: TextStyle(fontSize: 12, color: AppColors.textTertiary),
+                              ),
+                              trailing: const Icon(Icons.chevron_right, size: 18, color: AppColors.textTertiary),
+                              onTap: () => context.push('/travel'),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+
+                    const SizedBox(height: 12),
+
+                    // Recent Transactions Section
                     Card(
                       child: Padding(
                         padding: const EdgeInsets.all(20.0),
@@ -133,209 +440,202 @@ class _HomeDashboardScreenState extends State<HomeDashboardScreen> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 const Text(
-                                  '내 순자산',
-                                  style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: AppColors.textSecondary),
-                                ),
-                                Container(
-                                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                                  decoration: BoxDecoration(
-                                    color: AppColors.background,
-                                    borderRadius: BorderRadius.circular(8),
+                                  '최근 거래',
+                                  style: TextStyle(
+                                    fontSize: 17,
+                                    fontWeight: FontWeight.w700,
+                                    color: AppColors.textPrimary,
                                   ),
-                                  child: Text(
-                                    currency,
-                                    style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: AppColors.textSecondary),
+                                ),
+                                InkWell(
+                                  onTap: () => context.push('/transactions'),
+                                  child: const Padding(
+                                    padding: EdgeInsets.symmetric(vertical: 4, horizontal: 4),
+                                    child: Row(
+                                      children: [
+                                        Text(
+                                          '전체보기',
+                                          style: TextStyle(
+                                            fontSize: 13,
+                                            fontWeight: FontWeight.w600,
+                                            color: AppColors.textTertiary,
+                                          ),
+                                        ),
+                                        Icon(Icons.chevron_right, size: 16, color: AppColors.textTertiary),
+                                      ],
+                                    ),
                                   ),
                                 ),
                               ],
                             ),
-                            const SizedBox(height: 8),
-                            Text(
-                              CurrencyFormatter.format(netWorthMinor, currency: currency, masked: _maskAmounts),
-                              style: const TextStyle(fontSize: 32, fontWeight: FontWeight.w900, color: AppColors.textPrimary),
-                            ),
-                            const SizedBox(height: 16),
-                            const Divider(height: 1),
                             const SizedBox(height: 12),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  '총 자산: ${CurrencyFormatter.format(totalAssetsMinor, currency: currency, masked: _maskAmounts)}',
-                                  style: const TextStyle(fontSize: 12, color: AppColors.textSecondary),
+                            if (_recentTx.isEmpty)
+                              const Padding(
+                                padding: EdgeInsets.symmetric(vertical: 24.0),
+                                child: Center(
+                                  child: Text(
+                                    '아직 기록된 거래가 없어요.',
+                                    style: TextStyle(color: AppColors.textTertiary, fontSize: 13),
+                                  ),
                                 ),
-                                Text(
-                                  '부채: ${CurrencyFormatter.format(totalLiabilitiesMinor, currency: currency, masked: _maskAmounts)}',
-                                  style: const TextStyle(fontSize: 12, color: AppColors.textSecondary),
-                                ),
-                              ],
-                            ),
+                              )
+                            else
+                              ListView.separated(
+                                shrinkWrap: true,
+                                physics: const NeverScrollableScrollPhysics(),
+                                itemCount: _recentTx.length,
+                                separatorBuilder: (_, __) => const Divider(height: 16),
+                                itemBuilder: (context, index) {
+                                  final tx = _recentTx[index];
+                                  final isExpense = tx['transaction_type'] == 'EXPENSE';
+                                  final isIncome = tx['transaction_type'] == 'INCOME';
+                                  return Row(
+                                    children: [
+                                      Container(
+                                        width: 40,
+                                        height: 40,
+                                        decoration: BoxDecoration(
+                                          color: isIncome
+                                              ? AppColors.primaryLight
+                                              : AppColors.background,
+                                          borderRadius: BorderRadius.circular(14),
+                                        ),
+                                        child: Icon(
+                                          isIncome
+                                              ? Icons.arrow_downward_rounded
+                                              : isExpense
+                                                  ? Icons.arrow_upward_rounded
+                                                  : Icons.swap_horiz_rounded,
+                                          color: isIncome
+                                              ? AppColors.brandPrimary
+                                              : AppColors.textSecondary,
+                                          size: 20,
+                                        ),
+                                      ),
+                                      const SizedBox(width: 14),
+                                      Expanded(
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              tx['description'] ?? tx['merchant_name'] ?? '거래 기록',
+                                              style: const TextStyle(
+                                                fontWeight: FontWeight.w700,
+                                                fontSize: 14,
+                                                color: AppColors.textPrimary,
+                                              ),
+                                              maxLines: 1,
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
+                                            const SizedBox(height: 2),
+                                            Text(
+                                              tx['category_name'] ?? (isIncome ? '수입' : isExpense ? '지출' : '계정 이동'),
+                                              style: const TextStyle(
+                                                fontSize: 12,
+                                                color: AppColors.textTertiary,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      Text(
+                                        '${isExpense ? "− " : isIncome ? "+ " : ""}${CurrencyFormatter.format(tx['amount_minor'] ?? 0, currency: tx['currency_code'] ?? 'KRW', masked: _maskAmounts)}',
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.w800,
+                                          fontSize: 15,
+                                          color: isIncome
+                                              ? AppColors.brandPrimary
+                                              : AppColors.textPrimary,
+                                        ),
+                                      ),
+                                    ],
+                                  );
+                                },
+                              ),
                           ],
                         ),
                       ),
                     ),
-                    const SizedBox(height: 16),
 
-                    // Month Summary Grid (Expense & Income)
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Card(
-                            child: Padding(
-                              padding: const EdgeInsets.all(16.0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const Text('이번 달 지출', style: TextStyle(fontSize: 11, color: AppColors.textSecondary, fontWeight: FontWeight.bold)),
-                                  const SizedBox(height: 4),
-                                  Text(
-                                    '− ${CurrencyFormatter.format(monthExpense, currency: currency, masked: _maskAmounts)}',
-                                    style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w900, color: AppColors.danger),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: Card(
-                            child: Padding(
-                              padding: const EdgeInsets.all(16.0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const Text('이번 달 수입', style: TextStyle(fontSize: 11, color: AppColors.textSecondary, fontWeight: FontWeight.bold)),
-                                  const SizedBox(height: 4),
-                                  Text(
-                                    '+ ${CurrencyFormatter.format(monthIncome, currency: currency, masked: _maskAmounts)}',
-                                    style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w900, color: AppColors.success),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 20),
-
-                    // Quick Actions
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        _buildQuickAction(Icons.add_circle, '거래 추가', () => context.push('/transactions/new')),
-                        _buildQuickAction(Icons.account_balance, '자산 장부', () => context.push('/assets')),
-                        _buildQuickAction(Icons.flight_takeoff, '여행 예산', () => context.push('/travel')),
-                        _buildQuickAction(Icons.currency_exchange, '참고 환율', () => context.push('/fx')),
-                      ],
-                    ),
                     const SizedBox(height: 24),
-
-                    // Recent Transactions Section
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text(
-                          '최근 거래',
-                          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w800, color: AppColors.textPrimary),
-                        ),
-                        TextButton(
-                          onPressed: () => context.push('/transactions'),
-                          child: const Text('전체보기', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 8),
-
-                    if (_recentTx.isEmpty)
-                      const Center(
-                        child: Padding(
-                          padding: EdgeInsets.all(24.0),
-                          child: Text('기록된 거래 내역이 없습니다.', style: TextStyle(color: AppColors.textSecondary, fontSize: 13)),
-                        ),
-                      )
-                    else
-                      Card(
-                        child: ListView.separated(
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          itemCount: _recentTx.length,
-                          separatorBuilder: (_, __) => const Divider(height: 1),
-                          itemBuilder: (context, index) {
-                            final tx = _recentTx[index];
-                            final isExpense = tx['transaction_type'] == 'EXPENSE';
-                            final isIncome = tx['transaction_type'] == 'INCOME';
-                            return ListTile(
-                              leading: CircleAvatar(
-                                backgroundColor: isExpense
-                                    ? AppColors.danger.withOpacity(0.1)
-                                    : isIncome
-                                        ? AppColors.success.withOpacity(0.1)
-                                        : AppColors.brandPrimary.withOpacity(0.1),
-                                child: Icon(
-                                  isExpense ? Icons.arrow_downward : isIncome ? Icons.arrow_upward : Icons.swap_horiz,
-                                  color: isExpense ? AppColors.danger : isIncome ? AppColors.success : AppColors.brandPrimary,
-                                  size: 18,
-                                ),
-                              ),
-                              title: Text(
-                                tx['description'] ?? tx['merchant_name'] ?? '거래',
-                                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
-                              ),
-                              subtitle: Text(
-                                tx['category_name'] ?? tx['transaction_type'],
-                                style: const TextStyle(fontSize: 11, color: AppColors.textSecondary),
-                              ),
-                              trailing: Text(
-                                '${isExpense ? "− " : isIncome ? "+ " : ""}${CurrencyFormatter.format(tx['amount_minor'] ?? 0, currency: tx['currency_code'] ?? 'KRW', masked: _maskAmounts)}',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w900,
-                                  fontSize: 14,
-                                  color: isExpense ? AppColors.textPrimary : isIncome ? AppColors.success : AppColors.brandPrimary,
-                                ),
-                              ),
-                            );
-                          },
-                        ),
-                      ),
                   ],
                 ),
               ),
             ),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _currentIndex,
-        onTap: _onBottomNavTapped,
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home_outlined), activeIcon: Icon(Icons.home), label: 'HOME'),
-          BottomNavigationBarItem(icon: Icon(Icons.account_balance_outlined), activeIcon: Icon(Icons.account_balance), label: 'ASSETS'),
-          BottomNavigationBarItem(icon: Icon(Icons.receipt_long_outlined), activeIcon: Icon(Icons.receipt_long), label: 'ACTIVITY'),
-          BottomNavigationBarItem(icon: Icon(Icons.pie_chart_outline), activeIcon: Icon(Icons.pie_chart), label: 'PLAN'),
-          BottomNavigationBarItem(icon: Icon(Icons.more_horiz), activeIcon: Icon(Icons.more_horiz), label: 'MORE'),
-        ],
+      bottomNavigationBar: Container(
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          border: Border(top: BorderSide(color: AppColors.divider)),
+        ),
+        child: BottomNavigationBar(
+          currentIndex: _currentIndex,
+          onTap: _onBottomNavTapped,
+          items: const [
+            BottomNavigationBarItem(
+              icon: Icon(Icons.home_outlined),
+              activeIcon: Icon(Icons.home_filled),
+              label: '홈',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.account_balance_wallet_outlined),
+              activeIcon: Icon(Icons.account_balance_wallet),
+              label: '내 자산',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.receipt_long_outlined),
+              activeIcon: Icon(Icons.receipt_long),
+              label: '소비',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.pie_chart_outline_rounded),
+              activeIcon: Icon(Icons.pie_chart_rounded),
+              label: '계획',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.menu_rounded),
+              activeIcon: Icon(Icons.menu_open_rounded),
+              label: '전체',
+            ),
+          ],
+        ),
       ),
     );
   }
 
-  Widget _buildQuickAction(IconData icon, String label, VoidCallback onTap) {
+  Widget _buildTossQuickAction({
+    required IconData icon,
+    required String label,
+    required Color color,
+    required Color bg,
+    required VoidCallback onTap,
+  }) {
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(16),
-      child: Column(
-        children: [
-          Container(
-            width: 52,
-            height: 52,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(16),
-              border: Border.all(color: AppColors.border),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+        child: Column(
+          children: [
+            Container(
+              width: 48,
+              height: 48,
+              decoration: BoxDecoration(
+                color: bg,
+                borderRadius: BorderRadius.circular(18),
+              ),
+              child: Icon(icon, color: color, size: 22),
             ),
-            child: Icon(icon, color: AppColors.brandPrimary),
-          ),
-          const SizedBox(height: 6),
-          Text(label, style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: AppColors.textPrimary)),
-        ],
+            const SizedBox(height: 8),
+            Text(
+              label,
+              style: const TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w600,
+                color: AppColors.textSecondary,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -1,25 +1,36 @@
 <template>
   <div class="max-w-3xl space-y-6">
+    <!-- Header -->
     <div>
-      <h1 class="text-2xl font-black text-slate-900 tracking-tight">설정 & 개인정보 보호</h1>
-      <p class="text-xs text-slate-500 mt-0.5">계정 환경 설정, 보안 세션, 데이터 내보내기 및 삭제를 관리합니다.</p>
+      <h1 class="text-2xl font-bold tracking-tight text-[#191F28]">설정 & 개인정보 보호</h1>
+      <p class="text-sm text-[#8B95A1] mt-1">계정 환경 설정, 보안 세션, 데이터 내보내기 및 삭제를 관리해요.</p>
     </div>
 
-    <!-- User Profile Settings -->
-    <div class="bg-white p-6 rounded-3xl border border-slate-200 card-shadow space-y-4">
-      <h2 class="text-base font-bold text-slate-900">사용자 프로필</h2>
+    <!-- User Profile Settings Card -->
+    <div class="bg-white p-6 rounded-3xl space-y-5">
+      <h2 class="text-base font-bold text-[#191F28]">사용자 프로필</h2>
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
-          <label class="block text-xs font-bold text-slate-700 mb-1">이메일</label>
-          <input :value="auth.user?.email" disabled class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs bg-slate-50 text-slate-500" />
+          <label class="block text-xs font-bold text-[#4E5968] mb-1.5">이메일</label>
+          <input
+            :value="auth.user?.email"
+            disabled
+            class="w-full px-4 py-3 rounded-2xl bg-[#F2F4F6] border border-transparent text-sm text-[#8B95A1]"
+          />
         </div>
         <div>
-          <label class="block text-xs font-bold text-slate-700 mb-1">이름 / 닉네임</label>
-          <input v-model="profileForm.display_name" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs focus:outline-none focus:border-brand-600" />
+          <label class="block text-xs font-bold text-[#4E5968] mb-1.5">이름 / 닉네임</label>
+          <input
+            v-model="profileForm.display_name"
+            class="w-full px-4 py-3 rounded-2xl bg-[#F9FAFB] border border-[#E5E8EB] text-sm text-[#191F28] focus:outline-none focus:border-[#3182F6]"
+          />
         </div>
         <div>
-          <label class="block text-xs font-bold text-slate-700 mb-1">기준 통화</label>
-          <select v-model="profileForm.base_currency" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs bg-white">
+          <label class="block text-xs font-bold text-[#4E5968] mb-1.5">기준 통화</label>
+          <select
+            v-model="profileForm.base_currency"
+            class="w-full px-4 py-3 rounded-2xl bg-[#F9FAFB] border border-[#E5E8EB] text-sm text-[#191F28] focus:outline-none focus:border-[#3182F6]"
+          >
             <option value="KRW">KRW — 대한민국 원 (₩)</option>
             <option value="USD">USD — 미국 달러 ($)</option>
             <option value="EUR">EUR — 유로 (€)</option>
@@ -27,52 +38,67 @@
           </select>
         </div>
         <div>
-          <label class="block text-xs font-bold text-slate-700 mb-1">시간대</label>
-          <input v-model="profileForm.timezone" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs focus:outline-none focus:border-brand-600" />
+          <label class="block text-xs font-bold text-[#4E5968] mb-1.5">시간대</label>
+          <input
+            v-model="profileForm.timezone"
+            class="w-full px-4 py-3 rounded-2xl bg-[#F9FAFB] border border-[#E5E8EB] text-sm text-[#191F28] focus:outline-none focus:border-[#3182F6]"
+          />
         </div>
       </div>
       <div class="text-right pt-2">
-        <button @click="saveProfile" class="px-4 py-2 bg-brand-600 hover:bg-brand-700 text-white rounded-xl text-xs font-bold shadow-sm transition-all">
+        <button
+          @click="saveProfile"
+          class="px-5 py-2.5 bg-[#3182F6] hover:bg-[#1B64DA] text-white rounded-xl text-xs font-bold shadow-sm transition-colors"
+        >
           프로필 변경 저장
         </button>
       </div>
     </div>
 
-    <!-- Active Sessions -->
-    <div class="bg-white p-6 rounded-3xl border border-slate-200 card-shadow space-y-4">
-      <h2 class="text-base font-bold text-slate-900">로그인 세션 관리</h2>
-      <div class="divide-y divide-slate-100">
-        <div v-for="s in sessions" :key="s.id" class="py-3 flex items-center justify-between text-xs">
+    <!-- Active Sessions Card -->
+    <div class="bg-white p-6 rounded-3xl space-y-4">
+      <h2 class="text-base font-bold text-[#191F28]">로그인 세션 관리</h2>
+      <div class="divide-y divide-[#F2F4F6]">
+        <div v-for="s in sessions" :key="s.id" class="py-3.5 flex items-center justify-between text-xs">
           <div>
-            <div class="font-bold text-slate-800">{{ s.platform }} — {{ s.device_name || '웹 브라우저' }}</div>
-            <div class="text-[10px] text-slate-400">생성일: {{ s.created_at }}</div>
+            <div class="font-bold text-[#191F28] text-sm">{{ s.platform }} — {{ s.device_name || '웹 브라우저' }}</div>
+            <div class="text-[#8B95A1] text-xs mt-0.5">최근 접속일: {{ s.created_at }}</div>
           </div>
-          <button @click="revokeSession(s.id)" class="text-red-500 hover:text-red-700 font-bold text-[11px]">
+          <button
+            @click="revokeSession(s.id)"
+            class="text-[#F04452] hover:underline font-bold text-xs"
+          >
             세션 종료
           </button>
         </div>
       </div>
     </div>
 
-    <!-- Data Export Section -->
-    <div class="bg-white p-6 rounded-3xl border border-slate-200 card-shadow space-y-3">
-      <h2 class="text-base font-bold text-slate-900">데이터 내보내기 (GDPR / PIPA)</h2>
-      <p class="text-xs text-slate-500 leading-relaxed">
+    <!-- Data Export Card -->
+    <div class="bg-white p-6 rounded-3xl space-y-3">
+      <h2 class="text-base font-bold text-[#191F28]">데이터 내보내기 (GDPR / 개인정보보호법)</h2>
+      <p class="text-xs text-[#8B95A1] leading-relaxed">
         사용자의 모든 거래 내역, 계정, 자산 및 예산 데이터를 CSV 포맷으로 안전하게 내보낼 수 있습니다.
       </p>
-      <button @click="requestExport" class="px-4 py-2.5 bg-slate-800 hover:bg-slate-700 text-white rounded-xl text-xs font-bold transition-all">
-        전체 데이터 내보내기 요청 (CSV)
+      <button
+        @click="requestExport"
+        class="px-5 py-2.5 bg-[#F2F4F6] hover:bg-[#E5E8EB] text-[#4E5968] rounded-xl text-xs font-bold transition-colors"
+      >
+        전체 데이터 내보내기 (CSV)
       </button>
     </div>
 
-    <!-- Danger Zone: Account Deletion -->
-    <div class="bg-red-50/50 p-6 rounded-3xl border border-red-200 card-shadow space-y-3">
-      <h2 class="text-base font-bold text-red-900">회원 탈퇴 및 데이터 삭제</h2>
-      <p class="text-xs text-red-700 leading-relaxed">
-        계정 삭제 시 등록된 모든 금융 데이터가 안전하게 파기 또는 비식별화 처리됩니다. 법정 의무 보존 기간이 존재하는 경우 별도 분리 보관됩니다.
+    <!-- Danger Zone Card -->
+    <div class="bg-[#FEECEB] p-6 rounded-3xl space-y-3">
+      <h2 class="text-base font-bold text-[#F04452]">회원 탈퇴 및 데이터 영구 파기</h2>
+      <p class="text-xs text-[#F04452] leading-relaxed">
+        계정 삭제 시 등록된 모든 금융 데이터가 안전하게 즉시 파기 처리됩니다.
       </p>
-      <button @click="requestAccountDeletion" class="px-4 py-2.5 bg-red-600 hover:bg-red-700 text-white rounded-xl text-xs font-bold transition-all">
-        계정 영구 삭제 요청
+      <button
+        @click="requestAccountDeletion"
+        class="px-5 py-2.5 bg-[#F04452] hover:bg-[#dc2626] text-white rounded-xl text-xs font-bold transition-colors"
+      >
+        계정 영구 삭제하기
       </button>
     </div>
   </div>
@@ -135,4 +161,3 @@ async function requestAccountDeletion() {
   }
 }
 </script>
-

@@ -1,70 +1,93 @@
 <template>
   <div class="max-w-xl mx-auto space-y-6">
+    <!-- Header -->
     <div>
-      <h1 class="text-2xl font-black text-slate-900 tracking-tight">새 거래 기록</h1>
-      <p class="text-xs text-slate-500 mt-0.5">지출, 수입 또는 계정 간 자금 이동을 기록합니다.</p>
+      <h1 class="text-2xl font-bold tracking-tight text-[#191F28]">새 거래 기록</h1>
+      <p class="text-sm text-[#8B95A1] mt-1">지출, 수입 또는 계정 간 자금 이동을 기록해요.</p>
     </div>
 
     <!-- Mandatory Disclaimer (Article 1.5) -->
-    <div class="p-3.5 rounded-2xl bg-blue-50/70 border border-blue-100 flex items-start gap-2.5">
-      <span class="text-blue-600 text-sm">ℹ️</span>
-      <p class="text-[11px] text-blue-900 leading-relaxed">
-        BN ONE의 모든 거래 기록은 실제 금융기관 송금이나 결제를 실행하지 않는 장부 기록입니다.
+    <div class="p-4 rounded-2xl bg-[#E8F3FF] flex items-start gap-3">
+      <span class="text-[#3182F6] text-base">ℹ️</span>
+      <p class="text-xs text-[#1B64DA] font-semibold leading-relaxed">
+        BN ONE의 모든 거래 기록은 실제 금융기관 송금이나 결제를 실행하지 않는 순수 장부 기록입니다.
       </p>
     </div>
 
-    <!-- Type Tabs -->
-    <div class="flex p-1 bg-slate-100 rounded-2xl">
+    <!-- Type Tabs (Toss Segmented Pill Control) -->
+    <div class="flex p-1.5 bg-[#F2F4F6] rounded-2xl">
       <button
         @click="activeTab = 'EXPENSE'"
-        class="flex-1 py-2.5 text-xs font-bold rounded-xl transition-all"
-        :class="activeTab === 'EXPENSE' ? 'bg-white text-red-600 shadow-sm' : 'text-slate-500 hover:text-slate-800'"
+        class="flex-1 py-3 text-xs font-bold rounded-xl transition-all"
+        :class="activeTab === 'EXPENSE' ? 'bg-white text-[#191F28] shadow-sm' : 'text-[#8B95A1] hover:text-[#4E5968]'"
       >
         지출
       </button>
       <button
         @click="activeTab = 'INCOME'"
-        class="flex-1 py-2.5 text-xs font-bold rounded-xl transition-all"
-        :class="activeTab === 'INCOME' ? 'bg-white text-emerald-600 shadow-sm' : 'text-slate-500 hover:text-slate-800'"
+        class="flex-1 py-3 text-xs font-bold rounded-xl transition-all"
+        :class="activeTab === 'INCOME' ? 'bg-white text-[#3182F6] shadow-sm' : 'text-[#8B95A1] hover:text-[#4E5968]'"
       >
         수입
       </button>
       <button
         @click="activeTab = 'TRANSFER'"
-        class="flex-1 py-2.5 text-xs font-bold rounded-xl transition-all"
-        :class="activeTab === 'TRANSFER' ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-500 hover:text-slate-800'"
+        class="flex-1 py-3 text-xs font-bold rounded-xl transition-all"
+        :class="activeTab === 'TRANSFER' ? 'bg-white text-[#8061D9] shadow-sm' : 'text-[#8B95A1] hover:text-[#4E5968]'"
       >
         계정 간 이동
       </button>
     </div>
 
+    <!-- Big Amount Card (Toss Keypad/Amount Style) -->
+    <div class="bg-white p-6 rounded-3xl space-y-4">
+      <span class="text-xs font-bold text-[#8B95A1]">금액 입력</span>
+      <div class="flex items-center gap-2 border-b border-[#F2F4F6] pb-4">
+        <input
+          v-if="activeTab !== 'TRANSFER'"
+          v-model.number="form.amount_minor"
+          type="number"
+          min="1"
+          required
+          placeholder="0"
+          class="w-full text-3xl font-extrabold text-[#191F28] tracking-tight bg-transparent focus:outline-none placeholder-[#D1D6DB] tabular-nums"
+        />
+        <input
+          v-else
+          v-model.number="transferForm.amount_minor"
+          type="number"
+          min="1"
+          required
+          placeholder="0"
+          class="w-full text-3xl font-extrabold text-[#191F28] tracking-tight bg-transparent focus:outline-none placeholder-[#D1D6DB] tabular-nums"
+        />
+        <span class="text-2xl font-bold text-[#191F28] flex-shrink-0">원</span>
+      </div>
+
+      <!-- Quick Amount Presets -->
+      <div class="flex flex-wrap gap-2 pt-2">
+        <button
+          v-for="preset in [10000, 50000, 100000, 500000, 1000000]"
+          :key="preset"
+          type="button"
+          @click="addPreset(preset)"
+          class="px-3 py-1.5 bg-[#F2F4F6] hover:bg-[#E5E8EB] text-[#4E5968] rounded-xl text-xs font-bold transition-colors"
+        >
+          +{{ formatPreset(preset) }}
+        </button>
+      </div>
+    </div>
+
     <!-- Form Container -->
-    <div class="bg-white p-6 rounded-3xl border border-slate-200 card-shadow">
+    <div class="bg-white p-6 rounded-3xl">
       <!-- EXPENSE or INCOME FORM -->
       <form v-if="activeTab !== 'TRANSFER'" @submit.prevent="submitExpenseIncome" class="space-y-4">
         <div>
-          <label class="block text-xs font-bold text-slate-700 mb-1">금액</label>
-          <div class="relative">
-            <input
-              v-model.number="form.amount_minor"
-              type="number"
-              min="1"
-              required
-              placeholder="0"
-              class="w-full px-4 py-3 rounded-xl border border-slate-200 text-lg font-black focus:outline-none focus:border-brand-600"
-            />
-            <span class="absolute right-4 top-3.5 text-xs font-bold text-slate-400">
-              {{ selectedAccountCurrency }}
-            </span>
-          </div>
-        </div>
-
-        <div>
-          <label class="block text-xs font-bold text-slate-700 mb-1">연결 계정</label>
+          <label class="block text-xs font-bold text-[#4E5968] mb-1.5">연결 계정</label>
           <select
             v-model="form.account_id"
             required
-            class="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm bg-white"
+            class="w-full px-4 py-3 rounded-2xl bg-[#F9FAFB] border border-[#E5E8EB] text-sm text-[#191F28] font-medium focus:outline-none focus:border-[#3182F6]"
           >
             <option v-for="acc in finance.accounts" :key="acc.id" :value="acc.id">
               {{ acc.name }} ({{ acc.currency_code }}) — 잔액: {{ finance.formatCurrency(acc.calculated_balance_minor, acc.currency_code) }}
@@ -73,11 +96,11 @@
         </div>
 
         <div>
-          <label class="block text-xs font-bold text-slate-700 mb-1">카테고리</label>
+          <label class="block text-xs font-bold text-[#4E5968] mb-1.5">카테고리</label>
           <select
             v-model="form.category_id"
             required
-            class="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm bg-white"
+            class="w-full px-4 py-3 rounded-2xl bg-[#F9FAFB] border border-[#E5E8EB] text-sm text-[#191F28] font-medium focus:outline-none focus:border-[#3182F6]"
           >
             <option v-for="cat in filteredCategories" :key="cat.id" :value="cat.id">
               {{ cat.name }}
@@ -86,52 +109,52 @@
         </div>
 
         <div>
-          <label class="block text-xs font-bold text-slate-700 mb-1">설명 또는 상호명</label>
+          <label class="block text-xs font-bold text-[#4E5968] mb-1.5">설명 또는 상호명</label>
           <input
             v-model="form.description"
             type="text"
             required
             placeholder="예: 점심 식사, 스타벅스, 월급"
-            class="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm focus:outline-none focus:border-brand-600"
+            class="w-full px-4 py-3 rounded-2xl bg-[#F9FAFB] border border-[#E5E8EB] text-sm text-[#191F28] placeholder-[#8B95A1] focus:outline-none focus:border-[#3182F6]"
           />
         </div>
 
         <div>
-          <label class="block text-xs font-bold text-slate-700 mb-1">거래 날짜 및 시각</label>
+          <label class="block text-xs font-bold text-[#4E5968] mb-1.5">거래 날짜 및 시각</label>
           <input
             v-model="form.occurred_at"
             type="datetime-local"
-            class="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm bg-white"
+            class="w-full px-4 py-3 rounded-2xl bg-[#F9FAFB] border border-[#E5E8EB] text-sm text-[#191F28] focus:outline-none focus:border-[#3182F6]"
           />
         </div>
 
         <div>
-          <label class="block text-xs font-bold text-slate-700 mb-1">메모 (선택)</label>
+          <label class="block text-xs font-bold text-[#4E5968] mb-1.5">메모 (선택)</label>
           <textarea
             v-model="form.notes"
             rows="2"
             placeholder="추가 메모 입력"
-            class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm"
+            class="w-full px-4 py-3 rounded-2xl bg-[#F9FAFB] border border-[#E5E8EB] text-sm text-[#191F28] placeholder-[#8B95A1] focus:outline-none focus:border-[#3182F6]"
           ></textarea>
         </div>
 
         <button
           type="submit"
           :disabled="isSubmitting"
-          class="w-full py-3.5 bg-brand-600 hover:bg-brand-700 text-white rounded-xl font-bold text-sm shadow-md shadow-brand-600/25 transition-all mt-4"
+          class="w-full py-4 bg-[#3182F6] hover:bg-[#1B64DA] text-white rounded-2xl font-bold text-base shadow-sm transition-all mt-4"
         >
-          {{ isSubmitting ? '저장 중...' : '거래 저장하기' }}
+          {{ isSubmitting ? '저장 중...' : '기록 완료하기' }}
         </button>
       </form>
 
       <!-- TRANSFER FORM -->
       <form v-else @submit.prevent="submitTransfer" class="space-y-4">
         <div>
-          <label class="block text-xs font-bold text-slate-700 mb-1">출발 계정 (출금)</label>
+          <label class="block text-xs font-bold text-[#4E5968] mb-1.5">출발 계정 (출금)</label>
           <select
             v-model="transferForm.source_account_id"
             required
-            class="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm bg-white"
+            class="w-full px-4 py-3 rounded-2xl bg-[#F9FAFB] border border-[#E5E8EB] text-sm text-[#191F28] font-medium focus:outline-none focus:border-[#8061D9]"
           >
             <option v-for="acc in finance.accounts" :key="acc.id" :value="acc.id">
               {{ acc.name }} ({{ acc.currency_code }})
@@ -140,11 +163,11 @@
         </div>
 
         <div>
-          <label class="block text-xs font-bold text-slate-700 mb-1">도착 계정 (입금)</label>
+          <label class="block text-xs font-bold text-[#4E5968] mb-1.5">도착 계정 (입금)</label>
           <select
             v-model="transferForm.destination_account_id"
             required
-            class="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm bg-white"
+            class="w-full px-4 py-3 rounded-2xl bg-[#F9FAFB] border border-[#E5E8EB] text-sm text-[#191F28] font-medium focus:outline-none focus:border-[#8061D9]"
           >
             <option
               v-for="acc in finance.accounts"
@@ -158,33 +181,21 @@
         </div>
 
         <div>
-          <label class="block text-xs font-bold text-slate-700 mb-1">이동 금액</label>
-          <input
-            v-model.number="transferForm.amount_minor"
-            type="number"
-            min="1"
-            required
-            placeholder="0"
-            class="w-full px-4 py-3 rounded-xl border border-slate-200 text-lg font-black focus:outline-none focus:border-brand-600"
-          />
-        </div>
-
-        <div>
-          <label class="block text-xs font-bold text-slate-700 mb-1">이동 사유 / 설명</label>
+          <label class="block text-xs font-bold text-[#4E5968] mb-1.5">이동 사유 / 설명</label>
           <input
             v-model="transferForm.description"
             type="text"
-            placeholder="예: 비상금 저축, 카드 대금 이체"
-            class="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm"
+            placeholder="예: 비상금 저축, 카드 대금 결제용 이동"
+            class="w-full px-4 py-3 rounded-2xl bg-[#F9FAFB] border border-[#E5E8EB] text-sm text-[#191F28] placeholder-[#8B95A1] focus:outline-none focus:border-[#8061D9]"
           />
         </div>
 
         <button
           type="submit"
           :disabled="isSubmitting"
-          class="w-full py-3.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-bold text-sm shadow-md shadow-indigo-600/25 transition-all mt-4"
+          class="w-full py-4 bg-[#8061D9] hover:bg-[#6c4fc2] text-white rounded-2xl font-bold text-base shadow-sm transition-all mt-4"
         >
-          {{ isSubmitting ? '저장 중...' : '계정 이동 저장하기' }}
+          {{ isSubmitting ? '저장 중...' : '계정 이동 완료하기' }}
         </button>
       </form>
     </div>
@@ -225,10 +236,18 @@ const filteredCategories = computed(() => {
   return categories.value.filter((c) => c.category_type === activeTab.value);
 });
 
-const selectedAccountCurrency = computed(() => {
-  const acc = finance.accounts.find((a) => a.id === form.value.account_id);
-  return acc ? acc.currency_code : 'KRW';
-});
+function addPreset(delta: number) {
+  if (activeTab.value === 'TRANSFER') {
+    transferForm.value.amount_minor = (transferForm.value.amount_minor || 0) + delta;
+  } else {
+    form.value.amount_minor = (form.value.amount_minor || 0) + delta;
+  }
+}
+
+function formatPreset(val: number) {
+  if (val >= 10000) return `${val / 10000}만`;
+  return `${val}원`;
+}
 
 onMounted(async () => {
   await finance.loadDashboard();
@@ -303,4 +322,3 @@ async function submitTransfer() {
   }
 }
 </script>
-
