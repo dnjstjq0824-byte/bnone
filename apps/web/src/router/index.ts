@@ -91,10 +91,16 @@ const router = createRouter({
           component: () => import('../pages/SettingsPage.vue'),
         },
         {
+          path: 'future',
+          name: 'FutureCapabilities',
+          component: () => import('../pages/FutureCapabilitiesPage.vue'),
+        },
+        {
           path: 'support',
           name: 'Support',
           component: () => import('../pages/SupportPage.vue'),
         },
+
       ],
     },
   ],
