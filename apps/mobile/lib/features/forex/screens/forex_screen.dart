@@ -46,6 +46,7 @@ class _ForexScreenState extends State<ForexScreen> {
       });
       setState(() => _convertResult = res);
     } catch (e) {
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.toString())));
     }
   }
@@ -166,7 +167,7 @@ class _ForexScreenState extends State<ForexScreen> {
                             const Text('환산 결과', style: TextStyle(fontSize: 12, color: AppColors.textSecondary, fontWeight: FontWeight.bold)),
                             const SizedBox(height: 4),
                             Text(
-                              '${CurrencyFormatter.format(_convertResult!['target_amount_minor'] ?? 0, currency: _targetCurrency)}',
+                              CurrencyFormatter.format(_convertResult!['target_amount_minor'] ?? 0, currency: _targetCurrency),
                               style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w800, color: AppColors.brandPrimary),
                             ),
                             const SizedBox(height: 4),
@@ -204,7 +205,7 @@ class _ForexScreenState extends State<ForexScreen> {
                         shrinkWrap: true,
                         physics: const NeverScrollableScrollPhysics(),
                         itemCount: _rates.length,
-                        separatorBuilder: (_, __) => const Divider(height: 18),
+                        separatorBuilder: (_, _) => const Divider(height: 18),
                         itemBuilder: (context, index) {
                           final r = _rates[index];
                           return Row(

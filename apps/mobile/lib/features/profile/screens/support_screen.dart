@@ -86,7 +86,7 @@ class _SupportScreenState extends State<SupportScreen> {
                   padding: const EdgeInsets.all(12),
                   margin: const EdgeInsets.only(bottom: 16),
                   decoration: BoxDecoration(
-                    color: AppColors.brandPrimary.withOpacity(0.08),
+                    color: AppColors.brandPrimary.withValues(alpha: 0.08),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: const Text(

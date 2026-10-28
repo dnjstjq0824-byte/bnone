@@ -107,6 +107,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
         context.pop();
       }
     } catch (e) {
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.toString())));
     } finally {
       if (mounted) setState(() => _isLoading = false);
@@ -223,7 +224,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                     if (_selectedTypeIndex == 2) ...[
                       // Transfer Fields
                       DropdownButtonFormField<String>(
-                        value: _selectedAccount,
+                        initialValue: _selectedAccount,
                         items: _accounts
                             .map((a) => DropdownMenuItem<String>(
                                   value: a['id'] as String,
@@ -235,7 +236,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                       ),
                       const SizedBox(height: 14),
                       DropdownButtonFormField<String>(
-                        value: _destAccount,
+                        initialValue: _destAccount,
                         items: _accounts
                             .map((a) => DropdownMenuItem<String>(
                                   value: a['id'] as String,
@@ -248,7 +249,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                     ] else ...[
                       // Expense / Income Fields
                       DropdownButtonFormField<String>(
-                        value: _selectedAccount,
+                        initialValue: _selectedAccount,
                         items: _accounts
                             .map((a) => DropdownMenuItem<String>(
                                   value: a['id'] as String,
@@ -260,7 +261,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                       ),
                       const SizedBox(height: 14),
                       DropdownButtonFormField<String>(
-                        value: _selectedCategory,
+                        initialValue: _selectedCategory,
                         items: _categories
                             .map((c) => DropdownMenuItem<String>(
                                   value: c['id'] as String,

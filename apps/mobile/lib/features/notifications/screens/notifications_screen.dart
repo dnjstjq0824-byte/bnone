@@ -55,7 +55,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                       margin: const EdgeInsets.only(bottom: 8),
                       child: ListTile(
                         leading: CircleAvatar(
-                          backgroundColor: isRead ? Colors.grey.withOpacity(0.1) : AppColors.brandPrimary.withOpacity(0.1),
+                          backgroundColor: isRead ? Colors.grey.withValues(alpha: 0.1) : AppColors.brandPrimary.withValues(alpha: 0.1),
                           child: Icon(
                             n['type'] == 'BUDGET_ALERT' ? Icons.warning_amber : Icons.notifications,
                             color: isRead ? Colors.grey : AppColors.brandPrimary,

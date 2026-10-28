@@ -484,7 +484,7 @@ class _HomeDashboardScreenState extends State<HomeDashboardScreen> {
                                 shrinkWrap: true,
                                 physics: const NeverScrollableScrollPhysics(),
                                 itemCount: _recentTx.length,
-                                separatorBuilder: (_, __) => const Divider(height: 16),
+                                separatorBuilder: (_, _) => const Divider(height: 16),
                                 itemBuilder: (context, index) {
                                   final tx = _recentTx[index];
                                   final isExpense = tx['transaction_type'] == 'EXPENSE';

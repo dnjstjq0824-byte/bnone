@@ -34,6 +34,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
       setState(() => _step = 2);
     } catch (e) {
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.toString())));
     } finally {
       if (mounted) setState(() => _isLoading = false);
@@ -81,7 +82,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     ),
                     const SizedBox(height: 16),
                     DropdownButtonFormField<String>(
-                      value: _currency,
+                      initialValue: _currency,
                       decoration: InputDecoration(
                         labelText: '기준 통화',
                         border: OutlineInputBorder(borderRadius: BorderRadius.circular(14)),
@@ -129,7 +130,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                         width: 80,
                         height: 80,
                         decoration: BoxDecoration(
-                          color: AppColors.success.withOpacity(0.1),
+                          color: AppColors.success.withValues(alpha: 0.1),
                           shape: BoxShape.circle,
                         ),
                         child: const Icon(Icons.check, color: AppColors.success, size: 48),

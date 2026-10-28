@@ -198,7 +198,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           '로그아웃',
                           () async {
                             await ApiClient().clearToken();
-                            if (mounted) context.go('/welcome');
+                            if (!context.mounted) return;
+                            context.go('/welcome');
                           },
                         ),
                         _buildSettingItem(

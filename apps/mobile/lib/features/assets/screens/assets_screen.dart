@@ -99,7 +99,7 @@ class _AssetsScreenState extends State<AssetsScreen> {
               ),
               const SizedBox(height: 14),
               DropdownButtonFormField<String>(
-                value: type,
+                initialValue: type,
                 items: const [
                   DropdownMenuItem(value: 'MANUAL_BANK', child: Text('수동 은행 계좌')),
                   DropdownMenuItem(value: 'CASH', child: Text('현금 지갑')),
@@ -287,7 +287,7 @@ class _AssetsScreenState extends State<AssetsScreen> {
                                 shrinkWrap: true,
                                 physics: const NeverScrollableScrollPhysics(),
                                 itemCount: _accounts.length,
-                                separatorBuilder: (_, __) => const Divider(height: 18),
+                                separatorBuilder: (_, _) => const Divider(height: 18),
                                 itemBuilder: (context, index) {
                                   final a = _accounts[index];
                                   final typeName = a['account_type'] == 'MANUAL_BANK'

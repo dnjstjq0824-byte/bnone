@@ -236,7 +236,7 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
                                 shrinkWrap: true,
                                 physics: const NeverScrollableScrollPhysics(),
                                 itemCount: _subscriptions.length,
-                                separatorBuilder: (_, __) => const Divider(height: 18),
+                                separatorBuilder: (_, _) => const Divider(height: 18),
                                 itemBuilder: (context, index) {
                                   final s = _subscriptions[index];
                                   final nextDate = s['next_renewal_at']?.toString().split("T")[0] ?? '';

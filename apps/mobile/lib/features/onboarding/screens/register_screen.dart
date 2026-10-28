@@ -93,7 +93,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   padding: const EdgeInsets.all(12),
                   margin: const EdgeInsets.only(bottom: 20),
                   decoration: BoxDecoration(
-                    color: AppColors.danger.withOpacity(0.1),
+                    color: AppColors.danger.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Text(
