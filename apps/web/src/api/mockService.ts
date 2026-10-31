@@ -467,3 +467,4 @@ export function handleMockApi<T = any>(endpoint: string, options: RequestInit = 
   // Default fallback
   return {} as T;
 }
+

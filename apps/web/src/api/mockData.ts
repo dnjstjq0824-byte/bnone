@@ -364,3 +364,4 @@ export const INITIAL_NOTIFICATIONS = [
     notification_type: 'FX_ALERT',
   },
 ];
+
