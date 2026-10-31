@@ -80,6 +80,11 @@
         <p class="text-[11px] text-slate-500">
           * BN ONE v1.0은 사용자가 직접 입력한 금융정보를 기반으로 자산과 지출을 관리하는 소프트웨어이며, 실제 금융기관 계좌 연결 및 금융거래를 직접 실행하지 않습니다.
         </p>
+        <div class="pt-2 text-[10px] text-slate-500 flex items-center justify-center gap-3">
+          <span>배포 환경: 정적 웹 + 브라우저 로컬 목업 데모</span>
+          <span>•</span>
+          <span class="font-mono">Commit: #{{ commitHash }}</span>
+        </div>
       </div>
     </footer>
   </div>
@@ -87,5 +92,8 @@
 
 <script setup lang="ts">
 import { RouterLink } from 'vue-router';
+
+declare const __COMMIT_HASH__: string;
+const commitHash = typeof __COMMIT_HASH__ !== 'undefined' ? __COMMIT_HASH__ : 'dev';
 </script>
 

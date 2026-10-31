@@ -5,7 +5,8 @@
   "description": "BN ONE — Global Financial Lifestyle Super App",
   "scripts": {
     "build": "npm --prefix apps/web install && npm --prefix apps/web run build",
-    "deploy": "wrangler deploy"
+    "deploy": "wrangler deploy",
+    "test": "npm --prefix apps/web test"
   },
   "devDependencies": {
     "wrangler": "^4.156.0"

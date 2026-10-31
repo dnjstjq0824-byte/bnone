@@ -1,7 +1,7 @@
 // apps/web/src/api/client.ts
 import { handleMockApi } from './mockService';
 
-export const API_BASE = (import.meta.env.VITE_API_URL || '') + '/api/v1';
+export const API_BASE = (import.meta.env?.VITE_API_URL || '') + '/api/v1';
 
 export interface ApiResponse<T = any> {
   data: T;
@@ -30,7 +30,7 @@ export async function apiFetch<T = any>(endpoint: string, options: RequestInit =
   
   // If we are operating in mock mode or using a mock token, resolve with mock service immediately
   const isMockToken = token && token.startsWith('bn-mock');
-  const hasNoBackend = !import.meta.env.VITE_API_URL;
+  const hasNoBackend = !import.meta.env?.VITE_API_URL;
 
   // For auth endpoints in static deployment without dedicated backend, serve mock instantly
   if (hasNoBackend && (endpoint.startsWith('/auth/login') || endpoint.startsWith('/auth/register'))) {

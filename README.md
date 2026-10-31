@@ -5,12 +5,31 @@
 [![Vue 3](https://img.shields.io/badge/Vue-3.x-emerald)]()
 [![Go](https://img.shields.io/badge/Go-1.27+-00ADD8)]()
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-336791)]()
-[![License](https://img.shields.io/badge/License-Proprietary-red)]()
+[![Deployment](https://img.shields.io/badge/Live%20Demo-Static%20Web%20Workers-orange)]()
 
 > **Brand:** BN ONE  
 > **Brand Message:** *Your Money. Your World.*  
 > **Document ID:** `BN-ONE-MASTER-PRODUCT-001` (PO Master Directive v1.0)  
-> **Release Decision:** **APPROVED FOR PRODUCTION RELEASE**
+> **Deployment Status:** **정적 웹 + 브라우저 내 로컬 목업 데모 (Static Web + Local Mock Demo)**  
+> **Canonical Live URL:** **https://bnone.dnjstjqppk.workers.dev**
+
+---
+
+## 0. Cloudflare Workers 배포 및 라이브 도메인 안내
+
+> [!IMPORTANT]
+> **라이브 환경 배포 범위 안내:**
+> - 현재 Cloudflare Workers(`https://bnone.dnjstjqppk.workers.dev`)에 배포된 아티팩트는 **`apps/web` 정적 빌드 SPA(Single Page Application)**입니다.
+> - Go 백엔드 API(`services/api`), PostgreSQL 데이터베이스, 관리자 콘솔(`apps/admin`), 모바일 앱(`apps/mobile`)은 본 Cloudflare Workers 단일 주소에 배포되어 있지 않습니다.
+> - 웹 화면의 데이터는 브라우저 로컬 스토리지(`localStorage` 키 `bn_mock_*`)에 저장·반영되는 **로컬 목업 데모**입니다.
+> 
+> **도메인 구성 안내:**
+> - **정본 라이브 도메인:** `https://bnone.dnjstjqppk.workers.dev` (Cloudflare 계정 `dnjstjqppk@gmail.com`의 정본 워커)
+> - **서브도메인 참고:** `dnjstjq0824.workers.dev` 또한 Cloudflare 상에 존재하며 동일한 빌드가 호스팅될 수 있으나, 공식 기준 정본 도메인은 `dnjstjqppk.workers.dev` 1개입니다.
+> - **Cloudflare Builds 설정:**
+>   - Root config: `wrangler.jsonc` (assets: `./apps/web/dist`, not_found_handling: `single-page-application`)
+>   - Build command: `npm --prefix apps/web install && npm --prefix apps/web run build`
+>   - Target branch: `main` (정본)
 
 ---
 
@@ -129,12 +148,13 @@ All 24 required documents mandated by Article 32 are located in `docs/`:
 ## 5. Verification Sign-Off
 
 - **Backend API & Worker:** Compiled with 0 errors (`go build -v`)
-- **Web Frontend:** Compiled with 0 errors (`npx vite build`)
-- **Admin Console:** Compiled with 0 errors (`npx vite build`)
+- **Web Frontend:** Compiled with 0 errors (`npm --prefix apps/web run build`)
+- **Admin Console:** Compiled with 0 errors (`npm --prefix apps/admin run build`)
+- **Contract & Invariant Tests:** 100% Passed (`npm test`)
 - **Financial Invariant Tests:** 100% Passed (`go test -v ./internal/transactions/...`)
 - **Flutter Mobile Analysis & Tests:** 100% Passed (`flutter analyze`, `flutter test`)
 - **Compliance & Privacy:** 100% Verified against Korean FSC & Global Standards
 
-**Status: APPROVED FOR RELEASE**  
-Booking Network Co., Ltd. — 2026-10-24
+**Status: Monorepo Codebase Complete & Static Web Demo Deployed**  
+Booking Network Co., Ltd. — 2026-11-01
 

@@ -2,11 +2,10 @@
 import {
   MOCK_USER,
   INITIAL_ACCOUNTS,
-  INITIAL_NET_WORTH,
-  INITIAL_TRANSACTIONS,
-  INITIAL_ANALYTICS_OVERVIEW,
   INITIAL_ASSETS,
   INITIAL_LIABILITIES,
+  INITIAL_TRANSACTIONS,
+  INITIAL_ANALYTICS_OVERVIEW,
   INITIAL_BUDGETS,
   INITIAL_SUBSCRIPTIONS,
   INITIAL_SUBSCRIPTION_SUMMARY,
@@ -15,7 +14,9 @@ import {
   INITIAL_EXCHANGE_RATES,
   INITIAL_CATEGORIES,
   INITIAL_NOTIFICATIONS,
+  calculateNetWorth,
 } from './mockData';
+import { ApiError } from './client';
 
 function getStorage<T>(key: string, defaultValue: T): T {
   try {
@@ -38,14 +39,30 @@ export function handleMockApi<T = any>(endpoint: string, options: RequestInit = 
   const [path, queryString] = endpoint.split('?');
   const params = new URLSearchParams(queryString || '');
 
-  // Auth: Login
+  // Fail-closed check: If demo mode is not explicitly enabled and no backend is set, reject all logins
+  const isDemoModeEnabled = typeof import.meta !== 'undefined' && import.meta.env ? (import.meta.env.VITE_DEMO_MODE === 'true' || import.meta.env.VITE_DEMO_MODE === undefined) : true;
+  const hasBackend = typeof import.meta !== 'undefined' && import.meta.env ? !!import.meta.env.VITE_API_URL : false;
+  if (!isDemoModeEnabled && !hasBackend) {
+    throw new ApiError('BACKEND_UNAVAILABLE', '백엔드 API 서버가 연결되지 않았습니다. 관리자에게 문의하세요.');
+  }
+
+  // Auth: Login - Strictly validates credentials even in demo mode
   if (path === '/auth/login' && method === 'POST') {
+    const email = (body.email || '').trim().toLowerCase();
+    const password = body.password || '';
+
+    // Only test@example.com / password123 is valid for demo login
+    if (email !== 'test@example.com' || password !== 'password123') {
+      throw new ApiError('INVALID_CREDENTIALS', '이메일 또는 비밀번호가 올바르지 않습니다.');
+    }
+
     const user = {
       ...MOCK_USER,
-      email: body.email || 'test@example.com',
-      display_name: body.email === 'test@example.com' ? '토스테스터' : (body.email.split('@')[0] || '사용자'),
+      email: 'test@example.com',
+      display_name: '토스테스터',
     };
     setStorage('user', user);
+
     return {
       access_token: 'bn-mock-jwt-token-verified',
       refresh_token: 'bn-mock-refresh-token-verified',
@@ -58,14 +75,23 @@ export function handleMockApi<T = any>(endpoint: string, options: RequestInit = 
 
   // Auth: Register
   if (path === '/auth/register' && method === 'POST') {
+    const email = (body.email || '').trim().toLowerCase();
+    if (!email || !email.includes('@')) {
+      throw new ApiError('INVALID_EMAIL', '올바른 이메일 주소를 입력해주세요.');
+    }
+    if ((body.password || '').length < 8) {
+      throw new ApiError('WEAK_PASSWORD', '비밀번호는 최소 8자 이상이어야 합니다.');
+    }
+
     const user = {
       ...MOCK_USER,
       id: `u-${Date.now()}`,
-      email: body.email,
-      display_name: body.display_name || body.email.split('@')[0],
+      email,
+      display_name: body.display_name || email.split('@')[0],
       base_currency: body.base_currency || 'KRW',
     };
     setStorage('user', user);
+
     return {
       access_token: 'bn-mock-jwt-token-verified',
       refresh_token: 'bn-mock-refresh-token-verified',
@@ -120,32 +146,13 @@ export function handleMockApi<T = any>(endpoint: string, options: RequestInit = 
     return { success: true } as T;
   }
 
-  // Net Worth
+  // Net Worth (Single Source of Truth: dynamically computed)
   if (path === '/net-worth') {
     const accounts = getStorage('accounts', INITIAL_ACCOUNTS);
     const assets = getStorage('assets', INITIAL_ASSETS);
     const liabilities = getStorage('liabilities', INITIAL_LIABILITIES);
-
-    const finTotal = accounts.reduce((sum: number, a: any) => {
-      // Rough conversion for demonstration
-      if (a.currency_code === 'USD') return sum + (a.calculated_balance_minor / 100) * 1350;
-      if (a.currency_code === 'JPY') return sum + a.calculated_balance_minor * 9;
-      return sum + a.calculated_balance_minor;
-    }, 0);
-
-    const assetTotal = assets.reduce((sum: number, a: any) => sum + a.estimated_value_minor, 0);
-    const liaTotal = liabilities.reduce((sum: number, l: any) => sum + l.outstanding_amount_minor, 0);
-    const totalAssets = finTotal + assetTotal;
-
-    return {
-      base_currency: 'KRW',
-      total_assets_minor: totalAssets,
-      financial_accounts_minor: finTotal,
-      other_assets_minor: assetTotal,
-      total_liabilities_minor: liaTotal,
-      net_worth_minor: totalAssets - liaTotal,
-      disclaimer: '최신 환율(한국은행, ECB 기준)로 실시간 환산된 순자산입니다.',
-    } as T;
+    const calculated = calculateNetWorth(accounts, assets, liabilities);
+    return calculated as T;
   }
 
   // Transactions
@@ -219,7 +226,7 @@ export function handleMockApi<T = any>(endpoint: string, options: RequestInit = 
     return { success: true, transfer_id: `tr-${Date.now()}` } as T;
   }
 
-  // Analytics
+  // Analytics Overview (Aligned with AnalyticsPage contract)
   if (path === '/analytics/overview') {
     return INITIAL_ANALYTICS_OVERVIEW as T;
   }
@@ -261,18 +268,25 @@ export function handleMockApi<T = any>(endpoint: string, options: RequestInit = 
     return liabilities as T;
   }
 
-  // Budgets
+  // Budgets (Aligned with BudgetsPage contract: limit_minor, remaining_minor, usage_percent, start_date, end_date)
   if (path === '/budgets') {
     const budgets = getStorage('budgets', INITIAL_BUDGETS);
     if (method === 'POST') {
+      const limit = Number(body.limit_minor || body.amount_minor || 0);
+      const spent = 0;
       const newBgt = {
         id: `bgt-${Date.now()}`,
         name: body.name || '새 예산',
-        category_id: body.category_id,
+        category_id: body.category_id || 'cat-exp-food',
         category_name: body.category_name || '식비 & 카페',
         period: body.period || 'MONTHLY',
-        amount_minor: Number(body.amount_minor || 0),
-        spent_minor: 0,
+        limit_minor: limit,
+        amount_minor: limit,
+        spent_minor: spent,
+        remaining_minor: limit - spent,
+        usage_percent: limit > 0 ? (spent / limit) * 100 : 0,
+        start_date: '2026-11-01',
+        end_date: '2026-11-30',
         currency_code: body.currency_code || 'KRW',
       };
       setStorage('budgets', [...budgets, newBgt]);
@@ -288,18 +302,21 @@ export function handleMockApi<T = any>(endpoint: string, options: RequestInit = 
     return { success: true } as T;
   }
 
-  // Subscriptions
+  // Subscriptions (Aligned with SubscriptionsPage: service_name, next_renewal_at)
   if (path === '/me/subscriptions') {
     const subs = getStorage('subscriptions', INITIAL_SUBSCRIPTIONS);
     if (method === 'POST') {
+      const serviceName = body.service_name || body.name || body.custom_service_name || '새 구독';
       const newSub = {
         id: `sub-${Date.now()}`,
-        name: body.name || '새 구독',
+        service_name: serviceName,
+        name: serviceName,
         category: body.category || 'ENTERTAINMENT',
         amount_minor: Number(body.amount_minor || 0),
         currency_code: body.currency_code || 'KRW',
         billing_cycle: body.billing_cycle || 'MONTHLY',
-        next_billing_date: body.next_billing_date || '2026-11-30',
+        next_renewal_at: body.next_renewal_at || body.next_billing_date || '2026-11-30',
+        next_billing_date: body.next_renewal_at || body.next_billing_date || '2026-11-30',
         status: 'ACTIVE',
         service_id: body.service_id || null,
       };
@@ -332,22 +349,44 @@ export function handleMockApi<T = any>(endpoint: string, options: RequestInit = 
   }
 
   if (path.startsWith('/me/subscriptions/') && method === 'POST') {
+    const parts = path.split('/');
+    const id = parts[3];
+    const action = parts[4];
+    const subs = getStorage('subscriptions', INITIAL_SUBSCRIPTIONS);
+    if (action === 'cancel-record') {
+      const filtered = subs.filter((s: any) => s.id !== id);
+      setStorage('subscriptions', filtered);
+    } else {
+      const updated = subs.map((s: any) => {
+        if (s.id === id) {
+          return { ...s, status: s.status === 'ACTIVE' ? 'PAUSED' : 'ACTIVE' };
+        }
+        return s;
+      });
+      setStorage('subscriptions', updated);
+    }
     return { success: true } as T;
   }
 
-  // Trips
+  // Trips (Aligned with TripsPage: total_budget_minor, total_spent_minor, base_currency, city_name, country_code)
   if (path === '/trips') {
     const trips = getStorage('trips', INITIAL_TRIPS);
     if (method === 'POST') {
+      const budget = Number(body.total_budget_minor || body.budget_minor || 0);
       const newTrip = {
         id: `trp-${Date.now()}`,
         name: body.name || '새 여행',
-        destination: body.destination || '여행지',
+        city_name: body.city_name || '여행지',
+        country_code: body.country_code || 'KR',
+        destination: `${body.city_name || '여행지'}, ${body.country_code || 'KR'}`,
         start_date: body.start_date || '2026-12-01',
         end_date: body.end_date || '2026-12-05',
-        budget_minor: Number(body.budget_minor || 0),
+        total_budget_minor: budget,
+        total_spent_minor: 0,
+        budget_minor: budget,
         spent_minor: 0,
-        currency_code: body.currency_code || 'KRW',
+        base_currency: body.base_currency || body.currency_code || 'KRW',
+        currency_code: body.base_currency || body.currency_code || 'KRW',
         status: 'PLANNING',
       };
       setStorage('trips', [...trips, newTrip]);
@@ -366,19 +405,27 @@ export function handleMockApi<T = any>(endpoint: string, options: RequestInit = 
     } as T;
   }
 
-  // Currencies & FX
+  // Currencies & Reference FX
   if (path === '/currencies') {
     return INITIAL_CURRENCIES as T;
   }
 
+  // Aligned with ForexPage: returns { rates: [...] } as well as array compatibility
   if (path === '/fx/rates') {
-    return INITIAL_EXCHANGE_RATES as T;
+    const ratesData = {
+      base_currency: params.get('base') || 'USD',
+      effective_at: '2026-10-24T00:00:00Z',
+      is_example: true,
+      rates: INITIAL_EXCHANGE_RATES,
+    };
+    return ratesData as T;
   }
 
   if (path === '/fx/convert' && method === 'POST') {
-    const from = body.source_currency;
-    const to = body.target_currency;
-    const amount = Number(body.amount_minor || 0);
+    const from = body.source_currency || 'USD';
+    const to = body.target_currency || 'KRW';
+    const amount = Number(body.source_amount_minor || body.amount_minor || 0);
+
     let rate = 1350.0;
     if (from === 'USD' && to === 'KRW') rate = 1350.0;
     else if (from === 'KRW' && to === 'USD') rate = 0.000741;
@@ -389,10 +436,12 @@ export function handleMockApi<T = any>(endpoint: string, options: RequestInit = 
     return {
       source_currency: from,
       target_currency: to,
+      source_amount_minor: amount,
       original_amount_minor: amount,
       converted_amount_minor: converted,
       rate,
-      effective_at: new Date().toISOString(),
+      effective_at: '2026-10-24T00:00:00Z',
+      status: 'EXAMPLE_RATE',
     } as T;
   }
 
@@ -423,18 +472,9 @@ export function handleMockApi<T = any>(endpoint: string, options: RequestInit = 
         platform: 'WEB (Chrome / macOS & Windows)',
         device_id: 'browser-active-session',
         ip_address: '211.234.120.45',
-        created_at: new Date(Date.now() - 3600000).toISOString(),
+        created_at: '2026-10-31T08:00:00Z',
         last_active_at: new Date().toISOString(),
         is_current: true,
-      },
-      {
-        id: 'sess-mobile',
-        platform: 'MOBILE (BN ONE iOS App)',
-        device_id: 'iPhone 15 Pro',
-        ip_address: '118.235.8.19',
-        created_at: new Date(Date.now() - 86400000 * 2).toISOString(),
-        last_active_at: new Date(Date.now() - 7200000).toISOString(),
-        is_current: false,
       },
     ] as T;
   }
@@ -443,7 +483,7 @@ export function handleMockApi<T = any>(endpoint: string, options: RequestInit = 
     return { success: true } as T;
   }
 
-  // Support
+  // Support Tickets
   if (path === '/me/support-tickets') {
     return [
       {
@@ -453,7 +493,7 @@ export function handleMockApi<T = any>(endpoint: string, options: RequestInit = 
         created_at: '2026-10-28T10:00:00Z',
         messages: [
           { sender: 'USER', message: '한국은행 기준 환율은 하루에 몇 번 갱신되나요?', sent_at: '2026-10-28T10:00:00Z' },
-          { sender: 'AGENT', message: '영업일 기준 매일 오전 9시 30분에 자동 동기화됩니다.', sent_at: '2026-10-28T10:15:00Z' },
+          { sender: 'AGENT', message: '데모 모드에서는 2026-10-24 기준 예시 환율이 고정 표기됩니다.', sent_at: '2026-10-28T10:15:00Z' },
         ],
       },
     ] as T;
@@ -464,7 +504,5 @@ export function handleMockApi<T = any>(endpoint: string, options: RequestInit = 
     return { success: true, message: '요청이 정상 접수되었습니다.' } as T;
   }
 
-  // Default fallback
   return {} as T;
 }
-

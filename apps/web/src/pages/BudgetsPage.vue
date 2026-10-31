@@ -14,6 +14,12 @@
       </button>
     </div>
 
+    <!-- Error alert -->
+    <div v-if="loadError" class="p-4 rounded-2xl bg-[#FEECEB] text-[#F04452] text-xs font-medium">
+      {{ loadError }}
+      <button class="underline ml-2 font-bold" @click="loadBudgets">다시 시도</button>
+    </div>
+
     <!-- Budgets List -->
     <div v-if="budgets.length === 0" class="bg-white p-12 rounded-3xl text-center">
       <div class="w-14 h-14 mx-auto mb-4 rounded-2xl bg-[#E5F7F0] flex items-center justify-center text-[#00B06B] text-2xl">
@@ -38,30 +44,30 @@
         <div class="flex items-center justify-between">
           <div>
             <h3 class="font-bold text-base text-[#191F28]">{{ b.name }}</h3>
-            <span class="text-xs text-[#8B95A1] mt-0.5 block">{{ b.start_date }} ~ {{ b.end_date }}</span>
+            <span class="text-xs text-[#8B95A1] mt-0.5 block">{{ b.start_date || '-' }} ~ {{ b.end_date || '-' }}</span>
           </div>
           <span
             class="px-2.5 py-1 rounded-lg text-xs font-bold"
-            :class="b.usage_percent >= 100 ? 'bg-[#FEECEB] text-[#F04452]' : b.usage_percent >= 80 ? 'bg-[#FFF3E2] text-[#FF8D00]' : 'bg-[#E8F3FF] text-[#3182F6]'"
+            :class="(b.usage_percent ?? 0) >= 100 ? 'bg-[#FEECEB] text-[#F04452]' : (b.usage_percent ?? 0) >= 80 ? 'bg-[#FFF3E2] text-[#FF8D00]' : 'bg-[#E8F3FF] text-[#3182F6]'"
           >
-            {{ b.usage_percent.toFixed(0) }}% 사용
+            {{ (b.usage_percent ?? 0).toFixed(0) }}% 사용
           </span>
         </div>
 
         <div>
           <div class="text-xl font-extrabold text-[#191F28] mb-2 tracking-tight tabular-nums">
-            남은 예산 {{ finance.formatCurrency(b.remaining_minor, b.currency_code) }}
+            남은 예산 {{ finance.formatCurrency(b.remaining_minor ?? ((b.limit_minor ?? 0) - (b.spent_minor ?? 0)), b.currency_code) }}
           </div>
           <div class="w-full bg-[#F2F4F6] h-3 rounded-full overflow-hidden">
             <div
               class="h-full rounded-full transition-all"
-              :class="b.usage_percent >= 100 ? 'bg-[#F04452]' : b.usage_percent >= 80 ? 'bg-[#FF8D00]' : 'bg-[#3182F6]'"
-              :style="{ width: `${Math.min(100, b.usage_percent)}%` }"
+              :class="(b.usage_percent ?? 0) >= 100 ? 'bg-[#F04452]' : (b.usage_percent ?? 0) >= 80 ? 'bg-[#FF8D00]' : 'bg-[#3182F6]'"
+              :style="{ width: `${Math.min(100, b.usage_percent ?? 0)}%` }"
             ></div>
           </div>
           <div class="flex items-center justify-between text-xs text-[#8B95A1] mt-2">
-            <span>쓴 돈: {{ finance.formatCurrency(b.spent_minor, b.currency_code) }}</span>
-            <span>목표 한도: {{ finance.formatCurrency(b.limit_minor, b.currency_code) }}</span>
+            <span>쓴 돈: {{ finance.formatCurrency(b.spent_minor ?? 0, b.currency_code) }}</span>
+            <span>목표 한도: {{ finance.formatCurrency(b.limit_minor ?? b.amount_minor ?? 0, b.currency_code) }}</span>
           </div>
         </div>
 
@@ -150,6 +156,7 @@ import { useFinanceStore } from '../stores/finance';
 const finance = useFinanceStore();
 const budgets = ref<any[]>([]);
 const showCreateModal = ref(false);
+const loadError = ref('');
 
 const newBudget = ref({
   name: '',
@@ -159,7 +166,13 @@ const newBudget = ref({
 });
 
 async function loadBudgets() {
-  budgets.value = await apiFetch('/budgets');
+  loadError.value = '';
+  try {
+    const res = await apiFetch('/budgets');
+    budgets.value = Array.isArray(res) ? res : [];
+  } catch (err: any) {
+    loadError.value = err.message || '예산 정보를 불러오지 못했습니다.';
+  }
 }
 
 onMounted(() => {

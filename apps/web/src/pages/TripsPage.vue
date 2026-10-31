@@ -14,6 +14,12 @@
       </button>
     </div>
 
+    <!-- Error alert -->
+    <div v-if="loadError" class="p-4 rounded-2xl bg-[#FEECEB] text-[#F04452] text-xs font-medium">
+      {{ loadError }}
+      <button class="underline ml-2 font-bold" @click="loadTrips">다시 시도</button>
+    </div>
+
     <!-- Travel List -->
     <div v-if="trips.length === 0" class="bg-white p-12 rounded-3xl text-center">
       <div class="w-14 h-14 mx-auto mb-4 rounded-2xl bg-[#E5F7F0] flex items-center justify-center text-[#00B06B] text-2xl">
@@ -41,7 +47,10 @@
               <span class="w-8 h-8 rounded-xl bg-[#E5F7F0] text-[#00B06B] flex items-center justify-center text-sm">✈️</span>
               <span>{{ t.name }}</span>
             </h3>
-            <span class="text-xs text-[#8B95A1] mt-1 block">{{ t.city_name }} ({{ t.country_code }}) • {{ t.start_date }} ~ {{ t.end_date }}</span>
+            <span class="text-xs text-[#8B95A1] mt-1 block">
+              {{ t.city_name || (t.destination ? t.destination.split(',')[0] : '여행지') }}
+              ({{ t.country_code || (t.destination ? t.destination.split(',')[1]?.trim() : 'KR') }}) • {{ t.start_date }} ~ {{ t.end_date }}
+            </span>
           </div>
           <span class="px-2.5 py-1 rounded-lg text-xs font-bold bg-[#E8F3FF] text-[#3182F6]">
             {{ t.status === 'PLANNING' ? '계획 중' : t.status === 'ONGOING' ? '여행 중' : '완료' }}
@@ -51,17 +60,26 @@
         <div class="p-4 rounded-2xl bg-[#F9FAFB] flex items-center justify-between text-xs">
           <div>
             <div class="text-[#8B95A1] text-xs">총 예산</div>
-            <div class="font-extrabold text-[#191F28] text-base mt-0.5">{{ finance.formatCurrency(t.total_budget_minor, t.base_currency) }}</div>
+            <div class="font-extrabold text-[#191F28] text-base mt-0.5">
+              {{ finance.formatCurrency(t.total_budget_minor ?? t.budget_minor ?? 0, t.base_currency || t.currency_code || 'KRW') }}
+            </div>
           </div>
           <div class="text-right">
             <div class="text-[#8B95A1] text-xs">현재 사용액</div>
-            <div class="font-extrabold text-[#191F28] text-base mt-0.5">{{ finance.formatCurrency(t.total_spent_minor, t.base_currency) }}</div>
+            <div class="font-extrabold text-[#191F28] text-base mt-0.5">
+              {{ finance.formatCurrency(t.total_spent_minor ?? t.spent_minor ?? 0, t.base_currency || t.currency_code || 'KRW') }}
+            </div>
           </div>
         </div>
 
         <div class="flex items-center justify-between pt-1 text-xs">
           <span class="text-[#4E5968]">
-            남은 예산: <strong class="text-[#3182F6] font-extrabold">{{ finance.formatCurrency(t.total_budget_minor - t.total_spent_minor, t.base_currency) }}</strong>
+            남은 예산: <strong class="text-[#3182F6] font-extrabold">{{
+              finance.formatCurrency(
+                (t.total_budget_minor ?? t.budget_minor ?? 0) - (t.total_spent_minor ?? t.spent_minor ?? 0),
+                t.base_currency || t.currency_code || 'KRW'
+              )
+            }}</strong>
           </span>
           <button @click="viewReport(t.id)" class="text-[#3182F6] hover:underline font-bold">
             결산 리포트 보기 →
@@ -167,6 +185,7 @@ import { useFinanceStore } from '../stores/finance';
 const finance = useFinanceStore();
 const trips = ref<any[]>([]);
 const showCreateTripModal = ref(false);
+const loadError = ref('');
 
 const newTrip = ref({
   name: '',
@@ -179,7 +198,13 @@ const newTrip = ref({
 });
 
 async function loadTrips() {
-  trips.value = await apiFetch('/trips');
+  loadError.value = '';
+  try {
+    const res = await apiFetch('/trips');
+    trips.value = Array.isArray(res) ? res : [];
+  } catch (err: any) {
+    loadError.value = err.message || '여행 일정을 불러오지 못했습니다.';
+  }
 }
 
 onMounted(() => {

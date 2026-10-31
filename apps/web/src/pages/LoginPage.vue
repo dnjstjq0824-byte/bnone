@@ -10,21 +10,24 @@
         <p class="text-xs text-[#8B95A1] mt-1.5">내 돈의 흐름을 한눈에. 전 세계 어디서나.</p>
       </div>
 
-      <!-- Test Account Helper Banner (Toss Style) -->
-      <div class="mb-6 p-4 rounded-2xl bg-[#E8F3FF] border border-[#D0E5FF] space-y-2">
+      <!-- Test Account Helper Banner (Only displayed in Demo Mode) -->
+      <div v-if="isDemoMode" class="mb-6 p-4 rounded-2xl bg-[#E8F3FF] border border-[#D0E5FF] space-y-2">
         <div class="flex items-center justify-between">
           <div class="flex items-center gap-1.5">
-            <span class="text-[#3182F6] text-sm font-bold">💡 바로 체험할 수 있는 테스트 계정</span>
+            <span class="text-[#3182F6] text-sm font-bold">💡 데모 체험 계정 안내</span>
           </div>
-          <span class="px-2 py-0.5 rounded-full bg-[#3182F6]/10 text-[#3182F6] text-[11px] font-bold">체험용</span>
+          <span class="px-2 py-0.5 rounded-full bg-[#3182F6]/10 text-[#3182F6] text-[11px] font-bold">브라우저 로컬 데이터</span>
         </div>
+        <p class="text-[11px] text-[#4E5968] leading-relaxed">
+          현재 웹은 <strong>정적 웹 + 브라우저 내 로컬 목업 데모</strong>로 실행 중이며, 모든 데이터는 브라우저에만 저장됩니다.
+        </p>
         <div class="text-xs text-[#4E5968] space-y-1 pt-1 font-medium">
           <div class="flex items-center justify-between">
-            <span class="text-[#8B95A1]">이메일</span>
+            <span class="text-[#8B95A1]">데모 이메일</span>
             <code class="font-bold text-[#191F28] bg-white px-2 py-0.5 rounded border border-[#E5E8EB]">test@example.com</code>
           </div>
           <div class="flex items-center justify-between">
-            <span class="text-[#8B95A1]">비밀번호</span>
+            <span class="text-[#8B95A1]">데모 비밀번호</span>
             <code class="font-bold text-[#191F28] bg-white px-2 py-0.5 rounded border border-[#E5E8EB]">password123</code>
           </div>
         </div>
@@ -59,6 +62,7 @@
             v-model="email"
             type="email"
             required
+            autocomplete="username"
             placeholder="name@example.com"
             class="w-full px-4 py-3.5 rounded-xl border border-[#E5E8EB] text-sm focus:outline-none focus:border-[#3182F6] focus:ring-2 focus:ring-[#3182F6]/20 transition-all bg-[#F9FAFB] focus:bg-white"
           />
@@ -70,6 +74,7 @@
             v-model="password"
             type="password"
             required
+            autocomplete="current-password"
             placeholder="••••••••"
             class="w-full px-4 py-3.5 rounded-xl border border-[#E5E8EB] text-sm focus:outline-none focus:border-[#3182F6] focus:ring-2 focus:ring-[#3182F6]/20 transition-all bg-[#F9FAFB] focus:bg-white"
           />
@@ -103,9 +108,12 @@ import { useAuthStore } from '../stores/auth';
 const router = useRouter();
 const auth = useAuthStore();
 
-const email = ref('test@example.com');
-const password = ref('password123');
+// Initial form inputs must start empty (not pre-filled)
+const email = ref('');
+const password = ref('');
 const error = ref('');
+
+const isDemoMode = ref(import.meta.env.VITE_DEMO_MODE === 'true' || import.meta.env.VITE_DEMO_MODE === undefined);
 
 function fillTestAccount() {
   email.value = 'test@example.com';

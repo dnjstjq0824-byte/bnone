@@ -22,6 +22,12 @@
       </p>
     </div>
 
+    <!-- Error alert -->
+    <div v-if="loadError" class="p-4 rounded-2xl bg-[#FEECEB] text-[#F04452] text-xs font-medium">
+      {{ loadError }}
+      <button class="underline ml-2 font-bold" @click="loadData">다시 시도</button>
+    </div>
+
     <!-- Summary KPI (Toss Stats Cards) -->
     <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
       <div class="p-6 rounded-3xl bg-white space-y-1">
@@ -62,10 +68,10 @@
         <div class="flex items-center justify-between">
           <div class="flex items-center gap-3">
             <div class="w-11 h-11 rounded-2xl bg-[#F1EDFF] text-[#8061D9] flex items-center justify-center font-extrabold text-base">
-              {{ sub.service_name.charAt(0) }}
+              {{ (sub.service_name || sub.name || '?').charAt(0) }}
             </div>
             <div>
-              <h3 class="font-bold text-base text-[#191F28]">{{ sub.service_name }}</h3>
+              <h3 class="font-bold text-base text-[#191F28]">{{ sub.service_name || sub.name || '구독 서비스' }}</h3>
               <span class="text-xs text-[#8B95A1]">{{ sub.billing_cycle === 'MONTHLY' ? '매월' : '매년' }} 결제</span>
             </div>
           </div>
@@ -78,7 +84,7 @@
         </div>
 
         <div class="flex items-center justify-between pt-1">
-          <span class="text-xs text-[#8B95A1]">다음 결제일: <strong class="text-[#191F28] font-bold">{{ sub.next_renewal_at }}</strong></span>
+          <span class="text-xs text-[#8B95A1]">다음 결제일: <strong class="text-[#191F28] font-bold">{{ sub.next_renewal_at || sub.next_billing_date || '-' }}</strong></span>
           <span class="text-lg font-extrabold text-[#191F28] tabular-nums">{{ finance.formatCurrency(sub.amount_minor, sub.currency_code) }}</span>
         </div>
 
@@ -191,6 +197,7 @@ const subscriptions = ref<any[]>([]);
 const summary = ref<any>(null);
 const catalog = ref<any[]>([]);
 const showAddModal = ref(false);
+const loadError = ref('');
 
 const newSub = ref({
   service_id: '',
@@ -205,14 +212,19 @@ const newSub = ref({
 });
 
 async function loadData() {
-  const [subs, sum, cat] = await Promise.all([
-    apiFetch('/me/subscriptions'),
-    apiFetch('/me/subscriptions/summary'),
-    apiFetch('/subscription-services'),
-  ]);
-  subscriptions.value = subs;
-  summary.value = sum;
-  catalog.value = cat;
+  loadError.value = '';
+  try {
+    const [subs, sum, cat] = await Promise.all([
+      apiFetch('/me/subscriptions'),
+      apiFetch('/me/subscriptions/summary'),
+      apiFetch('/subscription-services'),
+    ]);
+    subscriptions.value = Array.isArray(subs) ? subs : [];
+    summary.value = sum;
+    catalog.value = Array.isArray(cat) ? cat : [];
+  } catch (err: any) {
+    loadError.value = err.message || '구독 정보를 불러오지 못했습니다.';
+  }
 }
 
 onMounted(() => {

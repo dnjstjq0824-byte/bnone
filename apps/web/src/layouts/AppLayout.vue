@@ -1,4 +1,4 @@
-﻿<script setup lang="ts">
+<script setup lang="ts">
 import { computed } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { Home, Wallet, ReceiptText, BarChart3, Target, Repeat, Plane, ArrowLeftRight, Bell, Settings, MessageCircle, LayoutGrid, Eye, EyeOff, LogOut } from 'lucide-vue-next';
@@ -22,7 +22,14 @@ const navItems = [
   { path: '/app/support', label: '고객센터', icon: MessageCircle },
 ];
 const mobileItems = [navItems[0], navItems[1], navItems[3], { path: '/app/all', label: '전체', icon: LayoutGrid }];
-const title = computed(() => navItems.find(item => isActive(item.path))?.label || '전체 서비스');
+declare const __COMMIT_HASH__: string;
+const commitHash = typeof __COMMIT_HASH__ !== 'undefined' ? __COMMIT_HASH__ : 'dev';
+const title = computed(() => {
+  if (route.path === '/app/future') return '다가오는 기능';
+  if (route.path === '/app/all') return '전체 서비스';
+  const found = navItems.find(item => isActive(item.path));
+  return found?.label || '금융 서비스';
+});
 function isActive(path: string) { return path === '/app' ? route.path === path : route.path.startsWith(path); }
 function logout() { auth.logout(); router.push('/login'); }
 </script>
@@ -36,6 +43,10 @@ function logout() { auth.logout(); router.push('/login'); }
         <RouterLink v-for="item in navItems" :key="item.path" :to="item.path" class="side-link" :class="{ selected: isActive(item.path) }" :aria-current="isActive(item.path) ? 'page' : undefined"><component :is="item.icon" :size="20" aria-hidden="true" />{{ item.label }}</RouterLink>
       </nav>
       <div class="sidebar-profile"><span class="profile-avatar">{{ (auth.user?.display_name || '나').charAt(0) }}</span><div class="min-w-0 flex-1"><strong class="block truncate">{{ auth.user?.display_name || '사용자' }}님</strong><span class="text-xs text-slate-500">내 금융을 한곳에서</span></div><button @click="logout" aria-label="로그아웃" class="icon-button"><LogOut :size="18" /></button></div>
+      <div class="px-3 py-2 text-[10px] text-slate-400 flex items-center justify-between border-t border-slate-100">
+        <span>브라우저 목업 데모</span>
+        <span class="font-mono">#{{ commitHash }}</span>
+      </div>
     </aside>
     <div class="finance-main">
       <header class="finance-header"><span class="hidden md:block font-semibold text-slate-600">{{ title }}</span><RouterLink to="/app" class="md:hidden brand-lockup"><span class="brand-mark">b</span> BN ONE</RouterLink><div class="flex items-center gap-2"><button @click="finance.maskAmounts = !finance.maskAmounts" :aria-pressed="finance.maskAmounts" :aria-label="finance.maskAmounts ? '금액 표시' : '금액 숨기기'" class="icon-button"><EyeOff v-if="finance.maskAmounts" :size="20" /><Eye v-else :size="20" /></button><RouterLink to="/app/notifications" class="icon-button" aria-label="알림"><Bell :size="21" /></RouterLink></div></header>

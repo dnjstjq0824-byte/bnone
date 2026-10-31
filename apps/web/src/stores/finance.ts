@@ -70,9 +70,16 @@ export const useFinanceStore = defineStore('finance', () => {
     }
   }
 
-  function formatCurrency(minor: number, currency: string = 'KRW'): string {
+  function formatCurrency(minor: number | null | undefined, currency: string = 'KRW'): string {
     if (maskAmounts.value) return '••••••';
-    const amount = currency === 'KRW' || currency === 'JPY' || currency === 'VND' ? minor : minor / 100;
+    let safeMinor = minor;
+    if (safeMinor === undefined || safeMinor === null || Number.isNaN(safeMinor) || !Number.isFinite(safeMinor)) {
+      if (import.meta.env.DEV) {
+        console.warn(`[formatCurrency] Non-numeric minor value provided: ${minor}`);
+      }
+      safeMinor = 0;
+    }
+    const amount = currency === 'KRW' || currency === 'JPY' || currency === 'VND' ? safeMinor : safeMinor / 100;
     return new Intl.NumberFormat('ko-KR', {
       style: 'currency',
       currency: currency,

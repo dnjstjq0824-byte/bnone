@@ -76,13 +76,13 @@
     <div class="bg-white rounded-3xl p-6 space-y-4">
       <div class="flex items-center justify-between">
         <h2 class="text-base font-bold text-[#191F28]">주요 통화 참고 환율 (기준: USD)</h2>
-        <span class="text-xs text-[#8B95A1]">한국은행 / ECB 공인 참고</span>
+        <span class="text-xs text-[#8B95A1]">예시 환율 (기준일: 2026-10-24 고정)</span>
       </div>
 
       <div class="divide-y divide-[#F2F4F6]">
         <div
           v-for="r in rateList"
-          :key="r.id || r.target_currency"
+          :key="r.id || r.target_currency || r.quote_currency"
           class="py-3.5 flex items-center justify-between"
         >
           <div class="flex items-center gap-3">
@@ -91,12 +91,12 @@
             </span>
             <div>
               <span class="text-sm font-bold text-[#191F28]">1 {{ r.base_currency || 'USD' }} / {{ r.target_currency || r.quote_currency }}</span>
-              <p class="text-xs text-[#8B95A1]">{{ r.provider_name || '공인 참고기관' }}</p>
+              <p class="text-xs text-[#8B95A1]">{{ r.provider_name || '예시 참고기관' }}</p>
             </div>
           </div>
           <div class="text-right">
             <div class="text-base font-extrabold text-[#191F28] tabular-nums">{{ r.rate }}</div>
-            <span class="text-[10px] font-bold text-[#00B06B] bg-[#E5F7F0] px-2 py-0.5 rounded-md">공인 검증 완료</span>
+            <span class="text-[10px] font-bold text-[#4E5968] bg-[#F2F4F6] px-2 py-0.5 rounded-md">정적 예시 환율</span>
           </div>
         </div>
       </div>
@@ -119,12 +119,16 @@ const convertReq = ref({
 });
 
 async function loadData() {
-  const [currs, ratesResp] = await Promise.all([
-    apiFetch('/currencies'),
-    apiFetch('/fx/rates?base=USD'),
-  ]);
-  currencies.value = currs;
-  rateList.value = ratesResp.rates || [];
+  try {
+    const [currs, ratesResp] = await Promise.all([
+      apiFetch('/currencies'),
+      apiFetch('/fx/rates?base=USD'),
+    ]);
+    currencies.value = Array.isArray(currs) ? currs : [];
+    rateList.value = ratesResp?.rates || (Array.isArray(ratesResp) ? ratesResp : []);
+  } catch (err: any) {
+    console.warn('[ForexPage] Failed to load data:', err);
+  }
 }
 
 onMounted(() => {
