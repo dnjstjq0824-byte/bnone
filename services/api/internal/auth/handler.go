@@ -2,28 +2,36 @@ package auth
 
 import (
 	"crypto/sha256"
+	"crypto/subtle"
 	"database/sql"
 	"encoding/hex"
 	"encoding/json"
 	"net/http"
+	"net/mail"
 	"strings"
 	"time"
 
-	"github.com/bookingnetwork/bn-one/services/api/internal/database"
-	"github.com/bookingnetwork/bn-one/services/api/internal/middleware"
-	"github.com/bookingnetwork/bn-one/services/api/internal/models"
+	"github.com/bookingnetwork/moa/services/api/internal/database"
+	"github.com/bookingnetwork/moa/services/api/internal/middleware"
+	"github.com/bookingnetwork/moa/services/api/internal/models"
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/google/uuid"
 	"golang.org/x/crypto/bcrypt"
 )
 
 type Handler struct {
-	db        *database.DB
-	jwtSecret string
+	db                 *database.DB
+	jwtSecret          string
+	bootstrapEnabled   bool
+	bootstrapPassword  string
 }
 
-func NewHandler(db *database.DB, jwtSecret string) *Handler {
-	return &Handler{db: db, jwtSecret: jwtSecret}
+// NewHandler wires the auth handler. bootstrapPassword must come from the
+// ADMIN_BOOTSTRAP_PASSWORD environment variable and is only honored when
+// bootstrapEnabled (ADMIN_BOOTSTRAP_ENABLED=true) is set, so a fresh
+// deployment can seed its first admin and then disable the backdoor.
+func NewHandler(db *database.DB, jwtSecret string, bootstrapEnabled bool, bootstrapPassword string) *Handler {
+	return &Handler{db: db, jwtSecret: jwtSecret, bootstrapEnabled: bootstrapEnabled, bootstrapPassword: bootstrapPassword}
 }
 
 type RegisterRequest struct {
@@ -61,12 +69,12 @@ func (h *Handler) Register(w http.ResponseWriter, r *http.Request) {
 	}
 
 	req.Email = strings.ToLower(strings.TrimSpace(req.Email))
-	if req.Email == "" || !strings.Contains(req.Email, "@") {
+	if !validEmail(req.Email) {
 		middleware.RespondError(w, r, http.StatusBadRequest, "INVALID_EMAIL", "A valid email address is required", nil)
 		return
 	}
-	if len(req.Password) < 8 {
-		middleware.RespondError(w, r, http.StatusBadRequest, "WEAK_PASSWORD", "Password must be at least 8 characters", nil)
+	if !validPassword(req.Password) {
+		middleware.RespondError(w, r, http.StatusBadRequest, "WEAK_PASSWORD", "Password must be at least 8 characters and include both letters and numbers", nil)
 		return
 	}
 	if !req.RequiredTermsAccepted {
@@ -287,8 +295,12 @@ func (h *Handler) AdminLogin(w http.ResponseWriter, r *http.Request) {
 	          WHERE a.email = $1 AND a.status = 'ACTIVE' LIMIT 1`
 	err := h.db.QueryRow(query, req.Email).Scan(&adminID, &fullName, &passHash, &roleCode)
 	if err != nil {
-		// If superadmin not yet seeded in admin_users, allow initial bootstrap credential
-		if req.Email == "admin@bookingnetwork.com" && req.Password == "AdminSuperPass2026!" {
+		// First-admin seeding: honored only when explicitly enabled via
+		// environment. Disable ADMIN_BOOTSTRAP_ENABLED right after the
+		// first real admin signs in.
+		if h.bootstrapEnabled && h.bootstrapPassword != "" &&
+			req.Email == "admin@bookingnetwork.com" &&
+			subtle.ConstantTimeCompare([]byte(req.Password), []byte(h.bootstrapPassword)) == 1 {
 			adminID = "admin-bootstrap-001"
 			fullName = "System Super Admin"
 			roleCode = "PLATFORM_SUPER_ADMIN"
@@ -328,6 +340,34 @@ func (h *Handler) AdminLogin(w http.ResponseWriter, r *http.Request) {
 		"email":        req.Email,
 		"expires_in":   43200,
 	})
+}
+
+func validEmail(email string) bool {
+	if email == "" || len(email) > 254 {
+		return false
+	}
+	addr, err := mail.ParseAddress(email)
+	if err != nil {
+		return false
+	}
+	// mail.ParseAddress accepts display names; require a bare address.
+	return addr.Address == email && strings.Contains(email, ".")
+}
+
+func validPassword(password string) bool {
+	if len(password) < 8 || len(password) > 128 {
+		return false
+	}
+	var hasLetter, hasDigit bool
+	for _, r := range password {
+		switch {
+		case r >= 'a' && r <= 'z' || r >= 'A' && r <= 'Z':
+			hasLetter = true
+		case r >= '0' && r <= '9':
+			hasDigit = true
+		}
+	}
+	return hasLetter && hasDigit
 }
 
 func (h *Handler) generateSessionTokens(userID, email, platform, deviceName string) (*TokenResponse, error) {

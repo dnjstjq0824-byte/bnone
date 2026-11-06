@@ -8,21 +8,21 @@
     </div>
 
     <!-- Search Input -->
-    <div class="bg-[#111827] p-4 rounded-2xl border border-slate-800 flex items-center gap-3">
+    <div class="bg-[#0C2318] p-4 rounded-2xl border border-white/10 flex items-center gap-3">
       <input
         v-model="search"
         @input="loadUsers"
         type="text"
         placeholder="사용자 이메일, 이름 검색..."
-        class="w-full px-4 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white focus:outline-none focus:border-blue-500"
+        class="w-full px-4 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white focus:outline-none focus:border-[#2A7248]"
       />
     </div>
 
     <!-- Users Table -->
-    <div class="bg-[#111827] rounded-3xl border border-slate-800 overflow-hidden">
+    <div class="bg-[#0C2318] rounded-3xl border border-white/10 overflow-hidden">
       <table class="w-full text-left border-collapse">
         <thead>
-          <tr class="bg-slate-800/50 text-[11px] font-bold text-slate-400 border-b border-slate-800">
+          <tr class="bg-slate-800/50 text-[11px] font-bold text-slate-400 border-b border-white/10">
             <th class="py-3 px-5">이메일</th>
             <th class="py-3 px-4">이름</th>
             <th class="py-3 px-4">국가 / 통화</th>
@@ -70,6 +70,9 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import { adminFetch } from '../api/client';
+import { useToast } from '../composables/useToast';
+
+const toast = useToast();
 
 const users = ref<any[]>([]);
 const search = ref('');
@@ -96,7 +99,7 @@ async function toggleStatus(u: any) {
 async function revokeSessions(id: string) {
   if (confirm('이 사용자의 모든 활성 세션을 즉시 철회하시겠습니까?')) {
     await adminFetch(`/admin/users/${id}/revoke-sessions`, { method: 'POST' });
-    alert('모든 세션이 종료되었습니다.');
+    toast.success('모든 세션이 종료되었습니다.');
   }
 }
 

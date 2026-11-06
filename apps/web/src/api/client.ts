@@ -26,19 +26,27 @@ export class ApiError extends Error {
 }
 
 export async function apiFetch<T = any>(endpoint: string, options: RequestInit = {}): Promise<T> {
-  const token = localStorage.getItem('bn_token');
-  
-  // If we are operating in mock mode or using a mock token, resolve with mock service immediately
-  const isMockToken = token && token.startsWith('bn-mock');
-  const hasNoBackend = !import.meta.env?.VITE_API_URL;
+  const token = localStorage.getItem('moa_token');
 
-  // For auth endpoints in static deployment without dedicated backend, serve mock instantly
-  if (hasNoBackend && (endpoint.startsWith('/auth/login') || endpoint.startsWith('/auth/register'))) {
+  // Mock demo data is served ONLY when explicitly enabled at build time
+  // (VITE_MOCK_ENABLED=true). Production builds fail closed: without a
+  // configured backend the call errors instead of masquerading demo
+  // fixtures as real user data.
+  const mockAllowed = import.meta.env?.VITE_MOCK_ENABLED === 'true';
+  const hasNoBackend = !import.meta.env?.VITE_API_URL;
+  const isMockToken = token && token.startsWith('moa-mock');
+
+  if (mockAllowed && (isMockToken || hasNoBackend)) {
     return handleMockApi<T>(endpoint, options);
   }
 
-  if (isMockToken) {
-    return handleMockApi<T>(endpoint, options);
+  if (isMockToken && !mockAllowed) {
+    localStorage.removeItem('moa_token');
+    throw new ApiError('MOCK_DISABLED', '데모 세션은 이 환경에서 사용할 수 없습니다. 다시 로그인하세요.');
+  }
+
+  if (hasNoBackend) {
+    throw new ApiError('BACKEND_NOT_CONFIGURED', '백엔드 API 주소(VITE_API_URL)가 설정되지 않았습니다. 관리자에게 문의하세요.');
   }
 
   const headers = new Headers(options.headers || {});
@@ -56,14 +64,15 @@ export async function apiFetch<T = any>(endpoint: string, options: RequestInit =
     });
 
     // If server responded with 404/405 (e.g. static server hosting SPA), fall back to mock
-    if ((response.status === 404 || response.status === 405) && hasNoBackend) {
-      console.warn(`[BN ONE API] Endpoint ${endpoint} returned ${response.status}, falling back to mock service.`);
+    // only when demo mode is explicitly enabled.
+    if ((response.status === 404 || response.status === 405) && mockAllowed) {
+      console.warn(`[MOA API] Endpoint ${endpoint} returned ${response.status}, falling back to mock service.`);
       return handleMockApi<T>(endpoint, options);
     }
 
     const contentType = response.headers.get('content-type') || '';
     if (!contentType.includes('application/json')) {
-      if (hasNoBackend) {
+      if (mockAllowed) {
         return handleMockApi<T>(endpoint, options);
       }
       throw new ApiError('INVALID_RESPONSE', 'Server returned non-JSON response');
@@ -78,9 +87,10 @@ export async function apiFetch<T = any>(endpoint: string, options: RequestInit =
 
     return json.data as T;
   } catch (err: any) {
-    // If network failed or unexpected parse error, fall back to mock service when no backend configured
-    if (hasNoBackend) {
-      console.warn(`[BN ONE API] Network error for ${endpoint}, serving mock data.`, err);
+    // If network failed or unexpected parse error, fall back to mock service
+    // only when demo mode is explicitly enabled.
+    if (mockAllowed && err?.code !== 'BACKEND_NOT_CONFIGURED' && err?.code !== 'MOCK_DISABLED') {
+      console.warn(`[MOA API] Network error for ${endpoint}, serving mock data.`, err);
       return handleMockApi<T>(endpoint, options);
     }
     throw err;

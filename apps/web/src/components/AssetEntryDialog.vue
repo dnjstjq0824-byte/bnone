@@ -48,7 +48,7 @@ async function save() {
   </dialog>
 </template>
 <style scoped>
-.asset-dialog { border: 0; border-radius: 24px; padding: 28px; width: min(460px, calc(100vw - 32px)); max-height: calc(100dvh - 40px); overflow-y: auto; color: #191f28; }
+.asset-dialog { border: 0; border-radius: 24px; padding: 28px; width: min(460px, calc(100vw - 32px)); max-height: calc(100dvh - 40px); overflow-y: auto; color: #141F19; }
 .asset-dialog::backdrop { background: rgb(25 31 40 / 45%); }
 .entry-field { display: grid; gap: 8px; font-size: 14px; font-weight: 600; }
 .entry-field input,.entry-field select { border: 1px solid #d1d6db; border-radius: 12px; padding: 12px; width: 100%; background: white; font-weight: 400; }

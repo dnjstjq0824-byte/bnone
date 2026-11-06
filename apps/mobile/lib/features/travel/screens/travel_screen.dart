@@ -137,10 +137,10 @@ class _TravelScreenState extends State<TravelScreen> {
                         width: 64,
                         height: 64,
                         decoration: BoxDecoration(
-                          color: const Color(0xFFE5F7F0),
+                          color: const Color(0xFFE4EFE7),
                           borderRadius: BorderRadius.circular(20),
                         ),
-                        child: const Icon(Icons.flight_takeoff_rounded, size: 32, color: Color(0xFF00B06B)),
+                        child: const Icon(Icons.flight_takeoff_rounded, size: 32, color: Color(0xFF2A7248)),
                       ),
                       const SizedBox(height: 16),
                       const Text(
@@ -189,10 +189,10 @@ class _TravelScreenState extends State<TravelScreen> {
                                         width: 36,
                                         height: 36,
                                         decoration: BoxDecoration(
-                                          color: const Color(0xFFE5F7F0),
+                                          color: const Color(0xFFE4EFE7),
                                           borderRadius: BorderRadius.circular(12),
                                         ),
-                                        child: const Icon(Icons.flight_rounded, color: Color(0xFF00B06B), size: 20),
+                                        child: const Icon(Icons.flight_rounded, color: Color(0xFF2A7248), size: 20),
                                       ),
                                       const SizedBox(width: 10),
                                       Text(

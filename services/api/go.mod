@@ -1,4 +1,4 @@
-module github.com/bookingnetwork/bn-one/services/api
+module github.com/bookingnetwork/moa/services/api
 
 go 1.27.0
 

@@ -6,9 +6,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/bookingnetwork/bn-one/services/api/internal/database"
-	"github.com/bookingnetwork/bn-one/services/api/internal/middleware"
-	"github.com/bookingnetwork/bn-one/services/api/internal/models"
+	"github.com/bookingnetwork/moa/services/api/internal/database"
+	"github.com/bookingnetwork/moa/services/api/internal/middleware"
+	"github.com/bookingnetwork/moa/services/api/internal/models"
 	"github.com/go-chi/chi/v5"
 )
 

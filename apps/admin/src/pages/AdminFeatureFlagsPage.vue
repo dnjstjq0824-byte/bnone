@@ -14,10 +14,10 @@
     </div>
 
     <!-- Feature Flags Table -->
-    <div class="bg-[#111827] rounded-3xl border border-slate-800 overflow-hidden">
+    <div class="bg-[#0C2318] rounded-3xl border border-white/10 overflow-hidden">
       <table class="w-full text-left border-collapse">
         <thead>
-          <tr class="bg-slate-800/50 text-[11px] font-bold text-slate-400 border-b border-slate-800">
+          <tr class="bg-slate-800/50 text-[11px] font-bold text-slate-400 border-b border-white/10">
             <th class="py-3 px-5">플래그 키 (Key)</th>
             <th class="py-3 px-4">설명</th>
             <th class="py-3 px-4">대상 환경</th>
@@ -27,7 +27,7 @@
         </thead>
         <tbody class="divide-y divide-slate-800/60 text-xs">
           <tr v-for="f in flags" :key="f.key" class="hover:bg-slate-800/30">
-            <td class="py-3.5 px-5 font-bold text-blue-400 font-mono text-[11px]">{{ f.key }}</td>
+            <td class="py-3.5 px-5 font-bold text-[#7FB08F] font-mono text-[11px]">{{ f.key }}</td>
             <td class="py-3.5 px-4 text-slate-300">{{ f.description }}</td>
             <td class="py-3.5 px-4 text-slate-500">{{ f.environment }}</td>
             <td class="py-3.5 px-4 text-center">
@@ -42,7 +42,7 @@
               <button
                 @click="toggleFlag(f)"
                 class="px-3 py-1 rounded-xl text-xs font-bold transition-all"
-                :class="f.enabled ? 'bg-slate-800 hover:bg-slate-700 text-slate-300' : 'bg-blue-600 hover:bg-blue-500 text-white'"
+                :class="f.enabled ? 'bg-slate-800 hover:bg-slate-700 text-slate-300' : 'bg-[#1E5A38] hover:bg-[#2A7248] text-white'"
               >
                 {{ f.enabled ? '끄기' : '켜기' }}
               </button>
@@ -57,6 +57,9 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import { adminFetch } from '../api/client';
+import { useToast } from '../composables/useToast';
+
+const toast = useToast();
 
 const flags = ref<any[]>([]);
 
@@ -76,7 +79,7 @@ async function toggleFlag(f: any) {
     });
     await loadFlags();
   } catch (err: any) {
-    alert(err.message || '플래그 토글에 실패했습니다.');
+    toast.error(err.message || '플래그 토글에 실패했습니다.');
   }
 }
 </script>

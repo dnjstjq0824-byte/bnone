@@ -127,10 +127,10 @@ class _BudgetsScreenState extends State<BudgetsScreen> {
                         width: 64,
                         height: 64,
                         decoration: BoxDecoration(
-                          color: const Color(0xFFE5F7F0),
+                          color: const Color(0xFFE4EFE7),
                           borderRadius: BorderRadius.circular(20),
                         ),
-                        child: const Icon(Icons.track_changes_rounded, size: 32, color: Color(0xFF00B06B)),
+                        child: const Icon(Icons.track_changes_rounded, size: 32, color: Color(0xFF2A7248)),
                       ),
                       const SizedBox(height: 16),
                       const Text(
@@ -181,9 +181,9 @@ class _BudgetsScreenState extends State<BudgetsScreen> {
                                     padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                                     decoration: BoxDecoration(
                                       color: percent >= 100
-                                          ? const Color(0xFFFEECEB)
+                                          ? const Color(0xFFFBEAEA)
                                           : percent >= 80
-                                              ? const Color(0xFFFFF3E2)
+                                              ? const Color(0xFFF8EFDC)
                                               : AppColors.primaryLight,
                                       borderRadius: BorderRadius.circular(10),
                                     ),
@@ -193,7 +193,7 @@ class _BudgetsScreenState extends State<BudgetsScreen> {
                                         color: percent >= 100
                                             ? AppColors.danger
                                             : percent >= 80
-                                                ? const Color(0xFFFF8D00)
+                                                ? const Color(0xFFC97E1F)
                                                 : AppColors.brandPrimary,
                                         fontWeight: FontWeight.w700,
                                         fontSize: 12,
@@ -221,7 +221,7 @@ class _BudgetsScreenState extends State<BudgetsScreen> {
                                   color: percent >= 100
                                       ? AppColors.danger
                                       : percent >= 80
-                                          ? const Color(0xFFFF8D00)
+                                          ? const Color(0xFFC97E1F)
                                           : AppColors.brandPrimary,
                                   minHeight: 8,
                                 ),

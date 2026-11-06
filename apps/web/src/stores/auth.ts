@@ -16,7 +16,7 @@ export interface User {
 
 export const useAuthStore = defineStore('auth', () => {
   const user = ref<User | null>(null);
-  const token = ref<string | null>(localStorage.getItem('bn_token'));
+  const token = ref<string | null>(localStorage.getItem('moa_token'));
   const refreshToken = ref<string | null>(localStorage.getItem('bn_refresh_token'));
   const isAuthenticated = ref<boolean>(!!token.value);
   const isLoading = ref<boolean>(false);
@@ -33,7 +33,7 @@ export const useAuthStore = defineStore('auth', () => {
       user.value = data.user;
       isAuthenticated.value = true;
 
-      localStorage.setItem('bn_token', data.access_token);
+      localStorage.setItem('moa_token', data.access_token);
       localStorage.setItem('bn_refresh_token', data.refresh_token);
       return data;
     } finally {
@@ -60,7 +60,7 @@ export const useAuthStore = defineStore('auth', () => {
       user.value = data.user;
       isAuthenticated.value = true;
 
-      localStorage.setItem('bn_token', data.access_token);
+      localStorage.setItem('moa_token', data.access_token);
       localStorage.setItem('bn_refresh_token', data.refresh_token);
       return data;
     } finally {
@@ -89,7 +89,7 @@ export const useAuthStore = defineStore('auth', () => {
     token.value = null;
     refreshToken.value = null;
     isAuthenticated.value = false;
-    localStorage.removeItem('bn_token');
+    localStorage.removeItem('moa_token');
     localStorage.removeItem('bn_refresh_token');
   }
 

@@ -8,73 +8,104 @@ class WelcomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.textPrimary,
+      backgroundColor: AppColors.pineDeep,
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 28.0, vertical: 24.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              // Brand Icon
+              // Brand mark
               Align(
                 alignment: Alignment.topLeft,
-                child: Container(
-                  width: 48,
-                  height: 48,
-                  decoration: BoxDecoration(
-                    color: AppColors.brandPrimary,
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  child: const Center(
-                    child: Text(
-                      'BN',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w900,
-                        fontSize: 22,
+                child: Row(
+                  children: [
+                    Container(
+                      width: 48,
+                      height: 48,
+                      decoration: BoxDecoration(
+                        color: AppColors.accent,
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      child: const Center(
+                        child: Text(
+                          'M',
+                          style: TextStyle(
+                            color: AppColors.pineDeep,
+                            fontWeight: FontWeight.w900,
+                            fontSize: 24,
+                          ),
+                        ),
                       ),
                     ),
-                  ),
+                    const SizedBox(width: 12),
+                    const Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'MOA',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w900,
+                            fontSize: 20,
+                            letterSpacing: 1,
+                          ),
+                        ),
+                        Text(
+                          '모아 · PRIVATE LEDGER',
+                          style: TextStyle(
+                            color: AppColors.darkTextTertiary,
+                            fontSize: 10,
+                            fontWeight: FontWeight.w600,
+                            letterSpacing: 2,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
               ),
 
-              // Title & Message (Article 1.1)
+              // Title & Message
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                    width: 48,
+                    height: 4,
                     decoration: BoxDecoration(
-                      color: Colors.white.withValues(alpha: 0.1),
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: const Text(
-                      '🌐 GLOBAL FINANCIAL LIFESTYLE',
-                      style: TextStyle(
-                        color: AppColors.accent,
-                        fontSize: 11,
-                        fontWeight: FontWeight.bold,
-                      ),
+                      color: AppColors.accent,
+                      borderRadius: BorderRadius.circular(4),
                     ),
                   ),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: 20),
                   const Text(
-                    'Your Money.\nYour World.',
+                    '돈을 모으다,\n삶을 모으다.',
                     style: TextStyle(
                       color: Colors.white,
-                      fontSize: 44,
+                      fontSize: 40,
                       fontWeight: FontWeight.w900,
-                      height: 1.15,
+                      height: 1.2,
                     ),
                   ),
                   const SizedBox(height: 16),
                   const Text(
-                    '매일 쓰는 돈부터 세계 여행에서 쓰는 돈까지, 하나의 앱에서 관리한다.',
+                    '매일 쓰는 돈부터 세계 여행에서 쓰는 돈까지, 하나의 장부에서 관리한다.',
                     style: TextStyle(
-                      color: AppColors.textSecondary,
+                      color: AppColors.darkTextSecondary,
                       fontSize: 15,
                       height: 1.5,
                     ),
+                  ),
+                  const SizedBox(height: 24),
+                  Row(
+                    children: const [
+                      _StatItem(value: '14', label: '통화'),
+                      SizedBox(width: 20),
+                      _StatItem(value: '9', label: '자산 영역'),
+                      SizedBox(width: 20),
+                      _StatItem(value: '0', label: '은행 연동'),
+                    ],
                   ),
                 ],
               ),
@@ -88,8 +119,8 @@ class WelcomeScreen extends StatelessWidget {
                     child: ElevatedButton(
                       onPressed: () => context.push('/register'),
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.brandPrimary,
-                        foregroundColor: Colors.white,
+                        backgroundColor: AppColors.accentPale,
+                        foregroundColor: AppColors.pineDeep,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(16),
                         ),
@@ -130,3 +161,34 @@ class WelcomeScreen extends StatelessWidget {
   }
 }
 
+class _StatItem extends StatelessWidget {
+  final String value;
+  final String label;
+
+  const _StatItem({required this.value, required this.label});
+
+  @override
+  Widget build(BuildContext context) {
+    return RichText(
+      text: TextSpan(
+        children: [
+          TextSpan(
+            text: '$value ',
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 18,
+              fontWeight: FontWeight.w900,
+            ),
+          ),
+          TextSpan(
+            text: label,
+            style: const TextStyle(
+              color: AppColors.darkTextTertiary,
+              fontSize: 12,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}

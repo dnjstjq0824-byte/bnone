@@ -26,6 +26,21 @@ const router = createRouter({
       meta: { requiresAuth: true },
     },
     {
+      path: '/terms',
+      name: 'Terms',
+      component: () => import('../pages/TermsPage.vue'),
+    },
+    {
+      path: '/privacy',
+      name: 'Privacy',
+      component: () => import('../pages/PrivacyPage.vue'),
+    },
+    {
+      path: '/500',
+      name: 'ServerError',
+      component: () => import('../pages/ServerErrorPage.vue'),
+    },
+    {
       path: '/app',
       component: () => import('../layouts/AppLayout.vue'),
       meta: { requiresAuth: true },

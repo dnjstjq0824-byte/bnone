@@ -1,6 +1,6 @@
 # 05. VUE 3 USER WEB ARCHITECTURE & SPECIFICATION
 
-**Document ID:** BN-ONE-WEB-005  
+**Document ID:** MOA-WEB-005  
 **Version:** 1.0.0  
 **Effective Date:** 2026-10-24  
 
@@ -8,14 +8,14 @@
 
 ## 1. Architectural Stack: Vue 3 + TypeScript + Pinia + Tailwind CSS
 
-BN ONE User Web (`apps/web`) delivers a fluid, responsive financial management portal for desktop and mobile web browsers.
+MOA User Web (`apps/web`) delivers a fluid, responsive financial management portal for desktop and mobile web browsers.
 
 ### 1.1 Technical Stack
 - **Framework:** Vue 3 Composition API (`<script setup lang="ts">`).
 - **Build Tool:** Vite 5.x for sub-second HMR and optimized production bundling.
 - **State Store:** Pinia stores (`authStore`, `financeStore`).
 - **Routing:** Vue Router 4 with navigation guards checking active JWT tokens.
-- **Styling:** Tailwind CSS with custom theme extensions matching the BN ONE design token palette.
+- **Styling:** Tailwind CSS with custom theme extensions matching the MOA design token palette.
 
 ---
 

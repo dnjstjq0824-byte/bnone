@@ -1,6 +1,6 @@
 // apps/web/src/api/mockData.ts
-// BN ONE Front-end Mock Data: Aligned with Toss Design System (TDS) and docs/09_API_SPECIFICATION.md
-// NOTE: This data is stored in the browser's localStorage (key: bn_mock_*) for local demonstration purposes.
+// MOA Front-end Mock Data: Aligned with Toss Design System (TDS) and docs/09_API_SPECIFICATION.md
+// NOTE: This data is stored in the browser's localStorage (key: moa_mock_*) for local demonstration purposes.
 
 export const MOCK_USER = {
   id: 'u-tester-001',
@@ -34,7 +34,7 @@ export const INITIAL_ACCOUNTS = [
     currency_code: 'KRW',
     calculated_balance_minor: 14850000,
     opening_balance_minor: 10000000,
-    color: '#3182F6',
+    color: '#1E5A38',
     icon: 'wallet',
     source_type: 'BANK',
   },
@@ -451,7 +451,7 @@ export const INITIAL_CATEGORIES = [
 export const INITIAL_NOTIFICATIONS = [
   {
     id: 'noti-001',
-    title: '🎉 BN ONE 슈퍼앱에 오신 것을 환영합니다!',
+    title: '🎉 MOA 슈퍼앱에 오신 것을 환영합니다!',
     body: '토스 스타일의 직관적인 다통화 자산 관리 서비스를 경험해보세요.',
     is_read: false,
     created_at: '2026-10-31T09:00:00Z',

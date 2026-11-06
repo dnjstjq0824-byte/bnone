@@ -2,7 +2,7 @@
 set -euo pipefail
 
 echo "=========================================================="
-echo "  BN ONE v1.0 — Staging & Production Deployment Pipeline  "
+echo "  MOA v1.0 — Staging & Production Deployment Pipeline  "
 echo "=========================================================="
 
 # 1. Environment check

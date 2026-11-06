@@ -1,6 +1,6 @@
 # 04. FLUTTER MOBILE ARCHITECTURE & SPECIFICATION
 
-**Document ID:** BN-ONE-MOB-004  
+**Document ID:** MOA-MOB-004  
 **Version:** 1.0.0  
 **Effective Date:** 2026-10-24  
 
@@ -8,7 +8,7 @@
 
 ## 1. Architectural Pattern: Feature-First with Riverpod
 
-BN ONE Mobile is engineered with a modular, **feature-first** directory structure adhering strictly to Flutter and Dart idioms.
+MOA Mobile is engineered with a modular, **feature-first** directory structure adhering strictly to Flutter and Dart idioms.
 
 ```text
 apps/mobile/lib/

@@ -1,6 +1,6 @@
 # 07. GO BACKEND ARCHITECTURE & ENGINE SPECIFICATION
 
-**Document ID:** BN-ONE-BE-007  
+**Document ID:** MOA-BE-007  
 **Version:** 1.0.0  
 **Effective Date:** 2026-10-24  
 
@@ -8,7 +8,7 @@
 
 ## 1. Clean Layered Architecture Overview
 
-The BN ONE backend server (`services/api`) is engineered in Go 1.27 with strict separation of concerns, zero circular dependencies, and high-concurrency throughput.
+The MOA backend server (`services/api`) is engineered in Go 1.27 with strict separation of concerns, zero circular dependencies, and high-concurrency throughput.
 
 ```text
 HTTP Request

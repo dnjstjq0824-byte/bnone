@@ -1,6 +1,6 @@
 # 19. NOTIFICATION & ALERT SYSTEM SPECIFICATION
 
-**Document ID:** BN-ONE-NTF-019  
+**Document ID:** MOA-NTF-019  
 **Version:** 1.0.0  
 **Effective Date:** 2026-10-24  
 
@@ -8,7 +8,7 @@
 
 ## 1. Notification Categories & Triggers
 
-BN ONE manages communications to keep users aware of financial events without spamming.
+MOA manages communications to keep users aware of financial events without spamming.
 
 | Notification Category | Trigger Condition | Delivery Channel | Priority |
 |---|---|---|---|

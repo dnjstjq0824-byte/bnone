@@ -1,6 +1,6 @@
 # 06. OPERATIONS ADMIN CONSOLE SPECIFICATION & RBAC
 
-**Document ID:** BN-ONE-ADM-006  
+**Document ID:** MOA-ADM-006  
 **Version:** 1.0.0  
 **Effective Date:** 2026-10-24  
 
@@ -8,7 +8,7 @@
 
 ## 1. Executive Mission & Security Baseline
 
-The BN ONE Operations Admin Console (`apps/admin`) empowers authorized platform operators, support agents, compliance officers, and system administrators to oversee platform health, manage reference data, and support users without compromising user tenant privacy.
+The MOA Operations Admin Console (`apps/admin`) empowers authorized platform operators, support agents, compliance officers, and system administrators to oversee platform health, manage reference data, and support users without compromising user tenant privacy.
 
 > **CRITICAL SECURITY INVARIANT:**  
 > Customer financial account balances and transaction contents are **private user records**. Admin personnel cannot view, modify, or inject personal transactions into user ledgers unless explicitly requested via an authenticated support session with user consent. All admin actions are immutably logged into `admin_audit_logs`.

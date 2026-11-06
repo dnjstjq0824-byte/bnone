@@ -5,13 +5,13 @@
       <p class="text-xs text-slate-400 mt-0.5">운영자 활동, 권한 변경, 세션 철회 및 프라이버시 처리 이력을 엄격하게 추적합니다.</p>
     </div>
 
-    <div class="bg-[#111827] rounded-3xl border border-slate-800 overflow-hidden">
+    <div class="bg-[#0C2318] rounded-3xl border border-white/10 overflow-hidden">
       <div v-if="logs.length === 0" class="p-12 text-center text-xs text-slate-500">
         기록된 감사 로그가 없습니다.
       </div>
       <table v-else class="w-full text-left border-collapse">
         <thead>
-          <tr class="bg-slate-800/50 text-[11px] font-bold text-slate-400 border-b border-slate-800">
+          <tr class="bg-slate-800/50 text-[11px] font-bold text-slate-400 border-b border-white/10">
             <th class="py-3 px-5">시각</th>
             <th class="py-3 px-4">행위자</th>
             <th class="py-3 px-4">작업 (Action)</th>
@@ -23,7 +23,7 @@
           <tr v-for="l in logs" :key="l.id" class="hover:bg-slate-800/30">
             <td class="py-3.5 px-5 text-slate-400">{{ formatDate(l.created_at) }}</td>
             <td class="py-3.5 px-4 font-bold text-white">{{ l.actor_type }} #{{ l.actor_id.slice(0, 8) }}</td>
-            <td class="py-3.5 px-4 font-bold text-blue-400">{{ l.action }}</td>
+            <td class="py-3.5 px-4 font-bold text-[#7FB08F]">{{ l.action }}</td>
             <td class="py-3.5 px-4 text-slate-300">{{ l.resource_type }} ({{ l.resource_id }})</td>
             <td class="py-3.5 px-4">
               <span

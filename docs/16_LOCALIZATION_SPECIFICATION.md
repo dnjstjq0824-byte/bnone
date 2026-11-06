@@ -1,6 +1,6 @@
 # 16. LOCALIZATION & INTERNATIONALIZATION (i18n) SPECIFICATION
 
-**Document ID:** BN-ONE-LOC-016  
+**Document ID:** MOA-LOC-016  
 **Version:** 1.0.0  
 **Effective Date:** 2026-10-24  
 
@@ -8,7 +8,7 @@
 
 ## 1. Supported Languages & Locales
 
-BN ONE v1.0 targets global personal finance users with Day-1 localization support across 10 major global and regional languages:
+MOA v1.0 targets global personal finance users with Day-1 localization support across 10 major global and regional languages:
 
 | Locale Code | Language Name | Native Name | Script Direction | Default Base Currency |
 |---|---|---|---|---|

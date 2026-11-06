@@ -8,19 +8,29 @@ export default {
   theme: {
     extend: {
       colors: {
+        // MOA premium identity: deep pine console + champagne gold
         admin: {
-          50: '#f8fafc',
-          100: '#f1f5f9',
-          600: '#0f172a',
-          800: '#1e293b',
-          900: '#0f172a',
+          50: '#EBF2EC',
+          100: '#D9E7DD',
+          600: '#1E5A38',
+          800: '#123522',
+          900: '#0C2318',
+          950: '#08170F',
         },
         brand: {
-          600: '#2563eb',
+          500: '#2A7248',
+          600: '#1E5A38',
+          700: '#17452C',
         },
+        accent: {
+          100: '#F2EAD3',
+          500: '#C0A04E',
+        },
+      },
+      fontFamily: {
+        sans: ['Pretendard', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Malgun Gothic', 'sans-serif'],
       },
     },
   },
   plugins: [],
 }
-

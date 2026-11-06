@@ -17,7 +17,7 @@
         <div>
           <h3 class="text-xl font-bold text-slate-900 tracking-tight">기준 통화 및 국가 설정</h3>
           <p class="text-xs text-slate-500 mt-1">
-            BN ONE에서 전체 자산과 순자산을 집계할 기준 통화를 선택하세요.
+            MOA에서 전체 자산과 순자산을 집계할 기준 통화를 선택하세요.
           </p>
         </div>
 

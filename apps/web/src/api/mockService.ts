@@ -20,7 +20,7 @@ import { ApiError } from './client';
 
 function getStorage<T>(key: string, defaultValue: T): T {
   try {
-    const item = localStorage.getItem(`bn_mock_${key}`);
+    const item = localStorage.getItem(`moa_mock_${key}`);
     return item ? JSON.parse(item) : defaultValue;
   } catch {
     return defaultValue;
@@ -29,7 +29,7 @@ function getStorage<T>(key: string, defaultValue: T): T {
 
 function setStorage<T>(key: string, value: T): void {
   try {
-    localStorage.setItem(`bn_mock_${key}`, JSON.stringify(value));
+    localStorage.setItem(`moa_mock_${key}`, JSON.stringify(value));
   } catch {}
 }
 
@@ -39,10 +39,13 @@ export function handleMockApi<T = any>(endpoint: string, options: RequestInit = 
   const [path, queryString] = endpoint.split('?');
   const params = new URLSearchParams(queryString || '');
 
-  // Fail-closed check: If demo mode is not explicitly enabled and no backend is set, reject all logins
-  const isDemoModeEnabled = typeof import.meta !== 'undefined' && import.meta.env ? (import.meta.env.VITE_DEMO_MODE === 'true' || import.meta.env.VITE_DEMO_MODE === undefined) : true;
-  const hasBackend = typeof import.meta !== 'undefined' && import.meta.env ? !!import.meta.env.VITE_API_URL : false;
-  if (!isDemoModeEnabled && !hasBackend) {
+  // Fail-closed check: mock fixtures are served only when demo mode was
+  // explicitly enabled at build time (VITE_MOCK_ENABLED=true). Vite always
+  // defines import.meta.env in browser builds; the undefined branch only
+  // covers the Node contract-test harness.
+  const env = typeof import.meta !== 'undefined' && import.meta.env ? import.meta.env : undefined;
+  const mockAllowed = env === undefined ? true : env.VITE_MOCK_ENABLED === 'true';
+  if (!mockAllowed) {
     throw new ApiError('BACKEND_UNAVAILABLE', '백엔드 API 서버가 연결되지 않았습니다. 관리자에게 문의하세요.');
   }
 
@@ -64,8 +67,8 @@ export function handleMockApi<T = any>(endpoint: string, options: RequestInit = 
     setStorage('user', user);
 
     return {
-      access_token: 'bn-mock-jwt-token-verified',
-      refresh_token: 'bn-mock-refresh-token-verified',
+      access_token: 'moa-mock-jwt-token-verified',
+      refresh_token: 'moa-mock-refresh-token-verified',
       expires_in: 86400,
       user,
       email_verification_required: false,
@@ -93,8 +96,8 @@ export function handleMockApi<T = any>(endpoint: string, options: RequestInit = 
     setStorage('user', user);
 
     return {
-      access_token: 'bn-mock-jwt-token-verified',
-      refresh_token: 'bn-mock-refresh-token-verified',
+      access_token: 'moa-mock-jwt-token-verified',
+      refresh_token: 'moa-mock-refresh-token-verified',
       expires_in: 86400,
       user,
       email_verification_required: false,
@@ -128,7 +131,7 @@ export function handleMockApi<T = any>(endpoint: string, options: RequestInit = 
         currency_code: body.currency_code || 'KRW',
         calculated_balance_minor: Number(body.opening_balance_minor || 0),
         opening_balance_minor: Number(body.opening_balance_minor || 0),
-        color: body.color || '#3182F6',
+        color: body.color || '#1E5A38',
         icon: body.icon || 'wallet',
         source_type: body.source_type || 'MANUAL',
       };

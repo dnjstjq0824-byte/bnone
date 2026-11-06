@@ -1,5 +1,5 @@
 // apps/web/tests/contracts.test.mjs
-// Automated Contract & Invariant Test Suite for BN ONE (BN-04, BN-05, BN-06, BN-07, BN-08, BN-11)
+// Automated Contract & Invariant Test Suite for MOA (MOA-04, MOA-05, MOA-06, MOA-07, MOA-08, MOA-11)
 import assert from 'node:assert/strict';
 import {
   INITIAL_ACCOUNTS,
@@ -15,7 +15,7 @@ import {
 } from '../src/api/mockData.ts';
 import { handleMockApi } from '../src/api/mockService.ts';
 
-console.log('🧪 Starting BN ONE Contract & Invariant Test Suite...\n');
+console.log('🧪 Starting MOA Contract & Invariant Test Suite...\n');
 
 let passedTests = 0;
 let failedTests = 0;
@@ -32,8 +32,8 @@ function runTest(name, fn) {
   }
 }
 
-// 1. BN-04: Single Source of Truth & Net Worth Invariant (A-04)
-runTest('BN-04 / A-04: Net Worth calculation invariant holds strictly', () => {
+// 1. MOA-04: Single Source of Truth & Net Worth Invariant (A-04)
+runTest('MOA-04 / A-04: Net Worth calculation invariant holds strictly', () => {
   const nw = calculateNetWorth(INITIAL_ACCOUNTS, INITIAL_ASSETS, INITIAL_LIABILITIES);
   
   // Invariant 1: Total Assets = Financial Accounts + Other Assets
@@ -58,8 +58,8 @@ runTest('BN-04 / A-04: Net Worth calculation invariant holds strictly', () => {
   assert.equal(nw.net_worth_minor, 303152500, 'Net Worth anchor must be 303,152,500');
 });
 
-// 2. BN-05: Subscriptions Contract & Summary (A-05)
-runTest('BN-05 / A-05: Subscriptions contract has service_name, next_renewal_at and sum matches', () => {
+// 2. MOA-05: Subscriptions Contract & Summary (A-05)
+runTest('MOA-05 / A-05: Subscriptions contract has service_name, next_renewal_at and sum matches', () => {
   const subs = handleMockApi('/me/subscriptions');
   assert.equal(subs.length, 4, 'Must have 4 active subscriptions');
 
@@ -82,8 +82,8 @@ runTest('BN-05 / A-05: Subscriptions contract has service_name, next_renewal_at 
   assert.equal(sum.yearly_estimate_minor, 801480);
 });
 
-// 3. BN-05: Budgets Contract (A-06)
-runTest('BN-05 / A-06: Budgets contract has limit_minor, remaining_minor, usage_percent', () => {
+// 3. MOA-05: Budgets Contract (A-06)
+runTest('MOA-05 / A-06: Budgets contract has limit_minor, remaining_minor, usage_percent', () => {
   const budgets = handleMockApi('/budgets');
   assert.equal(budgets.length, 3, 'Must have 3 initial budgets');
 
@@ -101,8 +101,8 @@ runTest('BN-05 / A-06: Budgets contract has limit_minor, remaining_minor, usage_
   }
 });
 
-// 4. BN-06: Trips Contract & No NaN Guard (A-07)
-runTest('BN-06 / A-07: Trips contract has total_budget_minor, total_spent_minor and zero NaN', () => {
+// 4. MOA-06: Trips Contract & No NaN Guard (A-07)
+runTest('MOA-06 / A-07: Trips contract has total_budget_minor, total_spent_minor and zero NaN', () => {
   const trips = handleMockApi('/trips');
   assert.equal(trips.length, 2, 'Must have 2 initial trips');
 
@@ -117,8 +117,8 @@ runTest('BN-06 / A-07: Trips contract has total_budget_minor, total_spent_minor 
   assert.ok(!Number.isNaN(remaining), 'Remaining trip budget must not be NaN');
 });
 
-// 5. BN-07: Analytics Contract & Current Month Population (A-08)
-runTest('BN-07 / A-08: Analytics overview matches page contract with non-zero current month values', () => {
+// 5. MOA-07: Analytics Contract & Current Month Population (A-08)
+runTest('MOA-07 / A-08: Analytics overview matches page contract with non-zero current month values', () => {
   const an = handleMockApi('/analytics/overview');
   assert.equal(an.current_month_income_minor, 4500000, 'Current month income must be 4,500,000');
   assert.equal(an.current_month_expense_minor, 1285000, 'Current month expense must be 1,285,000');
@@ -128,8 +128,8 @@ runTest('BN-07 / A-08: Analytics overview matches page contract with non-zero cu
   assert.ok(Array.isArray(an.category_breakdown) && an.category_breakdown.length === 5, 'Must have 5 categories');
 });
 
-// 6. BN-08: Forex Contract & 100 USD -> KRW 135,000 Conversion (A-09)
-runTest('BN-08 / A-09: Forex rates returns rates array and 100 USD converts to 135,000 KRW', () => {
+// 6. MOA-08: Forex Contract & 100 USD -> KRW 135,000 Conversion (A-09)
+runTest('MOA-08 / A-09: Forex rates returns rates array and 100 USD converts to 135,000 KRW', () => {
   const ratesResp = handleMockApi('/fx/rates?base=USD');
   assert.ok(Array.isArray(ratesResp.rates), 'Must return rates array in rates field');
   assert.ok(ratesResp.rates.length >= 3, 'Must have at least 3 reference rates');
@@ -150,8 +150,8 @@ runTest('BN-08 / A-09: Forex rates returns rates array and 100 USD converts to 1
   assert.equal(conv.converted_amount_minor, 135000, '100 USD at 1,350 rate must equal 135,000 KRW');
 });
 
-// 7. BN-03: Authentication Password Verification (A-02)
-runTest('BN-03 / A-02: Auth strictly verifies test@example.com / password123 and fails on wrong input', () => {
+// 7. MOA-03: Authentication Password Verification (A-02)
+runTest('MOA-03 / A-02: Auth strictly verifies test@example.com / password123 and fails on wrong input', () => {
   // 1. Correct credentials -> Succeeds
   const valid = handleMockApi('/auth/login', {
     method: 'POST',
@@ -185,8 +185,8 @@ runTest('BN-03 / A-02: Auth strictly verifies test@example.com / password123 and
   );
 });
 
-// 8. BN-05 / A-11: Contract Schema Regression & Negative Mutation Test
-runTest('BN-05 / A-11: Schema validator fails if a required contract field is missing (Negative test)', () => {
+// 8. MOA-05 / A-11: Contract Schema Regression & Negative Mutation Test
+runTest('MOA-05 / A-11: Schema validator fails if a required contract field is missing (Negative test)', () => {
   function validateSubscriptionContract(sub) {
     if (!sub.service_name) throw new Error('Missing service_name');
     if (!sub.next_renewal_at) throw new Error('Missing next_renewal_at');

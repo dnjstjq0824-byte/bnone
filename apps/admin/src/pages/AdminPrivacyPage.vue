@@ -5,13 +5,13 @@
       <p class="text-xs text-slate-400 mt-0.5">GDPR / 개인정보보호법에 따른 데이터 삭제 및 영구 파기 요청을 심사합니다.</p>
     </div>
 
-    <div class="bg-[#111827] rounded-3xl border border-slate-800 overflow-hidden">
+    <div class="bg-[#0C2318] rounded-3xl border border-white/10 overflow-hidden">
       <div v-if="requests.length === 0" class="p-12 text-center text-xs text-slate-500">
         접수된 계정 삭제 요청이 없습니다.
       </div>
       <table v-else class="w-full text-left border-collapse">
         <thead>
-          <tr class="bg-slate-800/50 text-[11px] font-bold text-slate-400 border-b border-slate-800">
+          <tr class="bg-slate-800/50 text-[11px] font-bold text-slate-400 border-b border-white/10">
             <th class="py-3 px-5">사용자 이메일</th>
             <th class="py-3 px-4">요청 시각</th>
             <th class="py-3 px-4">상태</th>
@@ -51,6 +51,9 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import { adminFetch } from '../api/client';
+import { useToast } from '../composables/useToast';
+
+const toast = useToast();
 
 const requests = ref<any[]>([]);
 
@@ -68,7 +71,7 @@ async function reviewRequest(id: string, action: string) {
       method: 'POST',
       body: JSON.stringify({ action }),
     });
-    alert('삭제 및 비식별화 처리가 완료되었습니다.');
+    toast.success('삭제 및 비식별화 처리가 완료되었습니다.');
     await loadData();
   }
 }

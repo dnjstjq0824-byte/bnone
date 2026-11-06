@@ -10,12 +10,12 @@ import (
 	"testing"
 	"time"
 
-	"github.com/bookingnetwork/bn-one/services/api/internal/database"
-	"github.com/bookingnetwork/bn-one/services/api/internal/middleware"
+	"github.com/bookingnetwork/moa/services/api/internal/database"
+	"github.com/bookingnetwork/moa/services/api/internal/middleware"
 )
 
 func setupTestDB(t *testing.T) *database.DB {
-	dbFile := "test_bn_one_" + time.Now().Format("20060102150405.000") + ".db"
+	dbFile := "test_moa_" + time.Now().Format("20060102150405.000") + ".db"
 	db, err := database.Connect("sqlite", dbFile)
 	if err != nil {
 		t.Fatalf("Failed to open test db: %v", err)

@@ -1,100 +1,119 @@
 <template>
-  <div class="min-h-screen bg-[#F9FAFB] flex items-center justify-center p-4">
-    <div class="max-w-md w-full bg-white rounded-3xl p-8 card-shadow border border-[#F2F4F6]">
-      <!-- Header -->
-      <div class="text-center mb-6">
-        <div class="w-14 h-14 rounded-2xl bg-[#3182F6] mx-auto flex items-center justify-center text-white font-black text-2xl shadow-lg shadow-[#3182F6]/25 mb-3">
-          BN
+  <div class="min-h-screen bg-[#08170F] flex">
+    <!-- Brand panel -->
+    <div class="hidden lg:flex w-[44%] flex-col justify-between p-12 text-white">
+      <RouterLink to="/" class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-[#C0A04E] flex items-center justify-center font-black text-xl text-[#08170F]">
+          M
         </div>
-        <h2 class="text-2xl font-bold text-[#191F28] tracking-tight">로그인</h2>
-        <p class="text-xs text-[#8B95A1] mt-1.5">내 돈의 흐름을 한눈에. 전 세계 어디서나.</p>
+        <div class="leading-none">
+          <span class="font-extrabold text-xl tracking-tight">MOA</span>
+          <span class="block text-[10px] font-semibold text-[#7E9387] tracking-[0.2em] mt-1">모아 · PRIVATE LEDGER</span>
+        </div>
+      </RouterLink>
+      <div>
+        <div class="w-12 h-1 bg-[#C0A04E] rounded-full mb-7"></div>
+        <p class="text-4xl font-black tracking-tight leading-tight">다시 오신 것을<br />환영합니다.</p>
+        <p class="text-sm text-[#A9BCAF] mt-4 leading-relaxed max-w-xs">로그인하면 어제의 기록부터 오늘의 잔액까지, 내 돈의 흐름이 이어집니다.</p>
       </div>
+      <p class="text-[11px] text-[#5B6960]">* MOA는 은행 연동 없이 사용자가 입력한 기록만 관리합니다.</p>
+    </div>
 
-      <!-- Test Account Helper Banner (Only displayed in Demo Mode) -->
-      <div v-if="isDemoMode" class="mb-6 p-4 rounded-2xl bg-[#E8F3FF] border border-[#D0E5FF] space-y-2">
-        <div class="flex items-center justify-between">
-          <div class="flex items-center gap-1.5">
-            <span class="text-[#3182F6] text-sm font-bold">💡 데모 체험 계정 안내</span>
-          </div>
-          <span class="px-2 py-0.5 rounded-full bg-[#3182F6]/10 text-[#3182F6] text-[11px] font-bold">브라우저 로컬 데이터</span>
+    <!-- Form panel -->
+    <div class="flex-1 bg-[#F6F8F4] flex items-center justify-center p-6 lg:rounded-l-[32px]">
+      <div class="max-w-md w-full">
+        <div class="lg:hidden flex items-center gap-3 mb-8">
+          <div class="w-10 h-10 rounded-xl bg-[#123522] flex items-center justify-center font-black text-xl text-[#E9D9A8]">M</div>
+          <span class="font-extrabold text-xl tracking-tight text-[#141F19]">MOA</span>
         </div>
-        <p class="text-[11px] text-[#4E5968] leading-relaxed">
-          현재 웹은 <strong>정적 웹 + 브라우저 내 로컬 목업 데모</strong>로 실행 중이며, 모든 데이터는 브라우저에만 저장됩니다.
-        </p>
-        <div class="text-xs text-[#4E5968] space-y-1 pt-1 font-medium">
+
+        <h2 class="text-2xl font-black text-[#141F19] tracking-tight">로그인</h2>
+        <p class="text-xs text-[#8A948C] mt-1.5">내 돈의 흐름을 한눈에. 전 세계 어디서나.</p>
+
+        <!-- Demo banner (explicit demo builds only) -->
+        <div v-if="isDemoMode" class="mt-6 p-4 rounded-2xl bg-[#EBF2EC] border border-[#CBDACF] space-y-2">
           <div class="flex items-center justify-between">
-            <span class="text-[#8B95A1]">데모 이메일</span>
-            <code class="font-bold text-[#191F28] bg-white px-2 py-0.5 rounded border border-[#E5E8EB]">test@example.com</code>
+            <span class="text-[#1E5A38] text-sm font-bold">데모 체험 계정 안내</span>
+            <span class="px-2 py-0.5 rounded-full bg-[#1E5A38]/10 text-[#1E5A38] text-[11px] font-bold">브라우저 로컬 데이터</span>
           </div>
-          <div class="flex items-center justify-between">
-            <span class="text-[#8B95A1]">데모 비밀번호</span>
-            <code class="font-bold text-[#191F28] bg-white px-2 py-0.5 rounded border border-[#E5E8EB]">password123</code>
+          <p class="text-[11px] text-[#41524A] leading-relaxed">
+            현재 웹은 <strong>정적 웹 + 브라우저 내 로컬 목업 데모</strong>로 실행 중이며, 모든 데이터는 브라우저에만 저장됩니다.
+          </p>
+          <div class="text-xs text-[#41524A] space-y-1 pt-1 font-medium">
+            <div class="flex items-center justify-between">
+              <span class="text-[#8A948C]">데모 이메일</span>
+              <code class="font-bold text-[#141F19] bg-white px-2 py-0.5 rounded border border-[#E2E7DE]">test@example.com</code>
+            </div>
+            <div class="flex items-center justify-between">
+              <span class="text-[#8A948C]">데모 비밀번호</span>
+              <code class="font-bold text-[#141F19] bg-white px-2 py-0.5 rounded border border-[#E2E7DE]">password123</code>
+            </div>
+          </div>
+          <div class="pt-2 flex items-center gap-2">
+            <button
+              type="button"
+              @click="fillTestAccount"
+              class="flex-1 py-2 bg-white hover:bg-[#ECEFE8] text-[#1E5A38] border border-[#CBDACF] rounded-xl text-xs font-bold transition-colors"
+            >
+              계정 자동 입력
+            </button>
+            <button
+              type="button"
+              @click="handleDemoLogin"
+              :disabled="auth.isLoading"
+              class="flex-1 py-2 bg-[#123522] hover:bg-[#0C2318] text-white rounded-xl text-xs font-bold shadow-sm transition-colors"
+            >
+              1초 만에 바로 시작
+            </button>
           </div>
         </div>
-        <div class="pt-2 flex items-center gap-2">
+
+        <!-- Error alert -->
+        <div v-if="error" class="mt-5 p-3.5 rounded-xl bg-[#FBEAEA] border border-[#F2C9C9] text-[#D64545] text-xs font-medium">
+          {{ error }}
+        </div>
+
+        <form @submit.prevent="handleSubmit" class="space-y-4 mt-6">
+          <div>
+            <label class="block text-xs font-bold text-[#41524A] mb-1.5">이메일</label>
+            <input
+              v-model="email"
+              type="email"
+              required
+              autocomplete="username"
+              placeholder="name@example.com"
+              class="w-full px-4 py-3.5 rounded-xl border border-[#E2E7DE] text-sm focus:outline-none focus:border-[#1E5A38] focus:ring-2 focus:ring-[#1E5A38]/20 transition-all bg-white"
+            />
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-[#41524A] mb-1.5">비밀번호</label>
+            <input
+              v-model="password"
+              type="password"
+              required
+              autocomplete="current-password"
+              placeholder="••••••••"
+              class="w-full px-4 py-3.5 rounded-xl border border-[#E2E7DE] text-sm focus:outline-none focus:border-[#1E5A38] focus:ring-2 focus:ring-[#1E5A38]/20 transition-all bg-white"
+            />
+          </div>
+
           <button
-            type="button"
-            @click="fillTestAccount"
-            class="flex-1 py-2 bg-white hover:bg-[#F2F4F6] text-[#3182F6] border border-[#D0E5FF] rounded-xl text-xs font-bold transition-colors"
-          >
-            계정 자동 입력
-          </button>
-          <button
-            type="button"
-            @click="handleDemoLogin"
+            type="submit"
             :disabled="auth.isLoading"
-            class="flex-1 py-2 bg-[#3182F6] hover:bg-[#1B64DA] text-white rounded-xl text-xs font-bold shadow-sm transition-colors"
+            class="w-full py-3.5 bg-[#123522] hover:bg-[#0C2318] active:bg-[#08170F] disabled:opacity-50 text-white rounded-xl font-bold text-sm shadow-md shadow-[#123522]/25 transition-all mt-2"
           >
-            1초 만에 바로 시작
+            <span v-if="auth.isLoading">로그인 중...</span>
+            <span v-else>로그인</span>
           </button>
+        </form>
+
+        <div class="mt-6 text-center text-xs text-[#8A948C]">
+          아직 계정이 없으신가요?
+          <RouterLink to="/register" class="font-bold text-[#1E5A38] hover:underline ml-1">
+            회원가입
+          </RouterLink>
         </div>
-      </div>
-
-      <!-- Error alert -->
-      <div v-if="error" class="mb-5 p-3.5 rounded-xl bg-[#FEECEB] border border-[#FDD8D6] text-[#F04452] text-xs font-medium">
-        {{ error }}
-      </div>
-
-      <form @submit.prevent="handleSubmit" class="space-y-4">
-        <div>
-          <label class="block text-xs font-bold text-[#4E5968] mb-1.5">이메일</label>
-          <input
-            v-model="email"
-            type="email"
-            required
-            autocomplete="username"
-            placeholder="name@example.com"
-            class="w-full px-4 py-3.5 rounded-xl border border-[#E5E8EB] text-sm focus:outline-none focus:border-[#3182F6] focus:ring-2 focus:ring-[#3182F6]/20 transition-all bg-[#F9FAFB] focus:bg-white"
-          />
-        </div>
-
-        <div>
-          <label class="block text-xs font-bold text-[#4E5968] mb-1.5">비밀번호</label>
-          <input
-            v-model="password"
-            type="password"
-            required
-            autocomplete="current-password"
-            placeholder="••••••••"
-            class="w-full px-4 py-3.5 rounded-xl border border-[#E5E8EB] text-sm focus:outline-none focus:border-[#3182F6] focus:ring-2 focus:ring-[#3182F6]/20 transition-all bg-[#F9FAFB] focus:bg-white"
-          />
-        </div>
-
-        <button
-          type="submit"
-          :disabled="auth.isLoading"
-          class="w-full py-3.5 bg-[#3182F6] hover:bg-[#1B64DA] active:bg-[#1553B7] disabled:opacity-50 text-white rounded-xl font-bold text-sm shadow-md shadow-[#3182F6]/25 transition-all mt-2"
-        >
-          <span v-if="auth.isLoading">로그인 중...</span>
-          <span v-else>로그인</span>
-        </button>
-      </form>
-
-      <div class="mt-6 text-center text-xs text-[#8B95A1]">
-        아직 계정이 없으신가요?
-        <RouterLink to="/register" class="font-bold text-[#3182F6] hover:underline ml-1">
-          회원가입
-        </RouterLink>
       </div>
     </div>
   </div>
@@ -113,7 +132,7 @@ const email = ref('');
 const password = ref('');
 const error = ref('');
 
-const isDemoMode = ref(import.meta.env.VITE_DEMO_MODE === 'true' || import.meta.env.VITE_DEMO_MODE === undefined);
+const isDemoMode = ref(import.meta.env.VITE_MOCK_ENABLED === 'true');
 
 function fillTestAccount() {
   email.value = 'test@example.com';

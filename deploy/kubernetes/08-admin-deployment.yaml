@@ -1,21 +1,21 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: bnone-admin
-  namespace: bnone-prod
+  name: moa-admin
+  namespace: moa-prod
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: bnone-admin
+      app: moa-admin
   template:
     metadata:
       labels:
-        app: bnone-admin
+        app: moa-admin
     spec:
       containers:
         - name: admin
-          image: ghcr.io/dnjstjq0824-byte/bnone-admin:latest
+          image: ghcr.io/dnjstjq0824-byte/moa-admin:latest
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 80
@@ -30,12 +30,12 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: bnone-admin-svc
-  namespace: bnone-prod
+  name: moa-admin-svc
+  namespace: moa-prod
 spec:
   ports:
     - port: 80
       targetPort: 80
   selector:
-    app: bnone-admin
+    app: moa-admin
 

@@ -3,7 +3,7 @@ import { ref } from 'vue';
 import { adminFetch } from '../api/client';
 
 export const useAdminAuthStore = defineStore('adminAuth', () => {
-  const token = ref<string | null>(localStorage.getItem('bn_admin_token'));
+  const token = ref<string | null>(localStorage.getItem('moa_admin_token'));
   const role = ref<string | null>(localStorage.getItem('bn_admin_role'));
   const adminEmail = ref<string | null>(localStorage.getItem('bn_admin_email'));
   const fullName = ref<string | null>(localStorage.getItem('bn_admin_name'));
@@ -24,7 +24,7 @@ export const useAdminAuthStore = defineStore('adminAuth', () => {
       fullName.value = data.full_name;
       isAuthenticated.value = true;
 
-      localStorage.setItem('bn_admin_token', data.access_token);
+      localStorage.setItem('moa_admin_token', data.access_token);
       localStorage.setItem('bn_admin_role', data.role);
       localStorage.setItem('bn_admin_email', data.email);
       localStorage.setItem('bn_admin_name', data.full_name);
@@ -42,7 +42,7 @@ export const useAdminAuthStore = defineStore('adminAuth', () => {
     fullName.value = null;
     isAuthenticated.value = false;
 
-    localStorage.removeItem('bn_admin_token');
+    localStorage.removeItem('moa_admin_token');
     localStorage.removeItem('bn_admin_role');
     localStorage.removeItem('bn_admin_email');
     localStorage.removeItem('bn_admin_name');

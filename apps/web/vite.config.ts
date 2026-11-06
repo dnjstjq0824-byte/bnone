@@ -21,11 +21,11 @@ try {
     path.join(publicDir, 'version.json'),
     JSON.stringify(
       {
-        app: 'BN ONE',
+        app: 'MOA',
         version: '1.0.0',
         commit: commitHash,
         built_at: buildTime,
-        mode: 'static-mock-demo',
+        mode: process.env.VITE_MOCK_ENABLED === 'true' ? 'static-mock-demo' : 'live-api',
       },
       null,
       2

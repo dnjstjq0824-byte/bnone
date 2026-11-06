@@ -24,7 +24,7 @@ type Worker struct {
 }
 
 func main() {
-	dbURL := getEnv("DATABASE_URL", "bn_one.db")
+	dbURL := getEnv("DATABASE_URL", "moa.db")
 	driver := getEnv("DB_DRIVER", "sqlite")
 	if strings.HasPrefix(dbURL, "postgres") {
 		driver = "pgx"
@@ -37,7 +37,7 @@ func main() {
 	defer db.Close()
 
 	w := &Worker{db: db, driver: driver}
-	log.Println("[BN ONE Worker] Background worker initialized. Starting scheduled jobs...")
+	log.Println("[MOA Worker] Background worker initialized. Starting scheduled jobs...")
 
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
@@ -72,7 +72,7 @@ func main() {
 	}()
 
 	<-stop
-	log.Println("[BN ONE Worker] Shutting down cleanly...")
+	log.Println("[MOA Worker] Shutting down cleanly...")
 }
 
 func (w *Worker) runRenewalAlerts() {
@@ -187,7 +187,7 @@ func (w *Worker) processDataExports() {
 
 	for _, job := range jobs {
 		now := time.Now().UTC()
-		exportDir := filepath.Join(os.TempDir(), "bn_one_exports")
+		exportDir := filepath.Join(os.TempDir(), "moa_exports")
 		os.MkdirAll(exportDir, 0755)
 		filePath := filepath.Join(exportDir, fmt.Sprintf("export_%s.csv", job.ID))
 

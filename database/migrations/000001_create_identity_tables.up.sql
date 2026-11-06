@@ -1,5 +1,5 @@
 -- 000001_create_identity_tables.up.sql
--- BN ONE v1.0 Identity & User Tables
+-- MOA v1.0 Identity & User Tables
 
 CREATE TABLE IF NOT EXISTS users (
     id VARCHAR(36) PRIMARY KEY,

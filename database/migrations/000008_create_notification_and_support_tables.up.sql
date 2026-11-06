@@ -1,5 +1,5 @@
 -- 000008_create_notification_and_support_tables.up.sql
--- BN ONE v1.0 Notifications, Deliveries, Devices & Customer Support Tickets
+-- MOA v1.0 Notifications, Deliveries, Devices & Customer Support Tickets
 
 CREATE TABLE IF NOT EXISTS notifications (
     id VARCHAR(36) PRIMARY KEY,

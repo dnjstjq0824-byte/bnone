@@ -1,6 +1,6 @@
 # 08. POSTGRESQL DATABASE SCHEMA & MIGRATIONS
 
-**Document ID:** BN-ONE-DB-008  
+**Document ID:** MOA-DB-008  
 **Version:** 1.0.0  
 **Effective Date:** 2026-10-24  
 

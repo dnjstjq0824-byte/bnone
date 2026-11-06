@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:bn_one/app/app.dart';
-import 'package:bn_one/core/utils/formatters.dart';
+import 'package:moa/app/app.dart';
+import 'package:moa/core/utils/formatters.dart';
 
 void main() {
   test('CurrencyFormatter minor units to major units formatting', () {
@@ -12,14 +12,14 @@ void main() {
     expect(CurrencyFormatter.format(1500000, currency: 'KRW', masked: true), '₩••••••');
   });
 
-  testWidgets('BN ONE App initializes smoke test', (WidgetTester tester) async {
+  testWidgets('MOA App initializes smoke test', (WidgetTester tester) async {
     await tester.pumpWidget(
       const ProviderScope(
-        child: BnOneApp(),
+        child: MoaApp(),
       ),
     );
     await tester.pump(const Duration(milliseconds: 100));
 
-    expect(find.byType(BnOneApp), findsOneWidget);
+    expect(find.byType(MoaApp), findsOneWidget);
   });
 }

@@ -1,5 +1,5 @@
 -- 000002_create_account_and_asset_tables.up.sql
--- BN ONE v1.0 Accounts, Manual Assets & Liabilities
+-- MOA v1.0 Accounts, Manual Assets & Liabilities
 
 CREATE TABLE IF NOT EXISTS finance_accounts (
     id VARCHAR(36) PRIMARY KEY,

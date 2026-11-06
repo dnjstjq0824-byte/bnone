@@ -159,7 +159,7 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
                       ),
                     ),
 
-                    // Monthly Subscription Total Card (Toss Card Style)
+                    // Monthly Subscription Total Card (MOA Card Style)
                     Card(
                       child: Padding(
                         padding: const EdgeInsets.all(24.0),
@@ -246,12 +246,12 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
                                         width: 42,
                                         height: 42,
                                         decoration: BoxDecoration(
-                                          color: const Color(0xFFF1EDFF),
+                                          color: const Color(0xFFF2EAD3),
                                           borderRadius: BorderRadius.circular(15),
                                         ),
                                         child: const Icon(
                                           Icons.repeat_rounded,
-                                          color: Color(0xFF8061D9),
+                                          color: Color(0xFF9A7A33),
                                           size: 22,
                                         ),
                                       ),

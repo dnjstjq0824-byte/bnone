@@ -1,5 +1,5 @@
 -- 000009_create_admin_and_security_tables.up.sql
--- BN ONE v1.0 Admin RBAC, Audit Logging, Privacy Jobs & Outbox
+-- MOA v1.0 Admin RBAC, Audit Logging, Privacy Jobs & Outbox
 
 CREATE TABLE IF NOT EXISTS admin_users (
     id VARCHAR(36) PRIMARY KEY,

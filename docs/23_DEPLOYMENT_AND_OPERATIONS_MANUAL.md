@@ -1,6 +1,6 @@
 # 23. DEPLOYMENT AND OPERATIONS MANUAL
 
-**Document ID:** BN-ONE-OPS-023  
+**Document ID:** MOA-OPS-023  
 **Version:** 1.0.0  
 **Effective Date:** 2026-10-24  
 
@@ -8,10 +8,10 @@
 
 ## 1. Container Architecture & Orchestration
 
-BN ONE delivers complete containerized definitions for local development, staging environments, and production Kubernetes/Docker clusters.
+MOA delivers complete containerized definitions for local development, staging environments, and production Kubernetes/Docker clusters.
 
 ```text
-bn-one/
+moa/
   docker-compose.yml       <-- Full-stack orchestration (PostgreSQL, Redis, API, Worker, Web, Admin)
   services/
     api/Dockerfile         <-- Multi-stage Go 1.27 scratch / alpine container
@@ -29,15 +29,15 @@ To run the complete production-grade system locally with a single command:
 
 ```bash
 # 1. Clone repository
-git clone https://github.com/bookingnetwork/bn-one.git
-cd bn-one
+git clone https://github.com/bookingnetwork/moa.git
+cd moa
 
 # 2. Boot all services
 docker compose up -d --build
 
 # 3. Apply database migrations & seed fixtures
-docker compose exec api /app/migrate -path=/app/migrations -database="postgres://bnone:bnone_secret@postgres:5432/bnone_db?sslmode=disable" up
-docker compose exec postgres psql -U bnone -d bnone_db -f /fixtures/01_seed_initial_data.sql
+docker compose exec api /app/migrate -path=/app/migrations -database="postgres://moa:moa_secret@postgres:5432/moa_db?sslmode=disable" up
+docker compose exec postgres psql -U moa -d moa_db -f /fixtures/01_seed_initial_data.sql
 ```
 
 ### Port Allocations:
@@ -54,7 +54,7 @@ docker compose exec postgres psql -U bnone -d bnone_db -f /fixtures/01_seed_init
 | Variable Name | Default Value | Description |
 |---|---|---|
 | `PORT` | `8080` | API listener TCP port |
-| `DATABASE_URL` | `postgres://bnone:bnone_secret@localhost:5432/bnone_db?sslmode=disable` | Database connection string |
+| `DATABASE_URL` | `postgres://moa:moa_secret@localhost:5432/moa_db?sslmode=disable` | Database connection string |
 | `REDIS_URL` | `redis://localhost:6379/0` | Cache & background queue broker |
 | `JWT_SECRET` | *Must be 32+ char secret* | HMAC-SHA256 signature key |
 | `BASE_CURRENCY` | `KRW` | Platform default fallback currency |

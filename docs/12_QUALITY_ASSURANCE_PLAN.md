@@ -1,6 +1,6 @@
 # 12. QUALITY ASSURANCE PLAN & RELEASE GATES
 
-**Document ID:** BN-ONE-QA-012  
+**Document ID:** MOA-QA-012  
 **Version:** 1.0.0  
 **Effective Date:** 2026-10-24  
 
@@ -8,7 +8,7 @@
 
 ## 1. Quality Engineering Strategy
 
-The BN ONE QA plan is structured across three verification horizons:
+The MOA QA plan is structured across three verification horizons:
 1. **Unit & Financial Invariant Testing:** Testing calculation correctness, minor-unit conversions, double-entry arithmetic, and tenant isolation at the service level.
 2. **Integration & API Verification:** Testing database transaction rollbacks, foreign exchange synchronization workers, and auth session flows.
 3. **End-to-End & UI/UX Validation:** Verifying that Flutter mobile apps and Vue web frontends properly render layouts, honor accessibility requirements, and handle offline transitions.

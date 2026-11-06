@@ -1,5 +1,5 @@
 -- 000006_create_fx_tables.up.sql
--- BN ONE v1.0 Currencies, FX Providers, Exchange Rates & Snapshots
+-- MOA v1.0 Currencies, FX Providers, Exchange Rates & Snapshots
 
 CREATE TABLE IF NOT EXISTS currencies (
     code VARCHAR(3) PRIMARY KEY,

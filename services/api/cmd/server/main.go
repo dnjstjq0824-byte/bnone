@@ -9,20 +9,20 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/bookingnetwork/bn-one/services/api/internal/accounts"
-	"github.com/bookingnetwork/bn-one/services/api/internal/admin"
-	"github.com/bookingnetwork/bn-one/services/api/internal/analytics"
-	"github.com/bookingnetwork/bn-one/services/api/internal/auth"
-	"github.com/bookingnetwork/bn-one/services/api/internal/budgets"
-	"github.com/bookingnetwork/bn-one/services/api/internal/config"
-	"github.com/bookingnetwork/bn-one/services/api/internal/database"
-	"github.com/bookingnetwork/bn-one/services/api/internal/forex"
-	"github.com/bookingnetwork/bn-one/services/api/internal/middleware"
-	"github.com/bookingnetwork/bn-one/services/api/internal/notifications"
-	"github.com/bookingnetwork/bn-one/services/api/internal/subscriptions"
-	"github.com/bookingnetwork/bn-one/services/api/internal/transactions"
-	"github.com/bookingnetwork/bn-one/services/api/internal/trips"
-	"github.com/bookingnetwork/bn-one/services/api/internal/users"
+	"github.com/bookingnetwork/moa/services/api/internal/accounts"
+	"github.com/bookingnetwork/moa/services/api/internal/admin"
+	"github.com/bookingnetwork/moa/services/api/internal/analytics"
+	"github.com/bookingnetwork/moa/services/api/internal/auth"
+	"github.com/bookingnetwork/moa/services/api/internal/budgets"
+	"github.com/bookingnetwork/moa/services/api/internal/config"
+	"github.com/bookingnetwork/moa/services/api/internal/database"
+	"github.com/bookingnetwork/moa/services/api/internal/forex"
+	"github.com/bookingnetwork/moa/services/api/internal/middleware"
+	"github.com/bookingnetwork/moa/services/api/internal/notifications"
+	"github.com/bookingnetwork/moa/services/api/internal/subscriptions"
+	"github.com/bookingnetwork/moa/services/api/internal/transactions"
+	"github.com/bookingnetwork/moa/services/api/internal/trips"
+	"github.com/bookingnetwork/moa/services/api/internal/users"
 	"github.com/go-chi/chi/v5"
 	chimw "github.com/go-chi/chi/v5/middleware"
 	"github.com/go-chi/cors"
@@ -30,7 +30,7 @@ import (
 
 func main() {
 	cfg := config.Load()
-	log.Printf("[BN ONE] Starting API Server on port %s (env: %s)...", cfg.Port, cfg.Environment)
+	log.Printf("[MOA] Starting API Server on port %s (env: %s)...", cfg.Port, cfg.Environment)
 
 	// Connect to Database
 	db, err := database.Connect(cfg.DBDriver, cfg.DatabaseURL)
@@ -61,7 +61,7 @@ func main() {
 	}
 
 	// Handlers
-	authHandler := auth.NewHandler(db, cfg.JWTSecret)
+	authHandler := auth.NewHandler(db, cfg.JWTSecret, cfg.AdminBootstrapEnabled, cfg.AdminBootstrapPassword)
 	usersHandler := users.NewHandler(db)
 	accountsHandler := accounts.NewHandler(db)
 	txHandler := transactions.NewHandler(db)
@@ -84,9 +84,14 @@ func main() {
 	r.Use(middleware.RequestIDMiddleware)
 	r.Use(middleware.SecurityHeadersMiddleware)
 
-	// CORS configuration for Vue Web and Admin Console
+	// Global per-IP rate limit: 600 requests/minute per client.
+	globalLimiter := middleware.NewRateLimiter(600, time.Minute)
+	r.Use(globalLimiter.Middleware)
+
+	// CORS origins come from CORS_ALLOWED_ORIGINS (config strips wildcards;
+	// a wildcard must never be combined with AllowCredentials).
 	r.Use(cors.Handler(cors.Options{
-		AllowedOrigins:   []string{"http://localhost:3000", "http://localhost:5173", "http://localhost:5174", "http://127.0.0.1:3000", "http://127.0.0.1:5173", "http://127.0.0.1:5174", "*"},
+		AllowedOrigins:   cfg.CORSAllowedOrigins,
 		AllowedMethods:   []string{"GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"},
 		AllowedHeaders:   []string{"Accept", "Authorization", "Content-Type", "X-CSRF-Token", "X-Request-ID", "Idempotency-Key"},
 		ExposedHeaders:   []string{"Link", "X-Request-ID"},
@@ -94,10 +99,13 @@ func main() {
 		MaxAge:           300,
 	}))
 
+	// Strict per-IP budget for credential endpoints (brute-force protection).
+	authLimiter := middleware.NewRateLimiter(20, time.Minute)
+
 	// Health and Readiness
 	r.Get("/healthz", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
-		w.Write([]byte(`{"status":"HEALTHY","product":"BN ONE API","version":"1.0.0"}`))
+		w.Write([]byte(`{"status":"HEALTHY","product":"MOA API","version":"1.0.0"}`))
 	})
 	r.Get("/readyz", func(w http.ResponseWriter, r *http.Request) {
 		if err := db.Ping(); err != nil {
@@ -110,11 +118,11 @@ func main() {
 
 	// API v1 Routes
 	r.Route("/api/v1", func(r chi.Router) {
-		// Public Auth
-		r.Post("/auth/register", authHandler.Register)
-		r.Post("/auth/login", authHandler.Login)
-		r.Post("/auth/refresh", authHandler.Refresh)
-		r.Post("/auth/admin/login", authHandler.AdminLogin)
+		// Public Auth (strict rate limit against credential stuffing)
+		r.With(authLimiter.Middleware).Post("/auth/register", authHandler.Register)
+		r.With(authLimiter.Middleware).Post("/auth/login", authHandler.Login)
+		r.With(authLimiter.Middleware).Post("/auth/refresh", authHandler.Refresh)
+		r.With(authLimiter.Middleware).Post("/auth/admin/login", authHandler.AdminLogin)
 
 		// Public FX & Currencies Reference
 		r.Get("/currencies", fxHandler.ListCurrencies)
@@ -259,21 +267,21 @@ func main() {
 	signal.Notify(stop, os.Interrupt, syscall.SIGTERM)
 
 	go func() {
-		log.Printf("[BN ONE API] HTTP Server running on http://127.0.0.1:%s", cfg.Port)
+		log.Printf("[MOA API] HTTP Server running on http://127.0.0.1:%s", cfg.Port)
 		if err := server.ListenAndServe(); err != nil && err != http.ErrServerClosed {
-			log.Fatalf("[BN ONE API] Could not listen: %v\n", err)
+			log.Fatalf("[MOA API] Could not listen: %v\n", err)
 		}
 	}()
 
 	<-stop
-	log.Println("[BN ONE API] Shutting down gracefully...")
+	log.Println("[MOA API] Shutting down gracefully...")
 
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
 	if err := server.Shutdown(ctx); err != nil {
-		log.Fatalf("[BN ONE API] Server forced to shutdown: %v", err)
+		log.Fatalf("[MOA API] Server forced to shutdown: %v", err)
 	}
 
-	log.Println("[BN ONE API] Server exited cleanly.")
+	log.Println("[MOA API] Server exited cleanly.")
 }

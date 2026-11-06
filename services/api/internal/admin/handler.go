@@ -5,9 +5,9 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/bookingnetwork/bn-one/services/api/internal/database"
-	"github.com/bookingnetwork/bn-one/services/api/internal/middleware"
-	"github.com/bookingnetwork/bn-one/services/api/internal/models"
+	"github.com/bookingnetwork/moa/services/api/internal/database"
+	"github.com/bookingnetwork/moa/services/api/internal/middleware"
+	"github.com/bookingnetwork/moa/services/api/internal/models"
 	"github.com/go-chi/chi/v5"
 	"github.com/google/uuid"
 )
@@ -370,7 +370,7 @@ func (h *Handler) ReviewDeletionRequest(w http.ResponseWriter, r *http.Request) 
 
 	if body.Action == "APPROVE_AND_EXECUTE" {
 		// Anonymize and soft delete user
-		h.db.Exec("UPDATE users SET status = 'DELETED', deleted_at = $1, email = 'deleted_' || id || '@anonymized.bn-one', display_name = 'Deleted User' WHERE id = $2", now, userID)
+		h.db.Exec("UPDATE users SET status = 'DELETED', deleted_at = $1, email = 'deleted_' || id || '@anonymized.moa', display_name = 'Deleted User' WHERE id = $2", now, userID)
 		h.db.Exec("UPDATE deletion_requests SET status = 'COMPLETED', processed_at = $1 WHERE id = $2", now, reqID)
 		h.db.Exec("UPDATE user_sessions SET revoked_at = $1 WHERE user_id = $2", now, userID)
 	} else {

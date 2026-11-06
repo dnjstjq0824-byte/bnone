@@ -3,25 +3,25 @@ version: '3.8'
 services:
   postgres:
     image: postgres:16-alpine
-    container_name: bnone-postgres
+    container_name: moa-postgres
     environment:
-      POSTGRES_USER: bnone
-      POSTGRES_PASSWORD: bnone_secret
-      POSTGRES_DB: bnone_db
+      POSTGRES_USER: moa
+      POSTGRES_PASSWORD: moa_secret
+      POSTGRES_DB: moa_db
     ports:
       - "5432:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
       - ./database/fixtures/01_seed_initial_data.sql:/docker-entrypoint-initdb.d/01_seed.sql
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U bnone -d bnone_db"]
+      test: ["CMD-SHELL", "pg_isready -U moa -d moa_db"]
       interval: 5s
       timeout: 5s
       retries: 5
 
   redis:
     image: redis:7-alpine
-    container_name: bnone-redis
+    container_name: moa-redis
     ports:
       - "6379:6379"
     volumes:
@@ -31,14 +31,14 @@ services:
     build:
       context: .
       dockerfile: services/api/Dockerfile
-    container_name: bnone-api
+    container_name: moa-api
     ports:
       - "8080:8080"
     environment:
       PORT: "8080"
-      DATABASE_URL: "postgres://bnone:bnone_secret@postgres:5432/bnone_db?sslmode=disable"
+      DATABASE_URL: "postgres://moa:moa_secret@postgres:5432/moa_db?sslmode=disable"
       REDIS_URL: "redis://redis:6379/0"
-      JWT_SECRET: "bnone-production-grade-jwt-secret-key-256bit-min"
+      JWT_SECRET: "moa-production-grade-jwt-secret-key-256bit-min"
       BASE_CURRENCY: "KRW"
     depends_on:
       postgres:
@@ -48,9 +48,9 @@ services:
     build:
       context: .
       dockerfile: services/worker/Dockerfile
-    container_name: bnone-worker
+    container_name: moa-worker
     environment:
-      DATABASE_URL: "postgres://bnone:bnone_secret@postgres:5432/bnone_db?sslmode=disable"
+      DATABASE_URL: "postgres://moa:moa_secret@postgres:5432/moa_db?sslmode=disable"
       REDIS_URL: "redis://redis:6379/0"
     depends_on:
       postgres:
@@ -60,7 +60,7 @@ services:
     build:
       context: apps/web
       dockerfile: Dockerfile
-    container_name: bnone-web
+    container_name: moa-web
     ports:
       - "3000:80"
     depends_on:
@@ -70,7 +70,7 @@ services:
     build:
       context: apps/admin
       dockerfile: Dockerfile
-    container_name: bnone-admin
+    container_name: moa-admin
     ports:
       - "3001:80"
     depends_on:

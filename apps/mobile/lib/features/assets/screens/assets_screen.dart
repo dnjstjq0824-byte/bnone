@@ -239,7 +239,7 @@ class _AssetsScreenState extends State<AssetsScreen> {
 
                     const SizedBox(height: 12),
 
-                    // Financial Accounts Card (Toss Account List)
+                    // Financial Accounts Card (MOA Account List)
                     Card(
                       child: Padding(
                         padding: const EdgeInsets.all(20.0),
@@ -387,10 +387,10 @@ class _AssetsScreenState extends State<AssetsScreen> {
                                           width: 38,
                                           height: 38,
                                           decoration: BoxDecoration(
-                                            color: const Color(0xFFF1EDFF),
+                                            color: const Color(0xFFF2EAD3),
                                             borderRadius: BorderRadius.circular(13),
                                           ),
-                                          child: const Icon(Icons.home_work_rounded, color: Color(0xFF8061D9), size: 20),
+                                          child: const Icon(Icons.home_work_rounded, color: Color(0xFF9A7A33), size: 20),
                                         ),
                                         const SizedBox(width: 12),
                                         Expanded(
@@ -417,7 +417,7 @@ class _AssetsScreenState extends State<AssetsScreen> {
                                           width: 38,
                                           height: 38,
                                           decoration: BoxDecoration(
-                                            color: const Color(0xFFFEECEB),
+                                            color: const Color(0xFFFBEAEA),
                                             borderRadius: BorderRadius.circular(13),
                                           ),
                                           child: const Icon(Icons.credit_card_rounded, color: AppColors.danger, size: 20),

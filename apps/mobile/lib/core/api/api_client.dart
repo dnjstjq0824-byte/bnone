@@ -21,19 +21,19 @@ class ApiClient {
 
   Future<void> init() async {
     final prefs = await SharedPreferences.getInstance();
-    _token = prefs.getString('bn_token');
+    _token = prefs.getString('moa_token');
   }
 
   Future<void> setToken(String token) async {
     _token = token;
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('bn_token', token);
+    await prefs.setString('moa_token', token);
   }
 
   Future<void> clearToken() async {
     _token = null;
     final prefs = await SharedPreferences.getInstance();
-    await prefs.remove('bn_token');
+    await prefs.remove('moa_token');
   }
 
   bool get isAuthenticated => _token != null && _token!.isNotEmpty;

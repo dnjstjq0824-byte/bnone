@@ -1,6 +1,6 @@
-# 01. PRODUCT REQUIREMENTS DOCUMENT (PRD) — BN ONE v1.0
+# 01. PRODUCT REQUIREMENTS DOCUMENT (PRD) — MOA v1.0
 
-**Document ID:** BN-ONE-PRD-001  
+**Document ID:** MOA-PRD-001  
 **Version:** 1.0.0  
 **Effective Date:** 2026-10-24  
 **Author:** PO / Lead Architecture Team  
@@ -12,15 +12,15 @@
 ## 1. Executive Summary & Brand Identity
 
 ### 1.1 Brand Mission
-- **Brand Name:** BN ONE
-- **Tagline:** *Your Money. Your World.*
+- **Brand Name:** MOA
+- **Tagline:** *Gather all your money.*
 - **Mission:** Empower global citizens to track and manage their financial lifestyle seamlessly across domestic daily expenditures and international travels within a unified, high-integrity platform.
 
 ### 1.2 Core Thesis & Scope Boundary
-BN ONE v1.0 is a **manual financial lifestyle and personal wealth tracking software**. It strictly operates as an immutable ledger and planner based on user-entered transactions, manual account balances, and verified third-party reference exchange rate feeds.
+MOA v1.0 is a **manual financial lifestyle and personal wealth tracking software**. It strictly operates as an immutable ledger and planner based on user-entered transactions, manual account balances, and verified third-party reference exchange rate feeds.
 
 > **CRITICAL LEGAL INVARIANT:**  
-> BN ONE v1.0 does **NOT** connect to live banking APIs, execute wire transfers, issue debit/credit cards, collect user banking credentials, or take custody of customer funds. All user balances represent user-recorded ledgers.
+> MOA v1.0 does **NOT** connect to live banking APIs, execute wire transfers, issue debit/credit cards, collect user banking credentials, or take custody of customer funds. All user balances represent user-recorded ledgers.
 
 ---
 

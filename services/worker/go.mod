@@ -1,4 +1,4 @@
-module github.com/bookingnetwork/bn-one/services/worker
+module github.com/bookingnetwork/moa/services/worker
 
 go 1.27.0
 

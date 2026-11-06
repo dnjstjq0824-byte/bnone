@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import '../core/theme/app_theme.dart';
 import 'router.dart';
 
-class BnOneApp extends StatelessWidget {
-  const BnOneApp({super.key});
+class MoaApp extends StatelessWidget {
+  const MoaApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
-      title: 'BN ONE',
+      title: 'MOA',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,

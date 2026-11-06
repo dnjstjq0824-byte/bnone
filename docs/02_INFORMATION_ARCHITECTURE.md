@@ -1,6 +1,6 @@
 # 02. INFORMATION ARCHITECTURE SPECIFICATION
 
-**Document ID:** BN-ONE-IA-002  
+**Document ID:** MOA-IA-002  
 **Version:** 1.0.0  
 **Effective Date:** 2026-10-24  
 
@@ -8,7 +8,7 @@
 
 ## 1. Information Architecture Overview
 
-BN ONE v1.0 organizes personal finance into a cohesive mental model across 5 core pillars:
+MOA v1.0 organizes personal finance into a cohesive mental model across 5 core pillars:
 1. **DASHBOARD (Home):** Holistic summary of net worth, monthly cash flow, recent activity, and quick actions.
 2. **ASSETS & ACCOUNTS (Assets):** Breakdown of all liquid cash, bank balances, investments, and liabilities.
 3. **ACTIVITY (Transactions & Analytics):** Historical timeline of cash inflows, outflows, and transfers with visual category breakdowns.
@@ -21,7 +21,7 @@ BN ONE v1.0 organizes personal finance into a cohesive mental model across 5 cor
 
 ```mermaid
 graph TD
-    Root[BN ONE App] --> Auth[Auth Flow]
+    Root[MOA App] --> Auth[Auth Flow]
     Auth --> Login[Login / Register]
     Auth --> Onboarding[Currency & Locale Setup]
     

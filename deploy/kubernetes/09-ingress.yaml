@@ -1,8 +1,8 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: bnone-ingress
-  namespace: bnone-prod
+  name: moa-ingress
+  namespace: moa-prod
   annotations:
     kubernetes.io/ingress.class: nginx
     cert-manager.io/cluster-issuer: letsencrypt-prod
@@ -11,44 +11,44 @@ metadata:
 spec:
   tls:
     - hosts:
-        - bnone.bookingnetwork.com
-        - admin.bnone.bookingnetwork.com
-        - api.bnone.bookingnetwork.com
-      secretName: bnone-tls-cert
+        - moa.bookingnetwork.com
+        - admin.moa.bookingnetwork.com
+        - api.moa.bookingnetwork.com
+      secretName: moa-tls-cert
   rules:
     # User Web
-    - host: bnone.bookingnetwork.com
+    - host: moa.bookingnetwork.com
       http:
         paths:
           - path: /
             pathType: Prefix
             backend:
               service:
-                name: bnone-web-svc
+                name: moa-web-svc
                 port:
                   number: 80
 
     # API
-    - host: api.bnone.bookingnetwork.com
+    - host: api.moa.bookingnetwork.com
       http:
         paths:
           - path: /
             pathType: Prefix
             backend:
               service:
-                name: bnone-api-svc
+                name: moa-api-svc
                 port:
                   number: 8080
 
     # Admin Console
-    - host: admin.bnone.bookingnetwork.com
+    - host: admin.moa.bookingnetwork.com
       http:
         paths:
           - path: /
             pathType: Prefix
             backend:
               service:
-                name: bnone-admin-svc
+                name: moa-admin-svc
                 port:
                   number: 80
 

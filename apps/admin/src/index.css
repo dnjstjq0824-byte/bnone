@@ -4,7 +4,9 @@
 
 @layer base {
   body {
-    @apply font-sans antialiased text-slate-100 bg-[#0B0F19];
+    @apply font-sans antialiased text-slate-100 bg-[#08170F];
   }
 }
 
+body { font-family: 'Pretendard Variable', 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Malgun Gothic', sans-serif; }
+:focus-visible { outline: 3px solid #C0A04E; outline-offset: 4px; }

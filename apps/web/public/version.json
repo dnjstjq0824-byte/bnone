@@ -1,7 +1,7 @@
 {
-  "app": "BN ONE",
+  "app": "MOA",
   "version": "1.0.0",
-  "commit": "3e4f38c",
-  "built_at": "2026-10-31T17:47:05.167Z",
-  "mode": "static-mock-demo"
+  "commit": "30e2481",
+  "built_at": "2026-11-06T17:14:49.254Z",
+  "mode": "live-api"
 }

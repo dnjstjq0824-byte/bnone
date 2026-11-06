@@ -45,7 +45,7 @@
           </div>
           <span
             class="px-2.5 py-0.5 rounded-full text-[10px] font-bold"
-            :class="t.status === 'RESOLVED' ? 'bg-emerald-50 text-emerald-600' : 'bg-blue-50 text-blue-600'"
+            :class="t.status === 'RESOLVED' ? 'bg-emerald-50 text-emerald-600' : 'bg-[#EBF2EC] text-[#1E5A38]'"
           >
             {{ t.status }}
           </span>
@@ -87,6 +87,43 @@
         </form>
       </div>
     </div>
+
+    <!-- Ticket Detail Modal -->
+    <div v-if="selectedTicket" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+      <div class="bg-white max-w-md w-full rounded-3xl p-6 card-shadow space-y-4 border border-slate-200 max-h-[85vh] overflow-y-auto">
+        <div class="flex items-start justify-between gap-3">
+          <div>
+            <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-100 text-slate-600">{{ selectedTicket.category }}</span>
+            <h3 class="text-base font-bold text-slate-900 mt-1.5">{{ selectedTicket.subject }}</h3>
+          </div>
+          <span
+            class="px-2.5 py-0.5 rounded-full text-[10px] font-bold shrink-0"
+            :class="selectedTicket.status === 'RESOLVED' ? 'bg-emerald-50 text-emerald-600' : 'bg-[#EBF2EC] text-[#1E5A38]'"
+          >
+            {{ selectedTicket.status }}
+          </span>
+        </div>
+        <p class="text-xs text-slate-600 leading-relaxed whitespace-pre-wrap">{{ selectedTicket.description }}</p>
+        <div class="pt-3 border-t border-slate-100 space-y-2.5">
+          <div class="text-xs font-bold text-slate-700">대화 내역</div>
+          <div v-if="!selectedTicket.messages || selectedTicket.messages.length === 0" class="text-xs text-slate-400">
+            답변 대기 중입니다.
+          </div>
+          <div
+            v-for="(m, idx) in selectedTicket.messages || []"
+            :key="idx"
+            class="p-3 rounded-xl text-xs leading-relaxed"
+            :class="m.sender_type === 'ADMIN' ? 'bg-[#EBF2EC] text-slate-700' : 'bg-slate-100 text-slate-600'"
+          >
+            <span class="font-bold">{{ m.sender_type === 'ADMIN' ? '관리자' : '나' }}</span>
+            <p class="mt-0.5 whitespace-pre-wrap">{{ m.message }}</p>
+          </div>
+        </div>
+        <button @click="selectedTicket = null" class="w-full py-2.5 bg-slate-100 hover:bg-slate-200 rounded-xl text-xs font-bold text-slate-700">
+          닫기
+        </button>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -96,6 +133,7 @@ import { apiFetch } from '../api/client';
 
 const tickets = ref<any[]>([]);
 const showCreateModal = ref(false);
+const selectedTicket = ref<any | null>(null);
 
 const newTicket = ref({
   category: 'GENERAL',
@@ -123,9 +161,7 @@ async function submitTicket() {
 }
 
 async function openTicket(ticket: any) {
-  const detail = await apiFetch(`/me/support-tickets/${ticket.id}`);
-  let msgList = detail.messages?.map((m: any) => `[${m.sender_type}] ${m.message}`).join('\n\n') || '답변 대기 중입니다.';
-  alert(`[${detail.subject}]\n상태: ${detail.status}\n\n내용:\n${detail.description}\n\n대화 내역:\n${msgList}`);
+  selectedTicket.value = await apiFetch(`/me/support-tickets/${ticket.id}`);
 }
 </script>
 

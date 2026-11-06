@@ -8,7 +8,7 @@
     </div>
 
     <!-- Privacy Banner -->
-    <div class="p-3.5 rounded-2xl bg-blue-900/30 border border-blue-800 text-blue-200 text-xs flex items-center gap-2.5">
+    <div class="p-3.5 rounded-2xl bg-[#1E5A38]/25 border border-[#2A7248] text-[#C9DCCD] text-xs flex items-center gap-2.5">
       <span>🔒</span>
       <p class="text-[11px] leading-relaxed">
         <strong>원칙 준수 (Article 21.5):</strong> 지원 담당자는 문의 내용 및 상태만을 열람하며, 사용자의 전체 자산 및 상세 거래내역 원문은 기본 노출되지 않습니다.
@@ -16,10 +16,10 @@
     </div>
 
     <!-- Tickets List -->
-    <div class="bg-[#111827] rounded-3xl border border-slate-800 overflow-hidden">
+    <div class="bg-[#0C2318] rounded-3xl border border-white/10 overflow-hidden">
       <table class="w-full text-left border-collapse">
         <thead>
-          <tr class="bg-slate-800/50 text-[11px] font-bold text-slate-400 border-b border-slate-800">
+          <tr class="bg-slate-800/50 text-[11px] font-bold text-slate-400 border-b border-white/10">
             <th class="py-3 px-5">문의자</th>
             <th class="py-3 px-4">유형</th>
             <th class="py-3 px-4">제목</th>
@@ -43,7 +43,7 @@
             </td>
             <td class="py-3.5 px-4 text-slate-500">{{ formatDate(t.created_at) }}</td>
             <td class="py-3.5 px-4 text-center space-x-2">
-              <button @click="openReply(t)" class="text-[11px] text-blue-400 hover:text-blue-300 font-bold">
+              <button @click="openReply(t)" class="text-[11px] text-[#7FB08F] hover:text-[#A9C7B4] font-bold">
                 답변/열람
               </button>
               <button v-if="t.status !== 'RESOLVED'" @click="resolveTicket(t.id)" class="text-[11px] text-emerald-400 hover:text-emerald-300 font-bold">
@@ -57,16 +57,16 @@
 
     <!-- Reply Modal -->
     <div v-if="activeTicket" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-      <div class="bg-[#111827] max-w-lg w-full rounded-3xl p-6 border border-slate-800 space-y-4 shadow-2xl">
-        <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+      <div class="bg-[#0C2318] max-w-lg w-full rounded-3xl p-6 border border-white/10 space-y-4 shadow-2xl">
+        <div class="flex items-center justify-between border-b border-white/10 pb-3">
           <div>
-            <span class="text-[10px] font-bold text-blue-400">티켓 #{{ activeTicket.id.slice(0, 8) }}</span>
+            <span class="text-[10px] font-bold text-[#7FB08F]">티켓 #{{ activeTicket.id.slice(0, 8) }}</span>
             <h3 class="text-sm font-bold text-white">{{ activeTicket.subject }}</h3>
           </div>
           <button @click="activeTicket = null" class="text-slate-400 hover:text-white">✕</button>
         </div>
 
-        <div class="p-3 rounded-xl bg-slate-900 border border-slate-800 text-xs text-slate-300 space-y-1">
+        <div class="p-3 rounded-xl bg-slate-900 border border-white/10 text-xs text-slate-300 space-y-1">
           <div class="font-bold text-slate-400">사용자 문의 내용:</div>
           <p>{{ activeTicket.description }}</p>
         </div>
@@ -77,7 +77,7 @@
             v-for="msg in activeTicket.messages || []"
             :key="msg.id"
             class="p-2.5 rounded-xl text-xs"
-            :class="msg.sender_type === 'ADMIN' ? 'bg-blue-900/30 text-blue-200 ml-4 border border-blue-800' : 'bg-slate-800 text-slate-200 mr-4'"
+            :class="msg.sender_type === 'ADMIN' ? 'bg-[#1E5A38]/25 text-[#C9DCCD] ml-4 border border-[#2A7248]' : 'bg-slate-800 text-slate-200 mr-4'"
           >
             <div class="text-[9px] text-slate-400 font-bold mb-1">
               {{ msg.sender_type === 'ADMIN' ? '운영 담당자' : '사용자' }}
@@ -87,16 +87,16 @@
         </div>
 
         <!-- Reply input -->
-        <div class="space-y-2 pt-2 border-t border-slate-800">
+        <div class="space-y-2 pt-2 border-t border-white/10">
           <textarea
             v-model="replyText"
             rows="3"
             placeholder="사용자에게 전달할 답변을 작성하세요."
-            class="w-full px-3.5 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white focus:outline-none focus:border-blue-500"
+            class="w-full px-3.5 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white focus:outline-none focus:border-[#2A7248]"
           ></textarea>
           <div class="flex justify-end gap-2">
             <button @click="activeTicket = null" class="px-3 py-2 bg-slate-800 text-slate-300 text-xs rounded-xl font-bold">닫기</button>
-            <button @click="submitReply" class="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white text-xs rounded-xl font-bold">답변 발송</button>
+            <button @click="submitReply" class="px-4 py-2 bg-[#1E5A38] hover:bg-[#2A7248] text-white text-xs rounded-xl font-bold">답변 발송</button>
           </div>
         </div>
       </div>

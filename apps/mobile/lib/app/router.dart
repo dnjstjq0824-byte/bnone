@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../core/api/api_client.dart';
+import '../core/theme/colors.dart';
 import '../features/onboarding/screens/welcome_screen.dart';
 import '../features/onboarding/screens/login_screen.dart';
 import '../features/onboarding/screens/register_screen.dart';
@@ -115,28 +116,48 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      backgroundColor: Color(0xFF2563EB),
+    return Scaffold(
+      backgroundColor: AppColors.pineDeep,
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(
-              'BN ONE',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 36,
-                fontWeight: FontWeight.w900,
-                letterSpacing: 2,
+            Container(
+              width: 72,
+              height: 72,
+              decoration: BoxDecoration(
+                color: AppColors.accent,
+                borderRadius: BorderRadius.circular(22),
+              ),
+              child: const Center(
+                child: Text(
+                  'M',
+                  style: TextStyle(
+                    color: AppColors.pineDeep,
+                    fontSize: 36,
+                    fontWeight: FontWeight.w900,
+                  ),
+                ),
               ),
             ),
-            SizedBox(height: 8),
-            Text(
-              'Your Money. Your World.',
+            const SizedBox(height: 20),
+            const Text(
+              'MOA',
               style: TextStyle(
-                color: Colors.white70,
-                fontSize: 14,
-                fontWeight: FontWeight.bold,
+                color: Colors.white,
+                fontSize: 28,
+                fontWeight: FontWeight.w900,
+                letterSpacing: 4,
+              ),
+            ),
+            const SizedBox(height: 8),
+            const Text(
+              '돈을 모으다',
+              style: TextStyle(
+                color: AppColors.darkTextTertiary,
+                fontSize: 13,
+                fontWeight: FontWeight.w600,
+                letterSpacing: 1,
               ),
             ),
           ],

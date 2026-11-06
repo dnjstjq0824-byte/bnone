@@ -1,6 +1,6 @@
 # 10. SECURITY AND DATA PROTECTION SPECIFICATION
 
-**Document ID:** BN-ONE-SEC-010  
+**Document ID:** MOA-SEC-010  
 **Version:** 1.0.0  
 **Effective Date:** 2026-10-24  
 
@@ -8,7 +8,7 @@
 
 ## 1. Threat Modeling & Core Defense Principles
 
-BN ONE holds sensitive user financial records. The platform enforces defense-in-depth across storage, transmission, and operational layers.
+MOA holds sensitive user financial records. The platform enforces defense-in-depth across storage, transmission, and operational layers.
 
 ### 1.1 Tenant Isolation Invariant
 - **Logical Data Segregation:** All user data (accounts, entries, budgets, trips, notes) is logically segregated with mandatory `user_id` ownership constraints.

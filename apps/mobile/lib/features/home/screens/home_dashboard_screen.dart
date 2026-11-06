@@ -100,7 +100,7 @@ class _HomeDashboardScreenState extends State<HomeDashboardScreen> {
             ),
             const SizedBox(width: 8),
             const Text(
-              'BN ONE',
+              'MOA',
               style: TextStyle(
                 fontWeight: FontWeight.w900,
                 fontSize: 20,
@@ -168,7 +168,7 @@ class _HomeDashboardScreenState extends State<HomeDashboardScreen> {
                       ),
                     ),
 
-                    // Net Worth Card (Toss Bank Card Style)
+                    // Net Worth Card (MOA Bank Card Style)
                     InkWell(
                       onTap: () => context.push('/assets'),
                       borderRadius: BorderRadius.circular(24),
@@ -249,36 +249,36 @@ class _HomeDashboardScreenState extends State<HomeDashboardScreen> {
                               const SizedBox(height: 20),
                               const Divider(),
                               const SizedBox(height: 16),
-                              // Toss Quick Actions Row
+                              // MOA Quick Actions Row
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                                 children: [
-                                  _buildTossQuickAction(
+                                  _buildQuickAction(
                                     icon: Icons.add,
                                     label: '거래 기록',
                                     color: AppColors.brandPrimary,
                                     bg: AppColors.primaryLight,
                                     onTap: () => context.push('/transactions/new'),
                                   ),
-                                  _buildTossQuickAction(
+                                  _buildQuickAction(
                                     icon: Icons.account_balance_wallet_outlined,
                                     label: '자산 관리',
-                                    color: const Color(0xFF8061D9),
-                                    bg: const Color(0xFFF1EDFF),
+                                    color: const Color(0xFF9A7A33),
+                                    bg: const Color(0xFFF2EAD3),
                                     onTap: () => context.push('/assets'),
                                   ),
-                                  _buildTossQuickAction(
+                                  _buildQuickAction(
                                     icon: Icons.track_changes_outlined,
                                     label: '예산 관리',
-                                    color: const Color(0xFF00B06B),
-                                    bg: const Color(0xFFE5F7F0),
+                                    color: const Color(0xFF2A7248),
+                                    bg: const Color(0xFFE4EFE7),
                                     onTap: () => context.push('/budgets'),
                                   ),
-                                  _buildTossQuickAction(
+                                  _buildQuickAction(
                                     icon: Icons.currency_exchange_rounded,
                                     label: '환율 계산',
-                                    color: const Color(0xFFFF8D00),
-                                    bg: const Color(0xFFFFF3E2),
+                                    color: const Color(0xFFC97E1F),
+                                    bg: const Color(0xFFF8EFDC),
                                     onTap: () => context.push('/fx'),
                                   ),
                                 ],
@@ -291,7 +291,7 @@ class _HomeDashboardScreenState extends State<HomeDashboardScreen> {
 
                     const SizedBox(height: 12),
 
-                    // Monthly Spending Card (Toss "이번 달 쓴 금액" Style)
+                    // Monthly Spending Card (MOA "이번 달 쓴 금액" Style)
                     InkWell(
                       onTap: () => context.push('/transactions'),
                       borderRadius: BorderRadius.circular(24),
@@ -370,7 +370,7 @@ class _HomeDashboardScreenState extends State<HomeDashboardScreen> {
 
                     const SizedBox(height: 12),
 
-                    // Lifestyle Services Card (Toss Feature Banner Style)
+                    // Lifestyle Services Card (MOA Feature Banner Style)
                     Card(
                       child: Padding(
                         padding: const EdgeInsets.symmetric(vertical: 8),
@@ -381,10 +381,10 @@ class _HomeDashboardScreenState extends State<HomeDashboardScreen> {
                                 width: 42,
                                 height: 42,
                                 decoration: BoxDecoration(
-                                  color: const Color(0xFFF1EDFF),
+                                  color: const Color(0xFFF2EAD3),
                                   borderRadius: BorderRadius.circular(14),
                                 ),
-                                child: const Icon(Icons.repeat_rounded, color: Color(0xFF8061D9), size: 22),
+                                child: const Icon(Icons.repeat_rounded, color: Color(0xFF9A7A33), size: 22),
                               ),
                               title: const Text(
                                 '매달 나가는 구독료',
@@ -406,10 +406,10 @@ class _HomeDashboardScreenState extends State<HomeDashboardScreen> {
                                 width: 42,
                                 height: 42,
                                 decoration: BoxDecoration(
-                                  color: const Color(0xFFE5F7F0),
+                                  color: const Color(0xFFE4EFE7),
                                   borderRadius: BorderRadius.circular(14),
                                 ),
-                                child: const Icon(Icons.flight_takeoff_rounded, color: Color(0xFF00B06B), size: 22),
+                                child: const Icon(Icons.flight_takeoff_rounded, color: Color(0xFF2A7248), size: 22),
                               ),
                               title: const Text(
                                 '여행도 계획적으로',
@@ -602,7 +602,7 @@ class _HomeDashboardScreenState extends State<HomeDashboardScreen> {
     );
   }
 
-  Widget _buildTossQuickAction({
+  Widget _buildQuickAction({
     required IconData icon,
     required String label,
     required Color color,

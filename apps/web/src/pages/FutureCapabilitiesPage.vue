@@ -32,7 +32,7 @@ const items = [
 <template>
   <div class="max-w-3xl mx-auto space-y-6">
     <div>
-      <p class="eyebrow">BN ONE</p>
+      <p class="eyebrow">MOA</p>
       <h1 class="text-3xl font-bold mt-2">다가오는 기능</h1>
       <p class="text-sm text-slate-500 mt-2">
         v1.0에서는 수동 가계부와 참고 환율만 제공합니다. 아래 기능은 v2.0 이후에 순차적으로 제공될 예정입니다.
@@ -66,7 +66,7 @@ const items = [
         <h2 class="text-sm font-semibold text-slate-500">v1.0 범위 안내</h2>
       </div>
       <p class="text-sm text-slate-600 leading-relaxed">
-        BN ONE v1.0은 수동 금융 가계부와 참고 환율 정보만 제공합니다. 자동 은행 연동, 카드 결제, 송금, 자금 보관 기능은 제공하지 않습니다.
+        MOA v1.0은 수동 금융 가계부와 참고 환율 정보만 제공합니다. 자동 은행 연동, 카드 결제, 송금, 자금 보관 기능은 제공하지 않습니다.
       </p>
     </section>
   </div>

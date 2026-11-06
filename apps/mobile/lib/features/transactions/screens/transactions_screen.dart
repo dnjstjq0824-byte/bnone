@@ -103,7 +103,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
       ),
       body: Column(
         children: [
-          // Filter Chips (Toss Pill Filter Style)
+          // Filter Chips (MOA Pill Filter Style)
           Container(
             color: AppColors.background,
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -178,7 +178,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                                               ? AppColors.primaryLight
                                               : isExpense
                                                   ? AppColors.background
-                                                  : const Color(0xFFF1EDFF),
+                                                  : const Color(0xFFF2EAD3),
                                           borderRadius: BorderRadius.circular(16),
                                         ),
                                         child: Icon(
@@ -191,7 +191,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                                               ? AppColors.brandPrimary
                                               : isExpense
                                                   ? AppColors.textSecondary
-                                                  : const Color(0xFF8061D9),
+                                                  : const Color(0xFF9A7A33),
                                           size: 22,
                                         ),
                                       ),

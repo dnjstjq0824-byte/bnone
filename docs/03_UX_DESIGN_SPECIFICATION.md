@@ -1,6 +1,6 @@
 # 03. UX/UI DESIGN SPECIFICATION & DESIGN TOKENS
 
-**Document ID:** BN-ONE-UX-003  
+**Document ID:** MOA-UX-003  
 **Version:** 1.0.0  
 **Effective Date:** 2026-10-24  
 
@@ -8,7 +8,7 @@
 
 ## 1. Design Tokens & Color Palette
 
-BN ONE incorporates a high-trust, modern financial aesthetic built upon an indigo/slate palette. The interface balances high data density with generous white space and legible typography.
+MOA incorporates a high-trust, modern financial aesthetic built upon an indigo/slate palette. The interface balances high data density with generous white space and legible typography.
 
 ### 1.1 Color Tokens
 

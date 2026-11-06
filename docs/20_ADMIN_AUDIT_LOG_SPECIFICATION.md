@@ -1,6 +1,6 @@
 # 20. ADMINISTRATIVE AUDIT LOG SPECIFICATION
 
-**Document ID:** BN-ONE-AUD-020  
+**Document ID:** MOA-AUD-020  
 **Version:** 1.0.0  
 **Effective Date:** 2026-10-24  
 

@@ -126,7 +126,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Type Segment Control (Toss Pill Selector)
+            // Type Segment Control (MOA Pill Selector)
             Container(
               padding: const EdgeInsets.all(4),
               decoration: BoxDecoration(
@@ -144,7 +144,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
 
             const SizedBox(height: 16),
 
-            // Amount Input Card (Toss Big Amount Display)
+            // Amount Input Card (MOA Big Amount Display)
             Card(
               child: Padding(
                 padding: const EdgeInsets.all(24.0),
@@ -299,7 +299,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
             const Padding(
               padding: EdgeInsets.symmetric(horizontal: 4.0),
               child: Text(
-                '※ BN ONE의 모든 기록은 사용자 직접 입력 장부이며 실제 금융기관 송금이나 결제를 실행하지 않습니다.',
+                '※ MOA의 모든 기록은 사용자 직접 입력 장부이며 실제 금융기관 송금이나 결제를 실행하지 않습니다.',
                 style: TextStyle(fontSize: 11, color: AppColors.textTertiary, height: 1.4),
               ),
             ),

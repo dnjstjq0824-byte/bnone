@@ -6,9 +6,9 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/bookingnetwork/bn-one/services/api/internal/database"
-	"github.com/bookingnetwork/bn-one/services/api/internal/middleware"
-	"github.com/bookingnetwork/bn-one/services/api/internal/models"
+	"github.com/bookingnetwork/moa/services/api/internal/database"
+	"github.com/bookingnetwork/moa/services/api/internal/middleware"
+	"github.com/bookingnetwork/moa/services/api/internal/models"
 	"github.com/go-chi/chi/v5"
 	"github.com/google/uuid"
 )
@@ -350,7 +350,7 @@ func (h *Handler) ManualTransfer(w http.ResponseWriter, r *http.Request) {
 		"destination_currency":     dstCurr,
 		"occurred_at":              occurredTime,
 		"status":                   "POSTED",
-		"notice":                   "BN ONE의 거래 기록은 실제 금융기관 거래를 실행하지 않습니다.",
+		"notice":                   "MOA의 거래 기록은 실제 금융기관 거래를 실행하지 않습니다.",
 	})
 }
 

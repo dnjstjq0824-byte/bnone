@@ -1,5 +1,5 @@
 -- 000005_create_subscription_tables.up.sql
--- BN ONE v1.0 Subscription Catalog, User Subscriptions & Reminders
+-- MOA v1.0 Subscription Catalog, User Subscriptions & Reminders
 
 CREATE TABLE IF NOT EXISTS subscription_services (
     id VARCHAR(36) PRIMARY KEY,

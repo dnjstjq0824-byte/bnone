@@ -1,6 +1,6 @@
 # 22. FUTURE CAPABILITIES & ROADMAP (v2.0+)
 
-**Document ID:** BN-ONE-FTR-022  
+**Document ID:** MOA-FTR-022  
 **Version:** 1.0.0  
 **Effective Date:** 2026-10-24  
 
@@ -9,7 +9,7 @@
 ## 1. Scope Boundary Isolation Rule
 
 > **MANDATORY INVARIANT:**  
-> The features outlined in this document are strictly scheduled for future versions (v2.0 and beyond). They are **NOT** active in BN ONE v1.0. The v1.0 codebase contains zero mock payment buttons, zero simulated bank logins, and zero fake transfer screens.
+> The features outlined in this document are strictly scheduled for future versions (v2.0 and beyond). They are **NOT** active in MOA v1.0. The v1.0 codebase contains zero mock payment buttons, zero simulated bank logins, and zero fake transfer screens.
 
 ---
 

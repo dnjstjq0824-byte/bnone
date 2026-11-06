@@ -1,29 +1,29 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: bnone-api
-  namespace: bnone-prod
+  name: moa-api
+  namespace: moa-prod
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: bnone-api
+      app: moa-api
   template:
     metadata:
       labels:
-        app: bnone-api
+        app: moa-api
     spec:
       containers:
         - name: api
-          image: ghcr.io/dnjstjq0824-byte/bnone-api:latest
+          image: ghcr.io/dnjstjq0824-byte/moa-api:latest
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080
           envFrom:
             - configMapRef:
-                name: bnone-config
+                name: moa-config
             - secretRef:
-                name: bnone-secrets
+                name: moa-secrets
           readinessProbe:
             httpGet:
               path: /readyz
@@ -47,12 +47,12 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: bnone-api-svc
-  namespace: bnone-prod
+  name: moa-api-svc
+  namespace: moa-prod
 spec:
   ports:
     - port: 8080
       targetPort: 8080
   selector:
-    app: bnone-api
+    app: moa-api
 

@@ -1,4 +1,4 @@
-name: BN ONE CI - Master Verification
+name: MOA CI - Master Verification
 
 on:
   push:
@@ -17,13 +17,13 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v5
         with:
-          go-version: '1.24'
+          go-version: '1.27'
           cache: true
 
-      - name: Run Financial Integrity Unit Tests
+      - name: Run Go Unit Tests (sqlite-backed, no external services)
         run: |
           cd services/api
-          go test -v ./internal/transactions/...
+          go test ./...
 
       - name: Build API Server Binary
         run: |
@@ -51,10 +51,15 @@ jobs:
             apps/web/package-lock.json
             apps/admin/package-lock.json
 
-      - name: Build User Web Application
+      - name: Run Web Contract Tests
         run: |
           cd apps/web
           npm ci
+          npm test
+
+      - name: Build User Web Application
+        run: |
+          cd apps/web
           npm run build
 
       - name: Build Operations Admin Console

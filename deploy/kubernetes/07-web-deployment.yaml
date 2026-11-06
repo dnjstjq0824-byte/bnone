@@ -1,21 +1,21 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: bnone-web
-  namespace: bnone-prod
+  name: moa-web
+  namespace: moa-prod
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: bnone-web
+      app: moa-web
   template:
     metadata:
       labels:
-        app: bnone-web
+        app: moa-web
     spec:
       containers:
         - name: web
-          image: ghcr.io/dnjstjq0824-byte/bnone-web:latest
+          image: ghcr.io/dnjstjq0824-byte/moa-web:latest
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 80
@@ -30,12 +30,12 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: bnone-web-svc
-  namespace: bnone-prod
+  name: moa-web-svc
+  namespace: moa-prod
 spec:
   ports:
     - port: 80
       targetPort: 80
   selector:
-    app: bnone-web
+    app: moa-web
 

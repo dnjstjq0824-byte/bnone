@@ -1,6 +1,6 @@
 # 14. ACCESSIBILITY AUDIT (WCAG 2.1 LEVEL AA)
 
-**Document ID:** BN-ONE-ACC-014  
+**Document ID:** MOA-ACC-014  
 **Version:** 1.0.0  
 **Effective Date:** 2026-10-24  
 
@@ -8,7 +8,7 @@
 
 ## 1. Compliance Scope & Standards
 
-BN ONE adheres to **WCAG 2.1 Level AA** standards across both Mobile (Flutter) and Web (Vue 3) interfaces to guarantee equitable financial management access for users with visual, motor, or cognitive impairments.
+MOA adheres to **WCAG 2.1 Level AA** standards across both Mobile (Flutter) and Web (Vue 3) interfaces to guarantee equitable financial management access for users with visual, motor, or cognitive impairments.
 
 ---
 

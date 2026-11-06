@@ -1,5 +1,5 @@
 -- 000004_create_budget_tables.up.sql
--- BN ONE v1.0 Budgets, Category Allocations & Alert Rules
+-- MOA v1.0 Budgets, Category Allocations & Alert Rules
 
 CREATE TABLE IF NOT EXISTS budgets (
     id VARCHAR(36) PRIMARY KEY,

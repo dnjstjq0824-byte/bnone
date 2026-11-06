@@ -1,6 +1,6 @@
 # 18. TRAVEL EXPENSE & TRIP WALLET SYSTEM SPECIFICATION
 
-**Document ID:** BN-ONE-TRV-018  
+**Document ID:** MOA-TRV-018  
 **Version:** 1.0.0  
 **Effective Date:** 2026-10-24  
 
@@ -10,7 +10,7 @@
 
 For modern international travelers, managing foreign spending is traditionally fractured across physical cash receipts, foreign currency credit cards, and mental exchange rate conversions.
 
-BN ONE introduces dedicated **Trip Workspaces** designed to isolate travel spending from regular home monthly budgets, offering clear insight into trip burn rates and multi-currency expense settlements.
+MOA introduces dedicated **Trip Workspaces** designed to isolate travel spending from regular home monthly budgets, offering clear insight into trip burn rates and multi-currency expense settlements.
 
 ---
 
@@ -21,7 +21,7 @@ sequenceDiagram
     autonumber
     actor User as Traveler
     participant App as Mobile / Web
-    participant API as BN ONE Backend
+    participant API as MOA Backend
     participant FX as Forex Engine
     participant DB as PostgreSQL
 

@@ -1,5 +1,5 @@
 -- 01_seed_initial_data.sql
--- BN ONE v1.0 Seed Data: Currencies, FX Providers, Rates, Categories, Subscriptions, Admin Roles
+-- MOA v1.0 Seed Data: Currencies, FX Providers, Rates, Categories, Subscriptions, Admin Roles
 
 -- Currencies
 INSERT INTO currencies (code, name, symbol, decimal_digits, is_active) VALUES

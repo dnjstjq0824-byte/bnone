@@ -7,17 +7,17 @@
       </div>
       <button
         @click="triggerSync"
-        class="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-xl text-xs font-bold transition-all"
+        class="px-4 py-2 bg-[#1E5A38] hover:bg-[#2A7248] text-white rounded-xl text-xs font-bold transition-all"
       >
         수집 동기화 즉시 실행
       </button>
     </div>
 
     <!-- Providers List -->
-    <div class="bg-[#111827] rounded-3xl border border-slate-800 p-6 space-y-4">
+    <div class="bg-[#0C2318] rounded-3xl border border-white/10 p-6 space-y-4">
       <h2 class="text-base font-bold text-white">등록된 환율 Provider</h2>
       <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div v-for="p in providers" :key="p.id" class="p-4 rounded-2xl bg-slate-900 border border-slate-800 space-y-2">
+        <div v-for="p in providers" :key="p.id" class="p-4 rounded-2xl bg-slate-900 border border-white/10 space-y-2">
           <div class="flex items-center justify-between">
             <span class="font-bold text-xs text-white">{{ p.name }}</span>
             <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/10 text-emerald-400">
@@ -25,7 +25,7 @@
             </span>
           </div>
           <div class="text-[11px] text-slate-400 truncate">{{ p.official_website }}</div>
-          <div class="text-[10px] text-slate-500 pt-2 border-t border-slate-800 flex justify-between">
+          <div class="text-[10px] text-slate-500 pt-2 border-t border-white/10 flex justify-between">
             <span>라이선스: {{ p.license_status }}</span>
             <span>최종 점검: {{ formatDate(p.last_checked_at) }}</span>
           </div>
@@ -38,6 +38,9 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import { adminFetch } from '../api/client';
+import { useToast } from '../composables/useToast';
+
+const toast = useToast();
 
 const providers = ref<any[]>([]);
 
@@ -51,7 +54,7 @@ onMounted(() => {
 
 async function triggerSync() {
   const res = await adminFetch('/admin/fx/sync-jobs', { method: 'POST' });
-  alert(res.message);
+  toast.success(res.message || '환율 동기화 작업이 등록되었습니다.');
   await loadData();
 }
 

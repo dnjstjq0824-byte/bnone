@@ -1,6 +1,6 @@
 # 09. REST API SPECIFICATION
 
-**Document ID:** BN-ONE-API-009  
+**Document ID:** MOA-API-009  
 **Version:** 1.0.0  
 **Effective Date:** 2026-10-24  
 
@@ -8,7 +8,7 @@
 
 ## 1. Global API Conventions
 
-- **Base URL:** `https://api.bnone.bookingnetwork.com/api/v1`
+- **Base URL:** `https://api.moa.bookingnetwork.com/api/v1`
 - **Protocol:** HTTPS / TLS 1.3
 - **Content-Type:** `application/json; charset=utf-8`
 - **Authentication:** `Authorization: Bearer <JWT_ACCESS_TOKEN>`

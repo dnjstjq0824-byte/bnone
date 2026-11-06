@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: redis
-  namespace: bnone-prod
+  namespace: moa-prod
 spec:
   replicas: 1
   selector:
@@ -27,7 +27,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: redis-service
-  namespace: bnone-prod
+  namespace: moa-prod
 spec:
   ports:
     - port: 6379

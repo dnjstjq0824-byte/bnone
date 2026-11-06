@@ -1,6 +1,6 @@
 # 21. DATA EXPORT AND ACCOUNT DELETION SPECIFICATION
 
-**Document ID:** BN-ONE-DEL-021  
+**Document ID:** MOA-DEL-021  
 **Version:** 1.0.0  
 **Effective Date:** 2026-10-24  
 
@@ -8,7 +8,7 @@
 
 ## 1. Regulatory Context (GDPR Art. 17/20 & PIPA Art. 36/37)
 
-Users possess full sovereign ownership over their financial records. BN ONE guarantees transparent self-service mechanisms to export all personal data in machine-readable formats and execute irrevocable account deletion.
+Users possess full sovereign ownership over their financial records. MOA guarantees transparent self-service mechanisms to export all personal data in machine-readable formats and execute irrevocable account deletion.
 
 ---
 

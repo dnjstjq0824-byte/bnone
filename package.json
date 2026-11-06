@@ -1,8 +1,8 @@
 {
-  "name": "bnone",
+  "name": "moa",
   "version": "1.0.0",
   "private": true,
-  "description": "BN ONE — Global Financial Lifestyle Super App",
+  "description": "MOA — Global Financial Lifestyle Super App",
   "scripts": {
     "build": "npm --prefix apps/web install && npm --prefix apps/web run build",
     "deploy": "wrangler deploy",

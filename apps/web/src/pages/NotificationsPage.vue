@@ -3,44 +3,44 @@
     <!-- Header -->
     <div class="flex items-center justify-between">
       <div>
-        <h1 class="text-2xl font-bold tracking-tight text-[#191F28]">알림함</h1>
-        <p class="text-sm text-[#8B95A1] mt-1">구독 갱신 예정, 예산 초과 경고 및 시스템 공지사항을 확인해요.</p>
+        <h1 class="text-2xl font-bold tracking-tight text-[#141F19]">알림함</h1>
+        <p class="text-sm text-[#8A948C] mt-1">구독 갱신 예정, 예산 초과 경고 및 시스템 공지사항을 확인해요.</p>
       </div>
     </div>
 
     <div v-if="notifications.length === 0" class="bg-white p-12 rounded-3xl text-center">
-      <div class="w-14 h-14 mx-auto mb-4 rounded-2xl bg-[#F2F4F6] flex items-center justify-center text-[#8B95A1] text-2xl">
+      <div class="w-14 h-14 mx-auto mb-4 rounded-2xl bg-[#ECEFE8] flex items-center justify-center text-[#8A948C] text-2xl">
         🔔
       </div>
-      <div class="text-base font-bold text-[#191F28]">새로운 알림이 없습니다.</div>
-      <p class="text-xs text-[#8B95A1] mt-1">구독 갱신이나 예산 알림이 발생하면 이곳에 표시돼요.</p>
+      <div class="text-base font-bold text-[#141F19]">새로운 알림이 없습니다.</div>
+      <p class="text-xs text-[#8A948C] mt-1">구독 갱신이나 예산 알림이 발생하면 이곳에 표시돼요.</p>
     </div>
 
-    <div v-else class="bg-white rounded-3xl divide-y divide-[#F2F4F6] overflow-hidden p-2">
+    <div v-else class="bg-white rounded-3xl divide-y divide-[#ECEFE8] overflow-hidden p-2">
       <div
         v-for="n in notifications"
         :key="n.id"
         class="p-4 flex items-start justify-between gap-4 rounded-2xl transition-colors"
-        :class="n.status === 'READ' ? 'bg-white opacity-70' : 'bg-[#F9FAFB]'"
+        :class="n.status === 'READ' ? 'bg-white opacity-70' : 'bg-[#F6F8F4]'"
       >
         <div class="flex items-start gap-3.5">
-          <div class="w-10 h-10 rounded-2xl bg-[#E8F3FF] flex items-center justify-center text-base shrink-0">
+          <div class="w-10 h-10 rounded-2xl bg-[#EBF2EC] flex items-center justify-center text-base shrink-0">
             {{ n.type === 'BUDGET_ALERT' ? '🎯' : n.type === 'RENEWAL_REMINDER' ? '🔄' : '📢' }}
           </div>
           <div>
             <div class="flex items-center gap-2">
-              <h3 class="font-bold text-sm text-[#191F28]">{{ n.title }}</h3>
-              <span v-if="n.status !== 'READ'" class="w-1.5 h-1.5 rounded-full bg-[#3182F6]"></span>
+              <h3 class="font-bold text-sm text-[#141F19]">{{ n.title }}</h3>
+              <span v-if="n.status !== 'READ'" class="w-1.5 h-1.5 rounded-full bg-[#1E5A38]"></span>
             </div>
-            <p class="text-xs text-[#4E5968] mt-1 leading-relaxed">{{ n.body }}</p>
-            <span class="text-xs text-[#8B95A1] mt-1.5 block">{{ formatDate(n.created_at) }}</span>
+            <p class="text-xs text-[#41524A] mt-1 leading-relaxed">{{ n.body }}</p>
+            <span class="text-xs text-[#8A948C] mt-1.5 block">{{ formatDate(n.created_at) }}</span>
           </div>
         </div>
 
         <button
           v-if="n.status !== 'READ'"
           @click="markRead(n.id)"
-          class="px-3 py-1.5 text-xs font-bold text-[#3182F6] hover:bg-[#E8F3FF] rounded-xl shrink-0 transition-colors"
+          class="px-3 py-1.5 text-xs font-bold text-[#1E5A38] hover:bg-[#EBF2EC] rounded-xl shrink-0 transition-colors"
         >
           읽음 표시
         </button>

@@ -66,24 +66,24 @@ class _ForexScreenState extends State<ForexScreen> {
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
               margin: const EdgeInsets.only(bottom: 12),
               decoration: BoxDecoration(
-                color: const Color(0xFFFFF3E2),
+                color: const Color(0xFFF8EFDC),
                 borderRadius: BorderRadius.circular(16),
               ),
               child: const Row(
                 children: [
-                  Icon(Icons.info_outline, size: 16, color: Color(0xFFFF8D00)),
+                  Icon(Icons.info_outline, size: 16, color: Color(0xFFC97E1F)),
                   SizedBox(width: 10),
                   Expanded(
                     child: Text(
                       '표시 환율은 참고용이며 실제 환전·결제 환율과 다를 수 있습니다.',
-                      style: TextStyle(fontSize: 12, color: Color(0xFFD88924), fontWeight: FontWeight.bold),
+                      style: TextStyle(fontSize: 12, color: Color(0xFFB07A1E), fontWeight: FontWeight.bold),
                     ),
                   ),
                 ],
               ),
             ),
 
-            // Currency Converter Card (Toss Style)
+            // Currency Converter Card (MOA Style)
             Card(
               child: Padding(
                 padding: const EdgeInsets.all(22.0),

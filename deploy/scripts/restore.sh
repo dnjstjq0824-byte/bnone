@@ -14,7 +14,7 @@ if [ ! -f "${BACKUP_FILE}" ]; then
 fi
 
 echo "[RESTORE] Restoring PostgreSQL database from ${BACKUP_FILE}..."
-PGPASSWORD="${POSTGRES_PASSWORD:-bnone_secret}" gunzip -c "${BACKUP_FILE}" | psql -h "${POSTGRES_HOST:-localhost}" -U "${POSTGRES_USER:-bnone}" -d "${POSTGRES_DB:-bnone_db}"
+PGPASSWORD="${POSTGRES_PASSWORD:-moa_secret}" gunzip -c "${BACKUP_FILE}" | psql -h "${POSTGRES_HOST:-localhost}" -U "${POSTGRES_USER:-moa}" -d "${POSTGRES_DB:-moa_db}"
 
 echo "[RESTORE] Database restored successfully."
 

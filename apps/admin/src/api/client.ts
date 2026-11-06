@@ -1,7 +1,7 @@
 export const API_BASE = (import.meta.env.VITE_API_URL || '') + '/api/v1';
 
 export async function adminFetch<T = any>(endpoint: string, options: RequestInit = {}): Promise<T> {
-  const token = localStorage.getItem('bn_admin_token');
+  const token = localStorage.getItem('moa_admin_token');
   const headers = new Headers(options.headers || {});
 
   if (!headers.has('Content-Type') && !(options.body instanceof FormData)) {

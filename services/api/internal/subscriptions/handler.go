@@ -5,9 +5,9 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/bookingnetwork/bn-one/services/api/internal/database"
-	"github.com/bookingnetwork/bn-one/services/api/internal/middleware"
-	"github.com/bookingnetwork/bn-one/services/api/internal/models"
+	"github.com/bookingnetwork/moa/services/api/internal/database"
+	"github.com/bookingnetwork/moa/services/api/internal/middleware"
+	"github.com/bookingnetwork/moa/services/api/internal/models"
 	"github.com/go-chi/chi/v5"
 	"github.com/google/uuid"
 )
@@ -145,7 +145,7 @@ func (h *Handler) CreateUserSubscription(w http.ResponseWriter, r *http.Request)
 		"id":              subID,
 		"message":         "Subscription saved successfully",
 		"next_renewal_at": req.NextRenewalAt,
-		"notice":          "BN ONE의 구독 관리는 참고 기록이며 실제 지출 거래를 자동 확정하지 않습니다.",
+		"notice":          "MOA의 구독 관리는 참고 기록이며 실제 지출 거래를 자동 확정하지 않습니다.",
 	})
 }
 
@@ -208,16 +208,16 @@ func (h *Handler) UpdateSubscription(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) PauseSubscription(w http.ResponseWriter, r *http.Request) {
-	h.setSubscriptionStatus(w, r, "PAUSED", "Subscription paused in BN ONE")
+	h.setSubscriptionStatus(w, r, "PAUSED", "Subscription paused in MOA")
 }
 
 func (h *Handler) ResumeSubscription(w http.ResponseWriter, r *http.Request) {
-	h.setSubscriptionStatus(w, r, "ACTIVE", "Subscription resumed in BN ONE")
+	h.setSubscriptionStatus(w, r, "ACTIVE", "Subscription resumed in MOA")
 }
 
 func (h *Handler) CancelRecord(w http.ResponseWriter, r *http.Request) {
-	// Cancel record in BN ONE - NOT external service cancellation
-	h.setSubscriptionStatus(w, r, "CANCELLED_RECORD", "BN ONE 내부 구독 기록이 해지 처리되었습니다. (실제 서비스 제공사에 자동 해지 요청이 전달되지 않으므로 서비스 웹사이트에서 별도 해지하시기 바랍니다.)")
+	// Cancel record in MOA - NOT external service cancellation
+	h.setSubscriptionStatus(w, r, "CANCELLED_RECORD", "MOA 내부 구독 기록이 해지 처리되었습니다. (실제 서비스 제공사에 자동 해지 요청이 전달되지 않으므로 서비스 웹사이트에서 별도 해지하시기 바랍니다.)")
 }
 
 func (h *Handler) DeleteSubscription(w http.ResponseWriter, r *http.Request) {

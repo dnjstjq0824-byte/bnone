@@ -1,5 +1,5 @@
 -- 000007_create_travel_tables.up.sql
--- BN ONE v1.0 Travel Management, Budgets, Expense Links & Notes
+-- MOA v1.0 Travel Management, Budgets, Expense Links & Notes
 
 CREATE TABLE IF NOT EXISTS trips (
     id VARCHAR(36) PRIMARY KEY,

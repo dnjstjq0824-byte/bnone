@@ -1,5 +1,5 @@
 -- 000003_create_transaction_and_category_tables.up.sql
--- BN ONE v1.0 Categories, Transactions, Splits & Signed Account Entries
+-- MOA v1.0 Categories, Transactions, Splits & Signed Account Entries
 
 CREATE TABLE IF NOT EXISTS categories (
     id VARCHAR(36) PRIMARY KEY,
