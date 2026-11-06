@@ -1,4 +1,4 @@
-# BN ONE v1.0 — Global Financial Lifestyle Super App
+# MOA v1.0 — Global Financial Lifestyle Super App
 
 [![Build Status](https://img.shields.io/badge/Build-Passing-brightgreen)]()
 [![Flutter](https://img.shields.io/badge/Flutter-3.47+-blue)]()
@@ -7,11 +7,11 @@
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-336791)]()
 [![Deployment](https://img.shields.io/badge/Live%20Demo-Static%20Web%20Workers-orange)]()
 
-> **Brand:** BN ONE  
-> **Brand Message:** *Your Money. Your World.*  
-> **Document ID:** `BN-ONE-MASTER-PRODUCT-001` (PO Master Directive v1.0)  
+> **Brand:** MOA  
+> **Brand Message:** *Gather all your money.*  
+> **Document ID:** `MOA-MASTER-PRODUCT-001` (PO Master Directive v1.0)  
 > **Deployment Status:** **정적 웹 + 브라우저 내 로컬 목업 데모 (Static Web + Local Mock Demo)**  
-> **Canonical Live URL:** **https://bnone.dnjstjqppk.workers.dev**
+> **Canonical Live URL:** **https://moa.dnjstjqppk.workers.dev**
 
 ---
 
@@ -19,34 +19,35 @@
 
 > [!IMPORTANT]
 > **라이브 환경 배포 범위 안내:**
-> - 현재 Cloudflare Workers(`https://bnone.dnjstjqppk.workers.dev`)에 배포된 아티팩트는 **`apps/web` 정적 빌드 SPA(Single Page Application)**입니다.
+> - 현재 Cloudflare Workers(`https://moa.dnjstjqppk.workers.dev`)에 배포된 아티팩트는 **`apps/web` 정적 빌드 SPA(Single Page Application)**입니다.
 > - Go 백엔드 API(`services/api`), PostgreSQL 데이터베이스, 관리자 콘솔(`apps/admin`), 모바일 앱(`apps/mobile`)은 본 Cloudflare Workers 단일 주소에 배포되어 있지 않습니다.
-> - 웹 화면의 데이터는 브라우저 로컬 스토리지(`localStorage` 키 `bn_mock_*`)에 저장·반영되는 **로컬 목업 데모**입니다.
+> - 웹 화면의 데이터는 브라우저 로컬 스토리지(`localStorage` 키 `moa_mock_*`)에 저장·반영되는 **로컬 목업 데모**입니다.
 > 
 > **도메인 구성 안내:**
-> - **정본 라이브 도메인:** `https://bnone.dnjstjqppk.workers.dev` (Cloudflare 계정 `dnjstjqppk@gmail.com`의 정본 워커)
+> - **정본 라이브 도메인:** `https://moa.dnjstjqppk.workers.dev` (Cloudflare 계정 `dnjstjqppk@gmail.com`의 정본 워커)
 > - **서브도메인 참고:** `dnjstjq0824.workers.dev` 또한 Cloudflare 상에 존재하며 동일한 빌드가 호스팅될 수 있으나, 공식 기준 정본 도메인은 `dnjstjqppk.workers.dev` 1개입니다.
 > - **Cloudflare Builds 설정:**
 >   - Root config: `wrangler.jsonc` (assets: `./apps/web/dist`, not_found_handling: `single-page-application`)
 >   - Build command: `npm --prefix apps/web install && npm --prefix apps/web run build`
 >   - Target branch: `main` (정본)
+>   - **필수 빌드 환경변수:** `VITE_MOCK_ENABLED=true` (이 워커는 백엔드 없이 동작하는 공개 데모이므로 데모 모드를 명시해야 하며, 미설정 시 앱이 백엔드 미연결 오류를 표시합니다)
 
 ---
 
 ## 1. Overview & Scope Boundary
 
-**BN ONE** is a high-integrity, personal financial lifestyle super app designed to track daily domestic expenditures, multi-account assets and liabilities, recurring subscriptions, monthly category budgets, and multi-currency travel expenses in a unified platform.
+**MOA** is a high-integrity, personal financial lifestyle super app designed to track daily domestic expenditures, multi-account assets and liabilities, recurring subscriptions, monthly category budgets, and multi-currency travel expenses in a unified platform.
 
 > [!IMPORTANT]
 > **Regulatory & Architecture Boundary:**
-> BN ONE v1.0 operates on a **manual financial ledger & reference data** model. The software does NOT connect to live open banking APIs, execute wire transfers, issue credit/debit cards, store user banking credentials, or take custody of customer funds. All user balances represent user-entered ledgers.
+> MOA v1.0 operates on a **manual financial ledger & reference data** model. The software does NOT connect to live open banking APIs, execute wire transfers, issue credit/debit cards, store user banking credentials, or take custody of customer funds. All user balances represent user-entered ledgers.
 
 ---
 
 ## 2. Monorepo Architecture
 
 ```text
-bn-one/
+moa/
   apps/
     mobile/              # Flutter (Android & iOS) native super app with Riverpod & GoRouter
     web/                 # Vue 3 + TypeScript + Tailwind + Pinia user web application
