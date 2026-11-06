@@ -29,7 +29,7 @@ class WelcomeScreen extends StatelessWidget {
                       ),
                       child: const Center(
                         child: Text(
-                          'M',
+                          '모',
                           style: TextStyle(
                             color: AppColors.pineDeep,
                             fontWeight: FontWeight.w900,
@@ -39,28 +39,14 @@ class WelcomeScreen extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(width: 12),
-                    const Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'MOA',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.w900,
-                            fontSize: 20,
-                            letterSpacing: 1,
-                          ),
-                        ),
-                        Text(
-                          '모아 · PRIVATE LEDGER',
-                          style: TextStyle(
-                            color: AppColors.darkTextTertiary,
-                            fontSize: 10,
-                            fontWeight: FontWeight.w600,
-                            letterSpacing: 2,
-                          ),
-                        ),
-                      ],
+                    const Text(
+                      'MOA',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w900,
+                        fontSize: 20,
+                        letterSpacing: 1,
+                      ),
                     ),
                   ],
                 ),
@@ -70,27 +56,18 @@ class WelcomeScreen extends StatelessWidget {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Container(
-                    width: 48,
-                    height: 4,
-                    decoration: BoxDecoration(
-                      color: AppColors.accent,
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                  ),
-                  const SizedBox(height: 20),
                   const Text(
-                    '돈을 모으다,\n삶을 모으다.',
+                    '쓸 때마다 적고,\n월말에 웃는다.',
                     style: TextStyle(
                       color: Colors.white,
-                      fontSize: 40,
+                      fontSize: 38,
                       fontWeight: FontWeight.w900,
                       height: 1.2,
                     ),
                   ),
                   const SizedBox(height: 16),
                   const Text(
-                    '매일 쓰는 돈부터 세계 여행에서 쓰는 돈까지, 하나의 장부에서 관리한다.',
+                    '은행에 연결하지 않는 수기 장부. 당신이 적어서 더 정확합니다.',
                     style: TextStyle(
                       color: AppColors.darkTextSecondary,
                       fontSize: 15,
@@ -98,14 +75,32 @@ class WelcomeScreen extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 24),
-                  Row(
-                    children: const [
-                      _StatItem(value: '14', label: '통화'),
-                      SizedBox(width: 20),
-                      _StatItem(value: '9', label: '자산 영역'),
-                      SizedBox(width: 20),
-                      _StatItem(value: '0', label: '은행 연동'),
-                    ],
+                  Container(
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withValues(alpha: 0.06),
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(
+                        color: Colors.white.withValues(alpha: 0.08),
+                      ),
+                    ),
+                    child: const Column(
+                      children: [
+                        _LedgerRow(
+                          title: '택시 · 합정→성수',
+                          meta: '어제 21:42',
+                          amount: '−₩14,800',
+                          positive: false,
+                        ),
+                        SizedBox(height: 12),
+                        _LedgerRow(
+                          title: '급여 입금',
+                          meta: '어제 08:15',
+                          amount: '+₩4,200,000',
+                          positive: true,
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),
@@ -161,34 +156,55 @@ class WelcomeScreen extends StatelessWidget {
   }
 }
 
-class _StatItem extends StatelessWidget {
-  final String value;
-  final String label;
+class _LedgerRow extends StatelessWidget {
+  final String title;
+  final String meta;
+  final String amount;
+  final bool positive;
 
-  const _StatItem({required this.value, required this.label});
+  const _LedgerRow({
+    required this.title,
+    required this.meta,
+    required this.amount,
+    required this.positive,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return RichText(
-      text: TextSpan(
-        children: [
-          TextSpan(
-            text: '$value ',
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 18,
-              fontWeight: FontWeight.w900,
-            ),
+    return Row(
+      children: [
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                title,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 13,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 2),
+              Text(
+                meta,
+                style: const TextStyle(
+                  color: AppColors.darkTextTertiary,
+                  fontSize: 11,
+                ),
+              ),
+            ],
           ),
-          TextSpan(
-            text: label,
-            style: const TextStyle(
-              color: AppColors.darkTextTertiary,
-              fontSize: 12,
-            ),
+        ),
+        Text(
+          amount,
+          style: TextStyle(
+            color: positive ? AppColors.accentPale : Colors.white,
+            fontSize: 13,
+            fontWeight: FontWeight.w800,
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }

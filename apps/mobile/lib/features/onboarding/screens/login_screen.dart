@@ -77,7 +77,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     child: const Center(
                       child: Text(
-                        'M',
+                        '모',
                         style: TextStyle(
                           color: AppColors.accentPale,
                           fontWeight: FontWeight.w900,

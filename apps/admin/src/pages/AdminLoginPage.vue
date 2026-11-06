@@ -3,7 +3,7 @@
     <div class="max-w-md w-full bg-[#0C2318] rounded-3xl p-8 border border-white/10 shadow-2xl">
       <div class="text-center mb-8">
         <div class="w-12 h-12 rounded-2xl bg-[#C0A04E] mx-auto flex items-center justify-center text-[#08170F] font-black text-2xl mb-3">
-          M
+          모
         </div>
         <h2 class="text-2xl font-bold text-white tracking-tight">MOA 콘솔 로그인</h2>
         <p class="text-xs text-[#7E9387] mt-1">Master Operations & Audited Admin</p>

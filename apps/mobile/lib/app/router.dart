@@ -131,7 +131,7 @@ class _SplashScreenState extends State<SplashScreen> {
               ),
               child: const Center(
                 child: Text(
-                  'M',
+                  '모',
                   style: TextStyle(
                     color: AppColors.pineDeep,
                     fontSize: 36,

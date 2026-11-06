@@ -45,7 +45,9 @@ export async function apiFetch<T = any>(endpoint: string, options: RequestInit =
     throw new ApiError('MOCK_DISABLED', '데모 세션은 이 환경에서 사용할 수 없습니다. 다시 로그인하세요.');
   }
 
-  if (hasNoBackend) {
+  // Production builds fail closed without VITE_API_URL. Dev servers are
+  // exempt: vite proxies relative /api calls to the local Go backend.
+  if (hasNoBackend && !import.meta.env?.DEV) {
     throw new ApiError('BACKEND_NOT_CONFIGURED', '백엔드 API 주소(VITE_API_URL)가 설정되지 않았습니다. 관리자에게 문의하세요.');
   }
 
@@ -75,6 +77,14 @@ export async function apiFetch<T = any>(endpoint: string, options: RequestInit =
       if (mockAllowed) {
         return handleMockApi<T>(endpoint, options);
       }
+      // Local dev without a running backend: the vite proxy answers 500/HTML.
+      // Say so directly instead of a generic format error.
+      if (import.meta.env?.DEV && response.status >= 500) {
+        throw new ApiError(
+          'BACKEND_DOWN',
+          'API 서버(localhost:8080)가 응답하지 않습니다. services/api 에서 `go run ./cmd/server`로 백엔드를 켜세요.'
+        );
+      }
       throw new ApiError('INVALID_RESPONSE', 'Server returned non-JSON response');
     }
 
@@ -92,6 +102,14 @@ export async function apiFetch<T = any>(endpoint: string, options: RequestInit =
     if (mockAllowed && err?.code !== 'BACKEND_NOT_CONFIGURED' && err?.code !== 'MOCK_DISABLED') {
       console.warn(`[MOA API] Network error for ${endpoint}, serving mock data.`, err);
       return handleMockApi<T>(endpoint, options);
+    }
+    // Raw browser network failures (backend down, CORS block, wrong host)
+    // surface as cryptic "Failed to fetch": translate to an actionable error.
+    if (err instanceof TypeError || err?.name === 'TypeError' || err?.message === 'Failed to fetch') {
+      throw new ApiError(
+        'NETWORK_ERROR',
+        '백엔드 서버에 연결할 수 없습니다. API 서버가 실행 중인지, 접속 주소(localhost)와 API 주소가 맞는지 확인하세요.'
+      );
     }
     throw err;
   }

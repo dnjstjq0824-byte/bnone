@@ -6,7 +6,7 @@
         <!-- Admin Console Header -->
         <div class="flex items-center gap-3 mb-8 px-2">
           <div class="w-9 h-9 rounded-xl bg-[#C0A04E] flex items-center justify-center font-black text-[#08170F] text-lg">
-            M
+            모
           </div>
           <div>
             <div class="font-extrabold text-white tracking-tight text-sm">MOA OPERATIONS</div>

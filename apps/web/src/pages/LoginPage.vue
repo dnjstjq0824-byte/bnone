@@ -1,34 +1,15 @@
 <template>
-  <div class="min-h-screen bg-[#08170F] flex">
-    <!-- Brand panel -->
-    <div class="hidden lg:flex w-[44%] flex-col justify-between p-12 text-white">
-      <RouterLink to="/" class="flex items-center gap-3">
-        <div class="w-10 h-10 rounded-xl bg-[#C0A04E] flex items-center justify-center font-black text-xl text-[#08170F]">
-          M
-        </div>
-        <div class="leading-none">
-          <span class="font-extrabold text-xl tracking-tight">MOA</span>
-          <span class="block text-[10px] font-semibold text-[#7E9387] tracking-[0.2em] mt-1">모아 · PRIVATE LEDGER</span>
-        </div>
-      </RouterLink>
-      <div>
-        <div class="w-12 h-1 bg-[#C0A04E] rounded-full mb-7"></div>
-        <p class="text-4xl font-black tracking-tight leading-tight">다시 오신 것을<br />환영합니다.</p>
-        <p class="text-sm text-[#A9BCAF] mt-4 leading-relaxed max-w-xs">로그인하면 어제의 기록부터 오늘의 잔액까지, 내 돈의 흐름이 이어집니다.</p>
-      </div>
-      <p class="text-[11px] text-[#5B6960]">* MOA는 은행 연동 없이 사용자가 입력한 기록만 관리합니다.</p>
-    </div>
-
-    <!-- Form panel -->
-    <div class="flex-1 bg-[#F6F8F4] flex items-center justify-center p-6 lg:rounded-l-[32px]">
+  <div class="min-h-screen bg-[#F6F8F4] flex">
+    <!-- Form -->
+    <div class="flex-1 flex items-center justify-center p-6 lg:p-16">
       <div class="max-w-md w-full">
-        <div class="lg:hidden flex items-center gap-3 mb-8">
-          <div class="w-10 h-10 rounded-xl bg-[#123522] flex items-center justify-center font-black text-xl text-[#E9D9A8]">M</div>
+        <RouterLink to="/" class="inline-flex items-center gap-3 mb-10">
+          <div class="w-10 h-10 rounded-xl bg-[#123522] flex items-center justify-center font-black text-xl text-[#E9D9A8]">모</div>
           <span class="font-extrabold text-xl tracking-tight text-[#141F19]">MOA</span>
-        </div>
+        </RouterLink>
 
-        <h2 class="text-2xl font-black text-[#141F19] tracking-tight">로그인</h2>
-        <p class="text-xs text-[#8A948C] mt-1.5">내 돈의 흐름을 한눈에. 전 세계 어디서나.</p>
+        <h2 class="text-[32px] font-black text-[#141F19] tracking-tight leading-tight">어제 쓴 돈,<br />기억나세요?</h2>
+        <p class="text-[13px] text-[#8A948C] mt-3">로그인하면 어제 적어둔 장부부터 이어집니다.</p>
 
         <!-- Demo banner (explicit demo builds only) -->
         <div v-if="isDemoMode" class="mt-6 p-4 rounded-2xl bg-[#EBF2EC] border border-[#CBDACF] space-y-2">
@@ -108,13 +89,28 @@
           </button>
         </form>
 
-        <div class="mt-6 text-center text-xs text-[#8A948C]">
+        <div class="mt-6 text-xs text-[#8A948C]">
           아직 계정이 없으신가요?
           <RouterLink to="/register" class="font-bold text-[#1E5A38] hover:underline ml-1">
             회원가입
           </RouterLink>
         </div>
       </div>
+    </div>
+
+    <!-- Ledger rail -->
+    <div class="hidden lg:flex w-[380px] shrink-0 bg-[#0C2318] p-8 flex-col justify-end gap-4" aria-hidden="true">
+      <div class="rounded-2xl bg-white/[0.06] border border-white/10 p-5 -rotate-1">
+        <p class="text-[11px] font-bold text-[#7E9387]">어제 장부 · 4건</p>
+        <p class="text-xl font-black text-white mt-1">−₩50,300</p>
+        <p class="text-[11px] text-[#A9BCAF] mt-2 leading-relaxed">택시 14,800 · 점심 12,000 · 서점 23,500 · 커피 0원(얻어먹음)</p>
+      </div>
+      <div class="rounded-2xl bg-[#C0A04E] p-5 rotate-1 ml-8">
+        <p class="text-[11px] font-bold text-[#0C2318]/70">11월 교통비</p>
+        <p class="text-xl font-black text-[#0C2318] mt-1">예산의 62%</p>
+        <p class="text-[11px] text-[#0C2318]/70 mt-2">남은 달력 24일 · 페이스 양호</p>
+      </div>
+      <p class="text-[11px] text-[#5B6960] pt-2">* MOA는 은행 연동 없이 직접 적은 기록만 보여줍니다.</p>
     </div>
   </div>
 </template>

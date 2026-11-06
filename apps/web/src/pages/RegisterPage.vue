@@ -1,47 +1,15 @@
 <template>
-  <div class="min-h-screen bg-[#08170F] flex">
-    <!-- Brand panel -->
-    <div class="hidden lg:flex w-[44%] flex-col justify-between p-12 text-white">
-      <RouterLink to="/" class="flex items-center gap-3">
-        <div class="w-10 h-10 rounded-xl bg-[#C0A04E] flex items-center justify-center font-black text-xl text-[#08170F]">
-          M
-        </div>
-        <div class="leading-none">
-          <span class="font-extrabold text-xl tracking-tight">MOA</span>
-          <span class="block text-[10px] font-semibold text-[#7E9387] tracking-[0.2em] mt-1">모아 · PRIVATE LEDGER</span>
-        </div>
-      </RouterLink>
-      <div>
-        <div class="w-12 h-1 bg-[#C0A04E] rounded-full mb-7"></div>
-        <p class="text-4xl font-black tracking-tight leading-tight">첫 장부를<br />펼쳐보세요.</p>
-        <div class="mt-8 space-y-4 text-sm">
-          <div class="flex items-center gap-3">
-            <span class="w-8 h-8 rounded-lg bg-white/10 grid place-items-center text-xs font-black text-[#E9D9A8]">1</span>
-            <span class="text-[#A9BCAF]">계정을 만들고 기준 통화를 정합니다</span>
-          </div>
-          <div class="flex items-center gap-3">
-            <span class="w-8 h-8 rounded-lg bg-white/10 grid place-items-center text-xs font-black text-[#E9D9A8]">2</span>
-            <span class="text-[#A9BCAF]">자산과 예산, 구독을 차곡차곡 모읍니다</span>
-          </div>
-          <div class="flex items-center gap-3">
-            <span class="w-8 h-8 rounded-lg bg-white/10 grid place-items-center text-xs font-black text-[#E9D9A8]">3</span>
-            <span class="text-[#A9BCAF]">순자산의 흐름을 한눈에 확인합니다</span>
-          </div>
-        </div>
-      </div>
-      <p class="text-[11px] text-[#5B6960]">* MOA는 은행 연동 없이 사용자가 입력한 기록만 관리합니다.</p>
-    </div>
-
-    <!-- Form panel -->
-    <div class="flex-1 bg-[#F6F8F4] flex items-center justify-center p-6 py-10 lg:rounded-l-[32px]">
+  <div class="min-h-screen bg-[#F6F8F4] flex">
+    <!-- Form -->
+    <div class="flex-1 flex items-center justify-center p-6 py-10 lg:p-16">
       <div class="max-w-md w-full">
-        <div class="lg:hidden flex items-center gap-3 mb-8">
-          <div class="w-10 h-10 rounded-xl bg-[#123522] flex items-center justify-center font-black text-xl text-[#E9D9A8]">M</div>
+        <RouterLink to="/" class="inline-flex items-center gap-3 mb-10">
+          <div class="w-10 h-10 rounded-xl bg-[#123522] flex items-center justify-center font-black text-xl text-[#E9D9A8]">모</div>
           <span class="font-extrabold text-xl tracking-tight text-[#141F19]">MOA</span>
-        </div>
+        </RouterLink>
 
-        <h2 class="text-2xl font-black text-[#141F19] tracking-tight">회원가입</h2>
-        <p class="text-xs text-[#8A948C] mt-1.5">MOA에서 당신의 금융 생활을 시작하세요.</p>
+        <h2 class="text-[32px] font-black text-[#141F19] tracking-tight leading-tight">첫 장부 펴는 데<br />1분이면 됩니다.</h2>
+        <p class="text-[13px] text-[#8A948C] mt-3">계정 만들고, 어제 쓴 돈부터 적어보세요.</p>
 
         <div v-if="error" class="mt-5 p-3.5 rounded-xl bg-[#FBEAEA] border border-[#F2C9C9] text-[#D64545] text-xs font-medium">
           {{ error }}
@@ -117,13 +85,27 @@
           </button>
         </form>
 
-        <div class="mt-6 text-center text-xs text-[#8A948C]">
+        <div class="mt-6 text-xs text-[#8A948C]">
           이미 계정이 있으신가요?
           <RouterLink to="/login" class="font-bold text-[#1E5A38] hover:underline ml-1">
             로그인
           </RouterLink>
         </div>
       </div>
+    </div>
+
+    <!-- Ledger rail -->
+    <div class="hidden lg:flex w-[380px] shrink-0 bg-[#0C2318] p-8 flex-col justify-end gap-4" aria-hidden="true">
+      <div class="rounded-2xl bg-white/[0.06] border border-white/10 p-5 rotate-1">
+        <p class="text-[11px] font-bold text-[#7E9387]">가입 첫 주에 보통 적는 것</p>
+        <p class="text-[13px] text-white mt-2 leading-loose">주계좌 잔액 · 교통카드 · 점심값 3건<br />구독 2건 · 비상금 통장</p>
+      </div>
+      <div class="rounded-2xl bg-[#C0A04E] p-5 -rotate-1 mr-8">
+        <p class="text-[11px] font-bold text-[#0C2318]/70">걱정 마세요</p>
+        <p class="text-xl font-black text-[#0C2318] mt-1">나중에 다 고쳐집니다</p>
+        <p class="text-[11px] text-[#0C2318]/70 mt-2">카테고리도, 계정도, 통화도</p>
+      </div>
+      <p class="text-[11px] text-[#5B6960] pt-2">* MOA는 은행 연동 없이 직접 적은 기록만 보여줍니다.</p>
     </div>
   </div>
 </template>

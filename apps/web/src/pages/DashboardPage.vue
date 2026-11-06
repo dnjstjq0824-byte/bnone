@@ -8,6 +8,8 @@ const finance = useFinanceStore();
 const currency = computed(() => finance.netWorth?.base_currency || auth.user?.base_currency || 'KRW');
 const money = (value: number = 0) => finance.formatCurrency(value, currency.value);
 const month = new Date().getMonth() + 1;
+const hour = new Date().getHours();
+const greeting = hour >= 5 && hour < 11 ? '좋은 아침이에요' : hour >= 11 && hour < 17 ? '점심은 맛있게 드셨나요' : hour >= 17 && hour < 23 ? '오늘 하루도 수고했어요' : '늦은 시간까지 장부 정리 중이네요';
 const shortcuts = [
   { path: '/app/transactions/new', label: '거래 기록', icon: Plus, color: 'blue' },
   { path: '/app/assets', label: '자산 관리', icon: Wallet, color: 'purple' },
@@ -19,7 +21,7 @@ onMounted(() => finance.loadDashboard());
 </script>
 <template>
   <div class="home-dashboard" :aria-busy="finance.isLoading">
-    <div class="dashboard-heading"><div><p class="eyebrow">나의 금융 생활</p><h1>{{ auth.user?.display_name || '사용자' }}님, 반가워요</h1><p class="text-slate-500 mt-2">오늘도 내 돈의 흐름을 가볍게 확인하세요.</p></div><button class="icon-button" @click="finance.loadDashboard" :disabled="finance.isLoading" aria-label="금융 정보 새로고침"><RefreshCw :size="20" :class="{ 'animate-spin': finance.isLoading }" /></button></div>
+    <div class="dashboard-heading"><div><p class="eyebrow">{{ month }}월 장부</p><h1>{{ auth.user?.display_name || '사용자' }}님, {{ greeting }}</h1><p class="text-slate-500 mt-2">어제 적어둔 기록부터 확인해볼까요.</p></div><button class="icon-button" @click="finance.loadDashboard" :disabled="finance.isLoading" aria-label="금융 정보 새로고침"><RefreshCw :size="20" :class="{ 'animate-spin': finance.isLoading }" /></button></div>
     <div v-if="finance.isLoading" class="dashboard-loading" role="status"><div v-for="n in 3" :key="n" class="finance-card skeleton-card"></div><span class="sr-only">금융 정보를 불러오는 중이에요</span></div>
     <div v-else-if="finance.dashboardError" class="finance-card empty-state" role="alert"><Wallet :size="36" /><h2>잠시 연결이 원활하지 않아요</h2><p>{{ finance.dashboardError }}</p><button class="primary-button" @click="finance.loadDashboard">다시 불러오기</button></div>
     <div v-else class="dashboard-columns">

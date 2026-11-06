@@ -57,7 +57,7 @@ func Load() *Config {
 		Environment:            env,
 		BaseCurrency:           getEnv("BASE_CURRENCY", "KRW"),
 		LogLevel:               getEnv("LOG_LEVEL", "info"),
-		CORSAllowedOrigins:     splitOrigins(getEnv("CORS_ALLOWED_ORIGINS", "http://localhost:3000,http://localhost:3001")),
+		CORSAllowedOrigins:     splitOrigins(getEnv("CORS_ALLOWED_ORIGINS", "http://localhost:3000,http://localhost:3001,http://127.0.0.1:3000,http://127.0.0.1:3001,http://localhost:5173,http://localhost:5174,http://127.0.0.1:5173,http://127.0.0.1:5174")),
 		AdminBootstrapEnabled:  getEnv("ADMIN_BOOTSTRAP_ENABLED", "false") == "true",
 		AdminBootstrapPassword: os.Getenv("ADMIN_BOOTSTRAP_PASSWORD"),
 	}
